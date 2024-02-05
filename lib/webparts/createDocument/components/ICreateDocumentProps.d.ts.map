@@ -1,0 +1,1 @@
+{"version":3,"file":"ICreateDocumentProps.d.ts","sourceRoot":"","sources":["../../../../src/webparts/createDocument/components/ICreateDocumentProps.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,oBAAoB;IACnC,WAAW,EAAE,MAAM,CAAC;IACpB,WAAW,EAAE,OAAO,CAAC;IACrB,kBAAkB,EAAE,MAAM,CAAC;IAC3B,eAAe,EAAE,OAAO,CAAC;IACzB,eAAe,EAAE,MAAM,CAAC;CACzB"}

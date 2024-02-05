@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "14.20.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.12.0"
+    },
+    "version": "1.18.1",
+    "libraryName": "document-management-system",
+    "libraryId": "11f3682a-6c0c-4281-b37b-daf2d15ca47f",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "DocumentManagementSystem",
+    "solutionShortDescription": "DocumentManagementSystem description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

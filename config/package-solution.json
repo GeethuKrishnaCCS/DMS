@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "document-management-system-client-side-solution",
+    "id": "11f3682a-6c0c-4281-b37b-daf2d15ca47f",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "DocumentManagementSystem description"
+      },
+      "longDescription": {
+        "default": "DocumentManagementSystem description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "document-management-system Feature",
+        "description": "The feature that activates elements of the document-management-system solution.",
+        "id": "2b62cf7c-63c8-4258-84ee-9d8cc318d9c3",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/document-management-system.sppkg"
+  }
+}
