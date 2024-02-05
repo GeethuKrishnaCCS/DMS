@@ -17,12 +17,21 @@
           "manifest": "./src/webparts/editDocument/EditDocumentWebPart.manifest.json"
         }
       ]
+    },
+    "send-request-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/sendRequest/SendRequestWebPart.js",
+          "manifest": "./src/webparts/sendRequest/SendRequestWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
     "CreateDocumentWebPartStrings": "lib/webparts/createDocument/loc/{locale}.js",
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
-    "EditDocumentWebPartStrings": "lib/webparts/editDocument/loc/{locale}.js"
+    "EditDocumentWebPartStrings": "lib/webparts/editDocument/loc/{locale}.js",
+    "SendRequestWebPartStrings": "lib/webparts/sendRequest/loc/{locale}.js"
   }
 }
