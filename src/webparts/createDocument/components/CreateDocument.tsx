@@ -450,7 +450,6 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       this.setState({ upload: true, hideupload: "", template: false, hidesource: "none", hidetemplate: "none" });
     }
     else if (!isChecked) {
-      // this.myfile.value = "";
       this.setState({ upload: false, hideupload: "none" });
     }
   }
