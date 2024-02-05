@@ -13,6 +13,7 @@
   },
   "externals": {},
   "localizedResources": {
-    "CreateDocumentWebPartStrings": "lib/webparts/createDocument/loc/{locale}.js"
+    "CreateDocumentWebPartStrings": "lib/webparts/createDocument/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
   }
 }
