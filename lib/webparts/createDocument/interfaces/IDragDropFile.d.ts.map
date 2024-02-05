@@ -1,1 +1,0 @@
-{"version":3,"file":"IDragDropFile.d.ts","sourceRoot":"","sources":["../../../../src/webparts/createDocument/interfaces/IDragDropFile.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,MAAM,4BAA4B,CAAC;AAE5D,MAAM,WAAW,kBAAkB;IAC/B,OAAO,EAAE,cAAc,CAAC;IACxB,cAAc,CAAC,QAAQ,EAAE,GAAG,GAAG,GAAG,CAAC;CACtC;AACD,MAAM,WAAW,kBAAkB;IAC/B,KAAK,EAAE,GAAG,CAAC;CACd"}
