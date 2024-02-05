@@ -1,9 +1,7 @@
-!dist
 config
 
 gulpfile.js
 
-release
 src
 temp
 
