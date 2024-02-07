@@ -3,18 +3,16 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   type IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneToggle
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import * as strings from 'SendRequestWebPartStrings';
 import SendRequest from './components/SendRequest';
-import { ISendRequestProps } from './components/ISendRequestProps';
+import { ISendRequestProps, ISendRequestWebPartProps } from './interfaces';
 
-export interface ISendRequestWebPartProps {
-  description: string;
-}
 
 export default class SendRequestWebPart extends BaseClientSideWebPart<ISendRequestWebPartProps> {
 
@@ -25,11 +23,36 @@ export default class SendRequestWebPart extends BaseClientSideWebPart<ISendReque
     const element: React.ReactElement<ISendRequestProps> = React.createElement(
       SendRequest,
       {
-        description: this.properties.description,
-        isDarkTheme: this._isDarkTheme,
-        environmentMessage: this._environmentMessage,
-        hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        context: this.context,
+        siteUrl: this.context.pageContext.web.serverRelativeUrl,
+        hubUrl: this.properties.hubUrl,
+        redirectUrl: this.properties.redirectUrl,
+        project: this.properties.project,
+        notificationPreference: this.properties.notificationPreference,
+        emailNotification: this.properties.emailNotification,
+        userMessageSettings: this.properties.userMessageSettings,
+        workflowHeaderList: this.properties.workflowHeaderList,
+        documentIndexList: this.properties.documentIndexList,
+        workflowDetailsList: this.properties.workflowDetailsList,
+        sourceDocumentLibrary: this.properties.sourceDocumentLibrary,
+        documentRevisionLogList: this.properties.documentRevisionLogList,
+        transmittalCodeSettingsList: this.properties.transmittalCodeSettingsList,
+        workflowTasksList: this.properties.workflowTasksList,
+        revisionLevelList: this.properties.revisionLevelList,
+        taskDelegationSettings: this.properties.taskDelegationSettings,
+        revisionHistoryPage: this.properties.revisionHistoryPage,
+        documentApprovalPage: this.properties.documentApprovalPage,
+        documentReviewPage: this.properties.documentReviewPage,
+        accessGroups: this.properties.accessGroups,
+        departmentList: this.properties.departmentList,
+        accessGroupDetailsList: this.properties.accessGroupDetailsList,
+        hubsite: this.properties.hubsite,
+        projectInformationListName: this.properties.projectInformationListName,
+        businessUnitList: this.properties.businessUnitList,
+        webpartHeader: this.properties.webpartHeader,
+        siteAddress: this.properties.siteAddress,
+        requestList: this.properties.requestList,
+        sourceDocumentLibraryView: this.properties.sourceDocumentLibraryView,
       }
     );
 
@@ -106,11 +129,115 @@ export default class SendRequestWebPart extends BaseClientSideWebPart<ISendReque
           },
           groups: [
             {
+              groupName: "Webpart Property",
+              groupFields: [
+                PropertyPaneTextField('webpartHeader', {
+                  label: 'webpartHeader'
+                }),
+              ]
+            },
+            {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
-                })
+                PropertyPaneTextField('documentIndexList', {
+                  label: 'Document Index List'
+                }),
+                PropertyPaneTextField('sourceDocumentLibrary', {
+                  label: 'Source Document Library'
+                }),
+                PropertyPaneTextField('workflowHeaderList', {
+                  label: 'WorkflowHeaderList'
+                }),
+                PropertyPaneTextField('workflowDetailsList', {
+                  label: 'Workflow Details List'
+                }),
+                PropertyPaneTextField('documentRevisionLogList', {
+                  label: 'Document RevisionLog List'
+                }),
+                PropertyPaneTextField('sourceDocumentLibraryView', {
+                  label: 'SourceDocument Library View'
+                }),
+
+              ]
+            },
+            {
+              groupName: "HubSite",
+              groupFields: [
+                PropertyPaneTextField('hubUrl', {
+                  label: 'HubUrl'
+                }),
+                PropertyPaneTextField('hubsite', {
+                  label: 'hubsite'
+                }),
+                PropertyPaneTextField('accessGroups', {
+                  label: 'Access Groups List'
+                }),
+                PropertyPaneTextField('notificationPreference', {
+                  label: 'Notification Preference'
+                }),
+                PropertyPaneTextField('emailNotification', {
+                  label: 'Email Notification'
+                }),
+                PropertyPaneTextField('userMessageSettings', {
+                  label: 'User Message Settings'
+                }),
+                PropertyPaneTextField('workflowTasksList', {
+                  label: 'Workflow Tasks List'
+                }),
+                PropertyPaneTextField('taskDelegationSettings', {
+                  label: 'Task Delegation Settings'
+                }),
+                PropertyPaneTextField('accessGroupDetailsList', {
+                  label: 'Access Group Details List'
+                }),
+                PropertyPaneTextField('departmentList', {
+                  label: 'Department List'
+                }),
+                PropertyPaneTextField('businessUnitList', {
+                  label: 'Business Unit List'
+                }),
+                PropertyPaneTextField('requestList', {
+                  label: 'RequestList'
+                }),
+              ]
+            },
+            {
+              groupName: "Pages",
+              groupFields: [
+                PropertyPaneTextField('documentReviewPage', {
+                  label: 'Document Review Page'
+                }),
+                PropertyPaneTextField('documentApprovalPage', {
+                  label: 'Document Approval Page'
+                }),
+                PropertyPaneTextField('revisionHistoryPage', {
+                  label: 'Revision History Page'
+                }),
+              ]
+            },
+            {
+              groupName: "LA Params",
+              groupFields: [
+
+                PropertyPaneTextField('sourceDocumentLibraryView', {
+                  label: 'Source Document View Library'
+                }),
+              ]
+            },
+            {
+              groupName: "Project",
+              groupFields: [
+                PropertyPaneToggle('project', {
+                  label: 'Project',
+                  onText: 'On',
+                  offText: 'Off'
+                }),
+                PropertyPaneTextField('revisionLevelList', {
+                  label: 'Revision Level List'
+                }),
+                PropertyPaneTextField('projectInformationListName', {
+                  label: 'projectInformationListName'
+                }),
               ]
             }
           ]

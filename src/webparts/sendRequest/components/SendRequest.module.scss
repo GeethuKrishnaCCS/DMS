@@ -5,8 +5,113 @@
   padding: 1em;
   color: "[theme:bodyText, default: #323130]";
   color: var(--bodyText);
+
   &.teams {
     font-family: $ms-font-family-fallbacks;
+  }
+
+  width: 100%;
+
+  div.alignCenter {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .border {
+    border: 1px solid black;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+  div.flex {
+    display: flex;
+    margin-top: 15px;
+  }
+
+  div.width {
+    width: 50%;
+  }
+
+  .cmnt {
+    overflow-x: auto;
+  }
+
+  .mt {
+    margin-top: 10px;
+  }
+
+  div.drpdwn {
+    width: 100%;
+  }
+
+  input {
+    height: 30px;
+    width: 100%;
+  }
+
+  // .title-155{
+  //   height: 34px;
+  // }
+  .btn {
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid gray;
+    margin-bottom: 5px;
+  }
+
+  .rgtalign {
+    width: 85%;
+    text-align: right;
+  }
+
+  .divMetadata {
+    width: 100%;
+    display: flex;
+  }
+
+  .divMetadataCol1 {
+    width: 100%;
+    display: flex;
+  }
+
+  .divMetadataCol2 {
+    width: 100%;
+    margin-left: 15px;
+    display: flex;
+  }
+
+  .divMetadataCol3 {
+    width: 100%;
+    margin-left: 15px;
+    display: flex;
+  }
+
+  .divMetadataCol4 {
+    width: 100%;
+    margin-left: 15px;
+    display: flex;
+  }
+
+  .divRow {
+    display: flex;
+    margin-top: 6px;
+  }
+
+  .header {
+    border-bottom: 1px solid rgb(161, 159, 157);
+    display: flex;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .divLabel {
+    margin-top: 5px;
+    margin-left: 5px;
   }
 }
 
