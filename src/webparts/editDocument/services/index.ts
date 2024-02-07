@@ -1,2 +1,2 @@
 export * from "./BaseService";
-export * from "./cdmsEditService";
+export * from "./DMSEditService";
