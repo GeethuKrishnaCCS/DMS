@@ -25,6 +25,14 @@
           "manifest": "./src/webparts/sendRequest/SendRequestWebPart.manifest.json"
         }
       ]
+    },
+    "revision-history-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/revisionHistory/RevisionHistoryWebPart.js",
+          "manifest": "./src/webparts/revisionHistory/RevisionHistoryWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -32,6 +40,7 @@
     "CreateDocumentWebPartStrings": "lib/webparts/createDocument/loc/{locale}.js",
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
     "EditDocumentWebPartStrings": "lib/webparts/editDocument/loc/{locale}.js",
-    "SendRequestWebPartStrings": "lib/webparts/sendRequest/loc/{locale}.js"
+    "SendRequestWebPartStrings": "lib/webparts/sendRequest/loc/{locale}.js",
+    "RevisionHistoryWebPartStrings": "lib/webparts/revisionHistory/loc/{locale}.js"
   }
 }
