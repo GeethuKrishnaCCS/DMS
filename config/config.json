@@ -33,6 +33,14 @@
           "manifest": "./src/webparts/revisionHistory/RevisionHistoryWebPart.manifest.json"
         }
       ]
+    },
+    "notification-preference-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/notificationPreference/NotificationPreferenceWebPart.js",
+          "manifest": "./src/webparts/notificationPreference/NotificationPreferenceWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -41,6 +49,7 @@
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
     "EditDocumentWebPartStrings": "lib/webparts/editDocument/loc/{locale}.js",
     "SendRequestWebPartStrings": "lib/webparts/sendRequest/loc/{locale}.js",
-    "RevisionHistoryWebPartStrings": "lib/webparts/revisionHistory/loc/{locale}.js"
+    "RevisionHistoryWebPartStrings": "lib/webparts/revisionHistory/loc/{locale}.js",
+    "NotificationPreferenceWebPartStrings": "lib/webparts/notificationPreference/loc/{locale}.js"
   }
 }
