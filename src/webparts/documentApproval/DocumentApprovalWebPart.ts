@@ -3,18 +3,15 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   type IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneToggle
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import * as strings from 'DocumentApprovalWebPartStrings';
 import DocumentApproval from './components/DocumentApproval';
-import { IDocumentApprovalProps } from './components/IDocumentApprovalProps';
-
-export interface IDocumentApprovalWebPartProps {
-  description: string;
-}
+import { IDocumentApprovalProps, IDocumentApprovalWebPartProps } from './interfaces';
 
 export default class DocumentApprovalWebPart extends BaseClientSideWebPart<IDocumentApprovalWebPartProps> {
 
@@ -25,11 +22,32 @@ export default class DocumentApprovalWebPart extends BaseClientSideWebPart<IDocu
     const element: React.ReactElement<IDocumentApprovalProps> = React.createElement(
       DocumentApproval,
       {
+        context: this.context,
         description: this.properties.description,
-        isDarkTheme: this._isDarkTheme,
-        environmentMessage: this._environmentMessage,
-        hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        project: this.properties.project,
+        siteUrl: this.context.pageContext.web.serverRelativeUrl,
+        hubUrl: this.properties.hubUrl,
+        notificationPreference: this.properties.notificationPreference,
+        emailNotification: this.properties.emailNotification,
+        userMessageSettings: this.properties.userMessageSettings,
+        workflowHeaderList: this.properties.workflowHeaderList,
+        documentIndexList: this.properties.documentIndexList,
+        workflowDetailsList: this.properties.workflowDetailsList,
+        sourceDocument: this.properties.sourceDocument,
+        publishedDocument: this.properties.publishedDocument,
+        documentRevisionLogList: this.properties.documentRevisionLogList,
+        transmittalCodeSettingsList: this.properties.transmittalCodeSettingsList,
+        workflowTasksList: this.properties.workflowTasksList,
+        PermissionMatrixSettings: this.properties.PermissionMatrixSettings,
+        departmentList: this.properties.departmentList,
+        sourceDocumentLibrary: this.properties.sourceDocumentLibrary,
+        siteAddress: this.properties.siteAddress,
+        accessGroupDetailsList: this.properties.accessGroupDetailsList,
+        hubsite: this.properties.hubsite,
+        projectInformationListName: this.properties.projectInformationListName,
+        businessUnit: this.properties.businessUnit,
+        requestList: this.properties.requestList,
+        webpartHeader: this.properties.webpartHeader
       }
     );
 
@@ -106,11 +124,100 @@ export default class DocumentApprovalWebPart extends BaseClientSideWebPart<IDocu
           },
           groups: [
             {
+              groupName: "Webpart Property",
+              groupFields: [
+                PropertyPaneTextField('webpartHeader', {
+                  label: 'webpartHeader'
+                }),
+              ]
+            },
+            {
+              groupName: "Hub Site",
+              groupFields: [
+                PropertyPaneTextField('hubUrl', {
+                  label: 'HubUrl'
+                }),
+                PropertyPaneTextField('hubsite', {
+                  label: 'hubsite'
+                }),
+                PropertyPaneTextField('notificationPreference', {
+                  label: 'Notification Preference'
+                }),
+                PropertyPaneTextField('emailNotification', {
+                  label: 'Email Notification'
+                }),
+                PropertyPaneTextField('userMessageSettings', {
+                  label: 'User Message Settings'
+                }),
+                PropertyPaneTextField('PermissionMatrixSettings', {
+                  label: 'Permission Matrix Settings List'
+                }),
+                PropertyPaneTextField('workflowTasksList', {
+                  label: 'Workflow Tasks List'
+                }),
+                PropertyPaneTextField('departmentList', {
+                  label: 'Department List'
+                }),
+                PropertyPaneTextField('businessUnit', {
+                  label: 'Business Unit'
+                }),
+                PropertyPaneTextField('requestList', {
+                  label: 'requestList'
+                }),
+                PropertyPaneTextField('accessGroupDetailsList', {
+                  label: 'AccessGroupDetailsList'
+                }),
+              ]
+            },
+            {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                PropertyPaneTextField('documentRevisionLogList', {
+                  label: 'Document RevisionLog List'
+                }),
+                PropertyPaneTextField('documentIndexList', {
+                  label: 'Document Index List'
+                }),
+                PropertyPaneTextField('sourceDocument', {
+                  label: 'Source Document Library'
+                }),
+
+                PropertyPaneTextField('workflowHeaderList', {
+                  label: 'WorkflowHeaderList'
+                }),
+                PropertyPaneTextField('workflowDetailsList', {
+                  label: 'Workflow Details List'
+                }),
+                PropertyPaneTextField('publishedDocument', {
+                  label: 'Published Document Library'
                 })
+
+              ]
+            },
+            {
+              groupName: "LA Params",
+              groupFields: [
+
+                PropertyPaneTextField('sourceDocumentLibrary', {
+                  label: 'Source Document View Library'
+                }),
+              ]
+            },
+            {
+              groupName: "Project",
+              groupFields: [
+
+                PropertyPaneToggle('project', {
+                  label: 'Project',
+                  onText: 'On',
+                  offText: 'Off'
+                }),
+                PropertyPaneTextField('transmittalCodeSettingsList', {
+                  label: 'Transmittal Code Settings List'
+                }),
+                PropertyPaneTextField('projectInformationListName', {
+                  label: 'projectInformationListName'
+                }),
               ]
             }
           ]

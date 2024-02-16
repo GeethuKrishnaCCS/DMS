@@ -1,0 +1,125 @@
+import { WebPartContext } from "@microsoft/sp-webpart-base";
+
+export interface IDocumentApprovalProps {
+  description: string;
+  project: string;
+  context: WebPartContext;
+  siteUrl: string;
+  hubUrl: string;
+  notificationPreference: string;
+  emailNotification: string;
+  userMessageSettings: string;
+  workflowHeaderList: string;
+  documentIndexList: string;
+  transmittalCodeSettingsList: string;
+  workflowDetailsList: string;
+  sourceDocument: string;
+  publishedDocument: string;
+  documentRevisionLogList: string;
+  workflowTasksList: string;
+  PermissionMatrixSettings: string;
+  departmentList: string;
+  sourceDocumentLibrary: string;
+  siteAddress: string;
+  accessGroupDetailsList: string;
+  hubsite: string;
+  projectInformationListName: string;
+  businessUnit: string;
+  requestList: string;
+  webpartHeader: string;
+}
+
+export interface IDocumentApprovalWebPartProps {
+  description: string;
+  project: string;
+  context: WebPartContext;
+  siteUrl: string;
+  hubUrl: string;
+  notificationPreference: string;
+  emailNotification: string;
+  userMessageSettings: string;
+  workflowHeaderList: string;
+  documentIndexList: string;
+  transmittalCodeSettingsList: string;
+  workflowDetailsList: string;
+  sourceDocument: string;
+  publishedDocument: string;
+  documentRevisionLogList: string;
+  workflowTasksList: string;
+  PermissionMatrixSettings: string;
+  departmentList: string;
+  sourceDocumentLibrary: string;
+  siteAddress: string;
+  accessGroupDetailsList: string;
+  hubsite: string;
+  projectInformationListName: string;
+  businessUnit: string;
+  requestList: string;
+  webpartHeader: string;
+}
+
+export interface IMessage {
+  isShowMessage: boolean;
+  messageType: number;
+  message: string;
+}
+export interface IDocumentApprovalState {
+  requester: any;
+  requesterComments: any;
+  dccComments: any;
+  hideProject: boolean;
+  publishOptionKey: string;
+  publishOption: string;
+  status: string;
+  statusKey: string;
+  approveDocument: string;
+  hideLoading: boolean;
+  documentID: string;
+  documentName: string;
+  revision: any;
+  ownerName: string;
+  ownerEmail: string;
+  dueDate: any;
+  requesterName: string;
+  requesterEmail: string;
+  requestedDate: any;
+  requesterComment: string;
+  linkToDoc: any;
+  reviewerData: any[];
+  access: string;
+  accessDeniedMsgBar: string;
+  hidepublish: boolean;
+  statusMessage: IMessage;
+  comments: string;
+  criticalDocument: any;
+  approverName: string;
+  cancelConfirmMsg: string;
+  confirmDialog: boolean;
+  savedisable: string;
+  taskID: any;
+  dccreviewerData: any[];
+  revisionLevel: any;
+  acceptanceCodearray: any[];
+  acceptanceCode: any;
+  hideacceptance: boolean;
+  externalDocument: any;
+  hidetransmittalrevision: boolean;
+  publishcheck: any;
+  transmittalRevision: any;
+  projectName: any;
+  projectNumber: any;
+  currentRevision: any;
+  previousRevisionItemID: any;
+  revisionItemID: any;
+  newRevision: any;
+  sameRevision: any;
+  hideButton: any;
+  reviewersTableDiv: string;
+  isdocx: string;
+  nodocx: string;
+  loaderDisplay: string;
+  dccTableDiv: string;
+  dcc: any;
+  dccEmail: any;
+  dccName: any;
+}
