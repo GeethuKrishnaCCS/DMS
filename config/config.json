@@ -41,6 +41,14 @@
           "manifest": "./src/webparts/notificationPreference/NotificationPreferenceWebPart.manifest.json"
         }
       ]
+    },
+    "document-review-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/documentReview/DocumentReviewWebPart.js",
+          "manifest": "./src/webparts/documentReview/DocumentReviewWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -50,6 +58,7 @@
     "EditDocumentWebPartStrings": "lib/webparts/editDocument/loc/{locale}.js",
     "SendRequestWebPartStrings": "lib/webparts/sendRequest/loc/{locale}.js",
     "RevisionHistoryWebPartStrings": "lib/webparts/revisionHistory/loc/{locale}.js",
-    "NotificationPreferenceWebPartStrings": "lib/webparts/notificationPreference/loc/{locale}.js"
+    "NotificationPreferenceWebPartStrings": "lib/webparts/notificationPreference/loc/{locale}.js",
+    "DocumentReviewWebPartStrings": "lib/webparts/documentReview/loc/{locale}.js"
   }
 }

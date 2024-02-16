@@ -36,7 +36,7 @@ export class DMSService extends BaseService {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid).delete();
     }
     public getItemsFromUserMsgSettings(siteUrl: string, listname: string): Promise<any> {
-        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,Message").filter("PageName eq 'DocumentIndex'")();
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,Message").filter("PageName eq 'RevisionHistory'")();
     }
     public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver")();

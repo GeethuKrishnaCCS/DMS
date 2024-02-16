@@ -24,6 +24,7 @@
     "@pnp/spfx-controls-react": "3.16.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-light-accordion": "^0.1.4",
     "react-spinners-kit": "^1.9.1",
     "replace-string": "^4.0.0",
     "simple-react-validator": "^1.6.2",
