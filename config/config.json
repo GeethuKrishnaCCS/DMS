@@ -49,6 +49,14 @@
           "manifest": "./src/webparts/documentReview/DocumentReviewWebPart.manifest.json"
         }
       ]
+    },
+    "document-approval-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/documentApproval/DocumentApprovalWebPart.js",
+          "manifest": "./src/webparts/documentApproval/DocumentApprovalWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -59,6 +67,7 @@
     "SendRequestWebPartStrings": "lib/webparts/sendRequest/loc/{locale}.js",
     "RevisionHistoryWebPartStrings": "lib/webparts/revisionHistory/loc/{locale}.js",
     "NotificationPreferenceWebPartStrings": "lib/webparts/notificationPreference/loc/{locale}.js",
-    "DocumentReviewWebPartStrings": "lib/webparts/documentReview/loc/{locale}.js"
+    "DocumentReviewWebPartStrings": "lib/webparts/documentReview/loc/{locale}.js",
+    "DocumentApprovalWebPartStrings": "lib/webparts/documentApproval/loc/{locale}.js"
   }
 }
