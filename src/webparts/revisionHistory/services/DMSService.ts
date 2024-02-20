@@ -38,9 +38,9 @@ export class DMSService extends BaseService {
     public getItemsFromUserMsgSettings(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,Message").filter("PageName eq 'RevisionHistory'")();
     }
-    public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
+    /* public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver")();
-    }
+    } */
     public async uploadDocument(filename: string, filedata: any, libraryname: string): Promise<any> {
         const file = await this._spfi.web.getFolderByServerRelativePath(libraryname)
             .files.addUsingPath(filename, filedata, { Overwrite: true });
