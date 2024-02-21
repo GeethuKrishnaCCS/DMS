@@ -63,7 +63,8 @@ export default class NotificationPreference extends React.Component<INotificatio
           }); */
       }
       //Reading User messages for 'NotificationPreference' page.
-      this._Service.getItemsFromUserMsgSettingsNP(this.props.hubSiteUrl, this.props.userMessageSettings)
+      this._Service.getSelectOrderByFilter(this.props.hubSiteUrl, this.props.userMessageSettings, "Title,Message", "ID", "PageName eq 'NotificationPreference'")
+      // this._Service.getItemsFromUserMsgSettingsNP(this.props.hubSiteUrl, this.props.userMessageSettings)
         /* sp.web.getList("/sites/" + this.props.hubSiteUrl + "/Lists/" + this.props.userMessageSettings).items.select("Title,Message").orderBy("ID")
           .filter("PageName eq 'NotificationPreference'").get() */
         .then(userMessages => {
@@ -103,7 +104,8 @@ export default class NotificationPreference extends React.Component<INotificatio
     //let currentUser = await sp.web.currentUser();
     await this.GetCurrentUserDetails();
     // Getting current uuser's preference if already set.
-    const notificationPreference: any[] = await this._Service.getNotificationPref(this.props.hubSiteUrl, this.props.notificationPrefListName, currentUser.Email)
+    const notificationPreference: any[] = await this._Service.getSelectExpandFilter(this.props.hubSiteUrl, this.props.notificationPrefListName, "ID,Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail", "EmailUser", "EmailUser/EMail eq '" + currentUser.Email + "'")
+    // const notificationPreference: any[] = await this._Service.getNotificationPref(this.props.hubSiteUrl, this.props.notificationPrefListName, currentUser.Email)
     //const notificationPreference: any[] = await sp.web.getList("/sites/" + this.props.hubSiteUrl + "/Lists/" + this.props.notificationPrefListName).items.select("ID,Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail").expand("EmailUser").filter("EmailUser/EMail eq '" + currentUser.Email + "'").get();
     if (notificationPreference.length > 0) {
       this.setState({
