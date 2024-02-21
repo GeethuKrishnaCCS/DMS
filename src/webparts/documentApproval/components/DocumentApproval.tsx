@@ -156,7 +156,8 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     //Get Parameter from URL
     await this._queryParamGetting();
     //Get Approver
-    const headerItem: any = await this._Service.getApproverData(this.props.siteUrl, this.props.workflowHeaderList, this.workflowHeaderID)
+    const headerItem: any = await this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.workflowHeaderList, this.workflowHeaderID, "Approver/ID,Approver/EMail,DocumentIndexID", "Approver")
+    // const headerItem: any = await this._Service.getApproverData(this.props.siteUrl, this.props.workflowHeaderList, this.workflowHeaderID)
     //const headerItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.workflowHeaderID).select("Approver/ID,Approver/EMail,DocumentIndexID").expand("Approver").get();
     this.approverEmail = headerItem.Approver.EMail;
     this.documentIndexID = headerItem.DocumentIndexID;
