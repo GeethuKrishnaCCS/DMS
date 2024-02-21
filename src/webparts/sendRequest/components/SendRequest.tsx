@@ -160,7 +160,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   //Messages
   private async _userMessageSettings() {
-    const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
+    const userMessageSettings: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'SendRequest'");
+    // const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
 
     for (var i in userMessageSettings) {
       if (userMessageSettings[i].Title == "InvalidSendRequestUser") {
@@ -239,7 +240,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   //Workflow Status Checking
   private async _checkWorkflowStatus() {
-    const documentIndexItem: any = await this._Service.getWorkflowStatus(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
+    const documentIndexItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, "WorkflowStatus,SourceDocument,DocumentStatus");
+    // const documentIndexItem: any = await this._Service.getWorkflowStatus(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
     //getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).select("WorkflowStatus,SourceDocument,DocumentStatus").get();
     if (documentIndexItem.WorkflowStatus == "Under Review" || documentIndexItem.WorkflowStatus == "Under Approval") {
       this.setState({
@@ -301,7 +303,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       let businessUnitID;
       let departmentId;
       //Get Document Index
-      const documentIndexItem: any = await this._Service.getDocumentIndexItem(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
+      const documentIndexItem: any = await this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, "DocumentID,DocumentName,DepartmentID,BusinessUnitID,Owner/ID,Owner/Title,Owner/EMail,Approver/ID,Approver/Title,Approver/EMail,Revision,SourceDocument,CriticalDocument,SourceDocumentID,Reviewers/ID,Reviewers/Title,Reviewers/EMail", "Owner,Approver,Reviewers");
+      // const documentIndexItem: any = await this._Service.getDocumentIndexItem(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
       //const documentIndexItem: any = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).select("DocumentID,DocumentName,DepartmentID,BusinessUnitID,Owner/ID,Owner/Title,Owner/EMail,Approver/ID,Approver/Title,Approver/EMail,Revision,SourceDocument,CriticalDocument,SourceDocumentID,Reviewers/ID,Reviewers/Title,Reviewers/EMail").expand("Owner,Approver,Reviewers").get();
 
       documentID = documentIndexItem.DocumentID;
@@ -405,11 +408,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     else {
       this.setState({ validApprover: "", approver: null, approverEmail: "", approverName: "", });
       if (this.state.businessUnitID != null) {
-        const businessUnit = await this._Service.getBusinessUnit(this.props.siteUrl, this.props.businessUnitList);
+        const businessUnit = await this._Service.getSelectExpand(this.props.siteUrl, this.props.businessUnitList, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
+        // const businessUnit = await this._Service.getBusinessUnit(this.props.siteUrl, this.props.businessUnitList);
         //const businessUnit = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.businessUnitList).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver").get();
         for (let i = 0; i < businessUnit.length; i++) {
           if (businessUnit[i].ID == this.state.businessUnitID) {
-            const approve = await this._Service.getSiteUserByEmail(businessUnit[i].Approver.EMail);
+            const approve = await this._Service.getUserByEmail(businessUnit[i].Approver.EMail);
             //const approve = await this._Service.siteUsers.getByEmail(businessUnit[i].Approver.EMail).get();
             approverEmail = businessUnit[i].Approver.EMail;
             approverName = businessUnit[i].Approver.Title;
@@ -418,11 +422,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         }
       }
       else {
-        const departments = await this._Service.getDepartments(this.props.siteUrl, this.props.departmentList);
+        const departments = await this._Service.getSelectExpand(this.props.siteUrl, this.props.departmentList, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
+        // const departments = await this._Service.getDepartments(this.props.siteUrl, this.props.departmentList);
         //const departments = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.departmentList).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver").get();
         for (let i = 0; i < departments.length; i++) {
           if (departments[i].ID == this.state.departmentId) {
-            const deptapprove = await this._Service.getSiteUserByEmail(departments[i].Approver.EMail);
+            const deptapprove = await this._Service.getUserByEmail(departments[i].Approver.EMail);
             //const deptapprove = await this._Service.siteUsers.getByEmail(departments[i].Approver.EMail).get();
             approverEmail = departments[i].Approver.EMail;
             approverName = departments[i].Approver.Title;
@@ -457,7 +462,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     let sorted_previousHeaderItems: any[] = [];
     let previousHeaderItem = 0;
     let dcc = "dcc";
-    const previousHeaderItems = await this._Service.getPreviousHeaderItems(this.props.siteUrl, this.props.workflowHeaderList, this.documentIndexID);
+    const previousHeaderItems = await this._Service.getSelectFilter(this.props.siteUrl, this.props.workflowHeaderList, "ID", "DocumentIndex eq '" + this.documentIndexID + "' and(WorkflowStatus eq 'Returned with comments')");
+    // const previousHeaderItems = await this._Service.getPreviousHeaderItems(this.props.siteUrl, this.props.workflowHeaderList, this.documentIndexID);
     //const previousHeaderItems = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.select("ID").filter("DocumentIndex eq '" + this.documentIndexID + "' and(WorkflowStatus eq 'Returned with comments')").get();
     if (previousHeaderItems.length != 0) {
       sorted_previousHeaderItems = _.orderBy(previousHeaderItems, 'ID', ['desc']);
@@ -504,7 +510,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       OwnerId: this.state.ownerId,
       PreviousReviewHeader: previousHeaderItem.toString()
     }
-    const header = await this._Service.addToWorkflowHeaderList(this.props.siteUrl, this.props.workflowHeaderList, itemtobeadded);
+    // const header = await this._Service.addToWorkflowHeaderList(this.props.siteUrl, this.props.workflowHeaderList, itemtobeadded);
+    const header = await this._Service.addItem(this.props.siteUrl, this.props.workflowHeaderList, itemtobeadded);
     /* const header = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.add({
       Title: this.state.documentName,
       DocumentID: this.state.documentID,
@@ -534,7 +541,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         DocumentIndexId: this.documentIndexID,
         DueDate: this.state.dueDate,
       }
-      const log = await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, revisionitem);
+      // const log = await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, revisionitem);
+      const log = await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, revisionitem);
       /* const log = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
         Status: "Workflow Initiated",
@@ -549,11 +557,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         const user = await this._Service.getSiteUserById(this.state.reviewers[k]);
         //const user = await this._Service.siteUsers.getById(this.state.reviewers[k]).get();
         if (user) {
-          const hubsieUser = await this._Service.getSiteUserByEmail(user.Email);
+          const hubsieUser = await this._Service.getUserByEmail(user.Email);
           //const hubsieUser = await this._Service.siteUsers.getByEmail(user.Email).get();
           if (hubsieUser) {
             //Task delegation 
-            const taskDelegation: any[] = await this._Service.getTaskDelegation(this.props.siteUrl, this.props.taskDelegationSettings, hubsieUser.Id)
+            const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationSettings, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')")
+            // const taskDelegation: any[] = await this._Service.getTaskDelegation(this.props.siteUrl, this.props.taskDelegationSettings, hubsieUser.Id)
             //const taskDelegation: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettings).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')").get();
 
             if (taskDelegation.length > 0) {
@@ -572,14 +581,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   delegatedFromId: taskDelegation[0].DelegatedFor.ID,
                 });
                 //Get Delegated To ID
-                const DelegatedTo = await this._Service.getSiteUserByEmail(taskDelegation[0].DelegatedTo.EMail);
+                const DelegatedTo = await this._Service.getUserByEmail(taskDelegation[0].DelegatedTo.EMail);
                 //const DelegatedTo = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get();
                 if (DelegatedTo) {
                   this.setState({
                     delegateToIdInSubSite: DelegatedTo.Id,
                   });
                   //Get Delegated For ID
-                  const DelegatedFor = await this._Service.getSiteUserByEmail(taskDelegation[0].DelegatedFor.EMail);
+                  const DelegatedFor = await this._Service.getUserByEmail(taskDelegation[0].DelegatedFor.EMail);
                   //const DelegatedFor = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get();
                   if (DelegatedFor) {
                     this.setState({
@@ -605,7 +614,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       },
                       OwnerId: this.state.ownerId,
                     }
-                    const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+                    const detail = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+                    // const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
                     /* const detail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add({
                       HeaderIDId: Number(this.newheaderid),
                       Workflow: "Review",
@@ -631,7 +641,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                         },
                       }
-                      await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, updateitem)
+                      // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, updateitem)
+                      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, updateitem)
                       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
                         Link: {
                           "__metadata": { type: "SP.FieldUrlValue" },
@@ -658,7 +669,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                         },
                       }
-                      const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+                      // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+                      const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem);
                       /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add({
                         Title: "Review '" + this.state.documentName + "'",
                         Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
@@ -681,7 +693,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                         const dataitem = {
                           TaskID: task.data.ID,
                         }
-                        await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, dataitem)
+                        // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, dataitem)
+                        await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, dataitem)
                         /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update
                           ({
                             TaskID: task.data.ID,
@@ -709,7 +722,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   },
                   OwnerId: this.state.ownerId,
                 }
-                const details = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, dataitem);
+                // const details = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, dataitem);
+                const details = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, dataitem);
                 /* const details = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add({
                   HeaderIDId: Number(this.newheaderid),
                   Workflow: "Review",
@@ -734,7 +748,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                     },
                   }
-                  const updatedetail = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
+                  // const updatedetail = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
+                  const updatedetail = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
                   /* const updatedetail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update({
                     Link: {
                       "__metadata": { type: "SP.FieldUrlValue" },
@@ -758,7 +773,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                     },
                   }
-                  const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem)
+                  // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem)
+                  const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem)
                   /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add({
                     Title: "Review '" + this.state.documentName + "'",
                     Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
@@ -778,7 +794,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     const dataitem = {
                       TaskID: task.data.ID,
                     }
-                    const updatetask = await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
+                    const updatetask = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
+                    // const updatetask = await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
                     /* const updatetask = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update
                       ({
                         TaskID: task.data.ID,
@@ -810,7 +827,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 },
                 OwnerId: this.state.ownerId,
               }
-              const details = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem)
+              // const details = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem)
+              const details = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detailitem)
               /* const details = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add({
                 HeaderIDId: Number(this.newheaderid),
                 Workflow: "Review",
@@ -835,7 +853,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                   },
                 }
-                const updatedetail = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailsdata)
+                const updatedetail = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailsdata)
+                // const updatedetail = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailsdata)
                 /* const updatedetail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update({
                   Link: {
                     "__metadata": { type: "SP.FieldUrlValue" },
@@ -859,7 +878,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                   },
                 }
-                const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+                // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+                const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem);
                 /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add({
                   Title: "Review '" + this.state.documentName + "'",
                   Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
@@ -880,7 +900,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   const detailitem = {
                     TaskID: task.data.ID,
                   }
-                  const updatetask = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailitem);
+                  const updatetask = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailitem);
+                  // const updatetask = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailitem);
                   /* const updatetask = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update
                     ({
                       TaskID: task.data.ID,
@@ -902,7 +923,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         ReviewersId: { results: this.state.reviewers },
         WorkflowDueDate: this.state.dueDate
       }
-      await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, indexitem);
+      // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, indexitem);
+      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, indexitem);
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
         WorkflowStatus: "Under Review",
         Workflow: "Review",
@@ -916,7 +938,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         ApproverId: this.state.approver,
         ReviewersId: { results: this.state.reviewers },
       }
-      await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
+      // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
+      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
       /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
         WorkflowStatus: "Under Review",
         Workflow: "Review",
@@ -926,7 +949,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       const headeritem = {
         ReviewersId: { results: this.state.reviewers }
       }
-      await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, parseInt(this.newheaderid), headeritem);
+      // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, parseInt(this.newheaderid), headeritem);
+      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, parseInt(this.newheaderid), headeritem);
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(parseInt(this.newheaderid)).update({
         ReviewersId: { results: this.state.reviewers }
       }); */
@@ -941,7 +965,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         Workflow: "Review",
         DueDate: this.state.dueDate,
       }
-      await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
+      await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
+      // await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
         Status: "Under Review",
@@ -1022,7 +1047,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       OwnerId: this.state.ownerId,
       PreviousReviewHeader: previousHeaderItem.toString()
     }
-    const header = await this._Service.addToWorkflowHeaderList(this.props.siteUrl, this.props.workflowHeaderList, headeritem);
+    // const header = await this._Service.addToWorkflowHeaderList(this.props.siteUrl, this.props.workflowHeaderList, headeritem);
+    const header = await this._Service.addItem(this.props.siteUrl, this.props.workflowHeaderList, headeritem);
     /* const header = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.add({
       Title: this.state.documentName,
       DocumentID: this.state.documentID,
@@ -1055,7 +1081,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         DueDate: this.state.dueDate,
 
       }
-      const log = await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
+      const log = await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
+      // const log = await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
       /* const log = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
         Status: "Workflow Initiated",
@@ -1081,7 +1108,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         },
         OwnerId: this.state.ownerId,
       }
-      const detailadd = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+      // const detailadd = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+      const detailadd = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
       /* const detailadd = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add({
         HeaderIDId: Number(this.newheaderid),
         Workflow: "Review",
@@ -1107,7 +1135,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailadd.data.ID + ""
           },
         }
-        await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailadd.data.ID, detailitem);
+        await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detailadd.data.ID, detailitem);
+        // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailadd.data.ID, detailitem);
         /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailadd.data.ID).update({
           Link: {
             "__metadata": { type: "SP.FieldUrlValue" },
@@ -1117,7 +1146,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         }); */
       }
       //Task delegation getting user id from hubsite
-      const user = await this._Service.getUserIdByEmail(this.state.approverEmail);
+      const user = await this._Service.getUserByEmail(this.state.approverEmail);
       //const user = await this._Service.siteUsers.getByEmail(this.state.approverEmail).get();
       if (user) {
         this.setState({
@@ -1125,7 +1154,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         });
 
         //Task delegation 
-        const taskDelegation: any[] = await this._Service.getTaskDelegation(this.props.siteUrl, this.props.taskDelegationSettings, user.Id);
+        const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationSettings, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')");
+        // const taskDelegation: any[] = await this._Service.getTaskDelegation(this.props.siteUrl, this.props.taskDelegationSettings, user.Id);
         /* const taskDelegation: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettings).items
         .select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate")
         .expand("DelegatedFor,DelegatedTo")
@@ -1148,13 +1178,13 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               delegatedFromId: taskDelegation[0].DelegatedFor.ID,
             });
             //detail list adding an item for approval
-            const DelegatedTo = await this._Service.getUserIdByEmail(taskDelegation[0].DelegatedTo.EMail);
+            const DelegatedTo = await this._Service.getUserByEmail(taskDelegation[0].DelegatedTo.EMail);
             //const DelegatedTo = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get();
             if (DelegatedTo) {
               this.setState({
                 delegateToIdInSubSite: DelegatedTo.Id,
               });
-              const DelegatedFor = await this._Service.getUserIdByEmail(taskDelegation[0].DelegatedFor.EMail);
+              const DelegatedFor = await this._Service.getUserByEmail(taskDelegation[0].DelegatedFor.EMail);
               //const DelegatedFor = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get();
               if (DelegatedFor) {
                 this.setState({
@@ -1175,7 +1205,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   },
                   OwnerId: this.state.ownerId,
                 }
-                const detailsAdd = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, itemdetail);
+                const detailsAdd = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, itemdetail);
+                // const detailsAdd = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, itemdetail);
                 /* const detailsAdd = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add
                   ({
                     HeaderIDId: Number(this.newheaderid),
@@ -1202,7 +1233,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
                     },
                   }
-                  await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, itemtoupdate)
+                  await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, itemtoupdate)
+                  // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, itemtoupdate)
                   /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailsAdd.data.ID).update({
                     Link: {
                       "__metadata": { type: "SP.FieldUrlValue" },
@@ -1213,21 +1245,24 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   const initem = {
                     ApproverId: this.state.delegateToIdInSubSite,
                   }
-                  await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, initem);
+                  // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, initem);
+                  await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, initem);
                   /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
                     ApproverId: this.state.delegateToIdInSubSite,
                   }); */
                   const sourceitem = {
                     ApproverId: this.state.delegateToIdInSubSite,
                   }
-                  await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
+                  await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
+                  // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
                   /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
                     ApproverId: this.state.delegateToIdInSubSite,
                   }); */
                   const headeritem = {
                     ApproverId: this.state.delegateToIdInSubSite,
                   }
-                  await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem);
+                  await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem);
+                  // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem);
                   /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.newheaderid).update({
                     ApproverId: this.state.delegateToIdInSubSite,
                   }); */
@@ -1250,7 +1285,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     },
 
                   }
-                  const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+                  // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+                  const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem);
                   /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add
                     ({
                       Title: "Approve '" + this.state.documentName + "'",
@@ -1274,7 +1310,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     const taskitem = {
                       TaskID: task.data.ID,
                     }
-                    this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, taskitem);
+                    this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, taskitem);
+                    // this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, taskitem);
                     /* this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailsAdd.data.ID).update
                       ({
                         TaskID: task.data.ID,
@@ -1304,7 +1341,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               },
               OwnerId: this.state.ownerId,
             }
-            const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+            // const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+            const detail = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
             /* const detail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add
               ({
                 HeaderIDId: Number(this.newheaderid),
@@ -1330,7 +1368,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                 },
               }
-              await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
+              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
+              // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
               /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
                 Link: {
                   "__metadata": { type: "SP.FieldUrlValue" },
@@ -1341,14 +1380,16 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               const inditem = {
                 ApproverId: this.state.approver,
               }
-              await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inditem)
+              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inditem)
+              // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inditem)
               /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
                 ApproverId: this.state.approver,
               }); */
               const sourceitem = {
                 ApproverId: this.state.approver,
               }
-              await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
+              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
+              // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
               /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
                 ApproverId: this.state.approver,
 
@@ -1356,7 +1397,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               const headeritem = {
                 ApproverId: this.state.approver,
               }
-              await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem)
+              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem)
+              // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem)
               /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.newheaderid).update({
                 ApproverId: this.state.approver,
               }); */
@@ -1377,7 +1419,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                 },
               }
-              const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem)
+              // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem)
+              const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem)
               /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add
                 ({
                   Title: "Approve '" + this.state.documentName + "'",
@@ -1399,7 +1442,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 const detailitem = {
                   TaskID: task.data.ID,
                 }
-                await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
+                await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
+                // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
                 /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update
                   ({
                     TaskID: task.data.ID,
@@ -1429,7 +1473,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             },
             OwnerId: this.state.ownerId,
           }
-          const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detitem)
+          // const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detitem)
+          const detail = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detitem)
           /* const detail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add
             ({
               HeaderIDId: Number(this.newheaderid),
@@ -1455,7 +1500,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
               },
             }
-            await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detaildata)
+            await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detaildata)
+            // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detaildata)
             /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
               Link: {
                 "__metadata": { type: "SP.FieldUrlValue" },
@@ -1466,14 +1512,16 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             const inddata = {
               ApproverId: this.state.approver,
             }
-            await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inddata)
+            await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inddata)
+            // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inddata)
             /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
               ApproverId: this.state.approver,
             }); */
             const sourcedata = {
               ApproverId: this.state.approver,
             }
-            await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
+            await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
+            // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
             /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
               ApproverId: this.state.approver,
 
@@ -1481,7 +1529,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             const headdata = {
               ApproverId: this.state.approver,
             }
-            await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headdata)
+            await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headdata)
+            // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headdata)
             /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.newheaderid).update({
               ApproverId: this.state.approver,
             }); */
@@ -1502,7 +1551,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               },
 
             }
-            const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskdata)
+            // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskdata)
+            const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskdata)
             /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add
               ({
                 Title: "Approve '" + this.state.documentName + "'",
@@ -1525,7 +1575,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               const detaildata = {
                 TaskID: task.data.ID,
               }
-              await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detaildata)
+              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detaildata)
+              // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detaildata)
               /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update
                 ({
                   TaskID: task.data.ID,
@@ -1544,7 +1595,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         ReviewersId: { results: this.state.currentUserReviewer },
         WorkflowDueDate: this.state.dueDate
       }
-      await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inddata)
+      // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inddata)
+      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inddata)
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
         WorkflowStatus: "Under Approval",
         Workflow: "Approval",
@@ -1556,7 +1608,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         Workflow: "Approval",
         ReviewersId: { results: this.state.currentUserReviewer },
       }
-      await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
+      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
+      // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
       /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
         WorkflowStatus: "Under Approval",
         Workflow: "Approval",
@@ -1572,7 +1625,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         Workflow: "Approval",
         DueDate: this.state.dueDate,
       }
-      await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
+      await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
+      // await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
         Status: "Under Approval",
@@ -1683,7 +1737,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     let Body;
     let link;
 
-    const notificationPreference: any[] = await this._Service.getMailPreference(this.props.siteUrl, this.props.notificationPreference, emailuser);
+    const notificationPreference: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.notificationPreference, "Preference", "EmailUser/EMail eq '" + emailuser + "'");
+    // const notificationPreference: any[] = await this._Service.getMailPreference(this.props.siteUrl, this.props.notificationPreference, emailuser);
     //const notificationPreference: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPreference).items.filter("EmailUser/EMail eq '" + emailuser + "'").select("Preference").get();
 
     if (notificationPreference.length > 0) {
