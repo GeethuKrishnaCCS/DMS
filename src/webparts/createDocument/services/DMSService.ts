@@ -45,15 +45,15 @@ export class DMSService extends BaseService {
     public async itemUpdate(siteUrl: string, listname: string, id: number, metadata: any): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(id).update(metadata);
     }
-    public async itemFromTemplate(siteUrl: string, listname: string): Promise<any> {
+    /* public async itemFromTemplate(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/" + listname).items.select("LinkFilename,ID").getAll();
-    }
+    } */
     public async getBuffer(siteUrl: string): Promise<any> {
         return this._spfi.web.getFileByServerRelativePath(siteUrl).getBuffer()
     }
-    public async documnetPath(uniqueId: any): Promise<any> {
+    /* public async documnetPath(uniqueId: any): Promise<any> {
         return this._spfi.web.getFileById(uniqueId)
-    }
+    } */
     public itemFromLibrary(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/" + listname).items();
     }
@@ -79,7 +79,7 @@ export class DMSService extends BaseService {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.filter("EmailUser/EMail eq '" + emailUser + "'").select("Preference")();
     }
     //MS Graph service
-    public sendMail(emailPostBody: any): Promise<any> {
+   /*  public sendMail(emailPostBody: any): Promise<any> {
         return this.currentContext.msGraphClientFactory
             .getClient("3")
             .then((client: MSGraphClientV3): void => {
@@ -87,14 +87,14 @@ export class DMSService extends BaseService {
                     .api('/me/sendMail')
                     .post(emailPostBody);
             });
-    }
+    } */
 
-    public getItemFromSIbFunction(siteUrl: string, listname: string, id: number,): Promise<any> {
+    /* public getItemFromSIbFunction(siteUrl: string, listname: string, id: number,): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,ID,SFDepartment/Title,SFDepartment/ID,Reviewer/EMail,Reviewer/Title,Reviewer/ID,Approvers/Title,Approvers/ID").expand("SFDepartment,Approvers,Reviewer").filter("SFDepartment/ID eq '" + id + "'")();
-    }
-    public getItemOnSelectCategory(siteUrl: string, listname: string, id: number,): Promise<any> {
+    } */
+    /* public getItemOnSelectCategory(siteUrl: string, listname: string, id: number,): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,ID,SFDepartment/Title,SFDepartment/ID,Reviewer/EMail,Reviewer/Title,Reviewer/ID,Approvers/Title,Approvers/ID").expand("SFDepartment,Approvers,Reviewer").filter("ID eq '" + id + "'")();
-    }
+    } */
 
     public getselectLibraryItems(url: string, listname: string): Promise<any> {
         return this._spfi.web.getList(url + "/" + listname).items.select("LinkFilename,ID,Template,DocumentName")();
@@ -108,7 +108,7 @@ export class DMSService extends BaseService {
     public getPathOfSelectedTemplate(fileName: string, listname: string): Promise<any> {
         return this.spQdms.web.lists.getByTitle(listname).items.select("FileDirRef,FileLeafRef").filter(`FileLeafRef eq '${fileName}'`)()
     }
-    public async getQDMSBuffer(siteUrl: string): Promise<any> {
+    /* public async getQDMSBuffer(siteUrl: string): Promise<any> {
         return this.spQdms.web.getFileByServerRelativePath(siteUrl).getBuffer()
-    }
+    } */
 }

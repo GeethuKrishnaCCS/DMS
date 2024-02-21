@@ -220,20 +220,26 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     let AccessGroupForDelegate: any[] = [];
     let ok = "No";
     if (this.props.project) {
-      AccessGroupForCancel = await this._Service.getProject_CancelWF(this.props.siteUrl, this.props.permissionMatrixSettings);
+      AccessGroupForCancel = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_CancelWF'");
+      // AccessGroupForCancel = await this._Service.getProject_CancelWF(this.props.siteUrl, this.props.permissionMatrixSettings);
       //AccessGroupForCancel = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_CancelWF'").get();
-      AccessGroup = await this._Service.getProject_SendReminderWFTasks(this.props.siteUrl, this.props.permissionMatrixSettings)
+      AccessGroup = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_SendReminderWFTasks'")
+      // AccessGroup = await this._Service.getProject_SendReminderWFTasks(this.props.siteUrl, this.props.permissionMatrixSettings)
       //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendReminderWFTasks'").get();
-      AccessGroupForDelegate = await this._Service.getProject_DelegateWFTask(this.props.siteUrl, this.props.permissionMatrixSettings);
+      AccessGroupForDelegate = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_DelegateWFTask'");
+      // AccessGroupForDelegate = await this._Service.getProject_DelegateWFTask(this.props.siteUrl, this.props.permissionMatrixSettings);
       //AccessGroupForDelegate = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_DelegateWFTask'").get();
 
     }
     else {
-      AccessGroup = await this._Service.getQDMS_SendReminderWFTasks(this.props.siteUrl, this.props.permissionMatrixSettings)
+      AccessGroup = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'QDMS_SendReminderWFTasks'")
+      // AccessGroup = await this._Service.getQDMS_SendReminderWFTasks(this.props.siteUrl, this.props.permissionMatrixSettings)
       //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendReminderWFTasks'").get();
-      AccessGroupForCancel = await this._Service.getQDMS_CancelWF(this.props.siteUrl, this.props.permissionMatrixSettings);
+      AccessGroupForCancel = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'QDMS_CancelWF'");
+      // AccessGroupForCancel = await this._Service.getQDMS_CancelWF(this.props.siteUrl, this.props.permissionMatrixSettings);
       //AccessGroupForCancel = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_CancelWF'").get();
-      AccessGroupForDelegate = await this._Service.getQDMS_DelegateWFTask(this.props.siteUrl, this.props.permissionMatrixSettings)
+      AccessGroupForDelegate = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'QDMS_DelegateWFTask'")
+      // AccessGroupForDelegate = await this._Service.getQDMS_DelegateWFTask(this.props.siteUrl, this.props.permissionMatrixSettings)
       //AccessGroupForDelegate = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_DelegateWFTask'").get();
     }
     let AccessGroupItems: any[] = AccessGroup[0].AccessGroups.split(',');
@@ -278,7 +284,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
   }
   private async departmentOrBUIdGetting(AccessGroupItems) {
     console.log("AccessGroupItems", AccessGroupItems);
-    const DocumentIndexItem: any = await this._Service.getDocumentIndexItem(this.props.siteUrl, this.props.documentIndexListName, this.documentIndexID)
+    const DocumentIndexItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndexListName, this.documentIndexID, "DepartmentID,BusinessUnitID")
+    // const DocumentIndexItem: any = await this._Service.getDocumentIndexItem(this.props.siteUrl, this.props.documentIndexListName, this.documentIndexID)
     //const DocumentIndexItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexListName).items.getById(this.documentIndexID).select("DepartmentID,BusinessUnitID").get();
     console.log("DocumentIndexItem", DocumentIndexItem);
     // this._gettingGroupID(AccessGroupItems);
@@ -333,7 +340,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     for (let a = 0; a < AccessGroupItems.length; a++) {
       AG = AccessGroupItems[a];
       //alert(AG);
-      const accessGroupID: any = await this._Service.getAccessGroupID(this.props.siteUrl, this.props.accessGroupDetailsListName, AG)
+      const accessGroupID: any = await this._Service.getItemsFilter(this.props.siteUrl, this.props.accessGroupDetailsListName, "Title eq '" + AG + "'")
+      // const accessGroupID: any = await this._Service.getAccessGroupID(this.props.siteUrl, this.props.accessGroupDetailsListName, AG)
       //const accessGroupID: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroupDetailsListName).items.filter("Title eq '" + AG + "'").get();
       let AccessGroupID;
       if (accessGroupID.length > 0) {
@@ -426,7 +434,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     }
   }
   private _LAUrlGetting = async () => {
-    const laUrl = await this._Service.getQDMS_DocumentPermission_UnderApproval(this.props.siteUrl, this.props.requestLaURL)
+    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestLaURL, "Title eq 'QDMS_DocumentPermission_UnderApproval'")
+    // const laUrl = await this._Service.getQDMS_DocumentPermission_UnderApproval(this.props.siteUrl, this.props.requestLaURL)
     //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestLaURL).items.filter("Title eq 'QDMS_DocumentPermission_UnderApproval'").get();
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
@@ -446,7 +455,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         documentName: logItems[0].Title,
         dueDate: logItems[0].DueDate,
       });
-      const documentIndexItems = await this._Service.getIndexItemsWithOwnerApprover(this.props.siteUrl, this.props.documentIndexListName, this.documentIndexID);
+      const documentIndexItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.documentIndexListName,"Owner/Title,Owner/ID,Owner/EMail,DocumentName,SourceDocumentID,CriticalDocument,Revision,DocumentID,Approver/Title,Approver/ID", "Owner,Approver", "ID eq '" + this.documentIndexID + "'");
+      // const documentIndexItems = await this._Service.getIndexItemsWithOwnerApprover(this.props.siteUrl, this.props.documentIndexListName, this.documentIndexID);
       //const documentIndexItems = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexListName).items.select("Owner/Title,Owner/ID,Owner/EMail,DocumentName,SourceDocumentID,CriticalDocument,Revision,DocumentID,Approver/Title,Approver/ID").expand("Owner,Approver").filter("ID eq '" + this.documentIndexID + "'").get();
       console.log("Document Index items", documentIndexItems);
       this.sourceDocumentID = documentIndexItems[0].SourceDocumentID;
@@ -510,13 +520,15 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
 
   }
   private _LAUrlGettingForUnderReview = async () => {
-    const laUrl = await this._Service.getQDMS_DocumentPermission_UnderReview(this.props.siteUrl, this.props.requestLaURL)
+    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestLaURL, "Title eq 'QDMS_DocumentPermission_UnderReview'")
+    // const laUrl = await this._Service.getQDMS_DocumentPermission_UnderReview(this.props.siteUrl, this.props.requestLaURL)
     //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestLaURL).items.filter("Title eq 'QDMS_DocumentPermission_UnderReview'").get();
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrlForUnderReview = laUrl[0].PostUrl;
   }
   private _LAUrlGettingForDelegate = async () => {
-    const laUrl = await this._Service.getQDMS_DocumentPermission_Delegate(this.props.siteUrl, this.props.requestLaURL)
+    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestLaURL, "Title eq 'QDMS_DocumentPermission_Delegate'")
+    // const laUrl = await this._Service.getQDMS_DocumentPermission_Delegate(this.props.siteUrl, this.props.requestLaURL)
     //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestLaURL).items.filter("Title eq 'QDMS_DocumentPermission_Delegate'").get();
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrlForDelegate = laUrl[0].PostUrl;
@@ -624,11 +636,13 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     );
   }
   private voidIntitiatedModel = async (ID) => {
-    const workflowId = await this._Service.getDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
+    const workflowId = await this._Service.getSelectFilter(this.props.siteUrl, this.props.DocumentRevisionLog, "WorkflowID", "DocumentIndex eq '" + this.documentIndexID + "'and (ID eq '" + ID + "')")
+    // const workflowId = await this._Service.getDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
     //const workflowId = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.DocumentRevisionLog).items.select("WorkflowID").filter("DocumentIndex eq '" + this.documentIndexID + "'and (ID eq '" + ID + "')").get();
     // alert(workflowId[0].WorkflowID)  ;
 
-    this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
+    this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID, "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate", "Approver,Requester")
+      // this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(workflowId[0].WorkflowID).select("Requester/ID,Requester/Title,Approver/ID,Approver/Title,RequestedDate,DueDate").expand("Approver,Requester").get()
       .then(headerItemsFromList => {
         console.log("headerItemsFromList", headerItemsFromList);
@@ -643,7 +657,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       });
   }
   private documentCreated1 = async (ID) => {
-    const workflowId = await this._Service.getDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
+    const workflowId = await this._Service.getSelectFilter(this.props.siteUrl, this.props.DocumentRevisionLog, "WorkflowID", "DocumentIndex eq '" + this.documentIndexID + "'and (ID eq '" + ID + "')")
+    // const workflowId = await this._Service.getDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
     //const workflowId = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.DocumentRevisionLog).items.select("WorkflowID").filter("DocumentIndex eq '" + this.documentIndexID + "'and (ID eq '" + ID + "')").get();
     // alert(workflowId[0].WorkflowID)  ;
     var headerItems1 = "Reviewers/ID,Reviewers/Title";
@@ -654,7 +669,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
           lengthOfReviwers: ReviewerIDFromList.ReviewersId
         });
 
-        this._Service.getWorkflowHeaderItem(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
+        this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID, "Requester/ID,Requester/Title,Approver/ID,Approver/Title,Reviewers/ID,Reviewers/Title,RequestedDate,DueDate", "Approver,Requester,Reviewers")
+          // this._Service.getWorkflowHeaderItem(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
           //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(workflowId[0].WorkflowID).select("Requester/ID,Requester/Title,Approver/ID,Approver/Title,Reviewers/ID,Reviewers/Title,RequestedDate,DueDate").expand("Approver,Requester,Reviewers").get()
           .then(headerItemsFromList => {
             console.log("headerItemsFromList", headerItemsFromList);
@@ -672,13 +688,15 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       });
   }
   private reviewedDetailsItemsDCC = async (ID) => {
-    const workflowId = await this._Service.getFlowDataInDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
+    const workflowId = await this._Service.getSelectFilter(this.props.siteUrl, this.props.DocumentRevisionLog, "WorkflowID,ID,DueDate", "DocumentIndex eq '" + this.documentIndexID + "' and (ID eq '" + ID + "')")
+    // const workflowId = await this._Service.getFlowDataInDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
     //const workflowId = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.DocumentRevisionLog).items.select("WorkflowID,ID,DueDate").filter("DocumentIndex eq '" + this.documentIndexID + "' and (ID eq '" + ID + "')").get();
     // alert(workflowId[0].WorkflowID);    
     this.headerId = workflowId[0].WorkflowID;
     this.documentRevisionLogID = workflowId[0].ID;
     this.dueDateForModel = workflowId[0].DueDate;
-    const workflowDetailsItems = await this._Service.getDetailsWorkflow_DCCReview(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
+    const workflowDetailsItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.workflowDetailsListName, "Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Workflow", "Responsible,Editor", "HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'DCC Review') ")
+    // const workflowDetailsItems = await this._Service.getDetailsWorkflow_DCCReview(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
     //const workflowDetailsItems = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsListName).items.select("Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Workflow").expand("Responsible,Editor").filter("HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'DCC Review') ").get();
     console.log("Workflow detail items of header id", workflowDetailsItems);
     this.setState({
@@ -696,7 +714,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         });
       }
     }
-    this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
+    this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID, "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate", "Approver,Requester")
+      // this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(workflowId[0].WorkflowID).select("Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate").expand("Approver,Requester").get()
       .then(headerItemsFromList => {
         console.log("headerItemsFromList", headerItemsFromList);
@@ -712,13 +731,15 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       });
   }
   private reviewedDetailsItems = async (ID) => {
-    const workflowId = await this._Service.getFlowDataInDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
+    const workflowId = await this._Service.getSelectFilter(this.props.siteUrl, this.props.DocumentRevisionLog, "WorkflowID,ID,DueDate", "DocumentIndex eq '" + this.documentIndexID + "' and (ID eq '" + ID + "')")
+    // const workflowId = await this._Service.getFlowDataInDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
     //const workflowId = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.DocumentRevisionLog).items.select("WorkflowID,ID,DueDate").filter("DocumentIndex eq '" + this.documentIndexID + "' and (ID eq '" + ID + "')").get();
     // alert(workflowId[0].WorkflowID);    
     this.headerId = workflowId[0].WorkflowID;
     this.documentRevisionLogID = workflowId[0].ID;
     this.dueDateForModel = workflowId[0].DueDate;
-    const workflowDetailsItems = await this._Service.getDetailsWorkflow_Review(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
+    const workflowDetailsItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.workflowDetailsListName, "Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Workflow", "Responsible,Editor", "HeaderID eq '" +  workflowId[0].WorkflowID + "' and (Workflow eq 'Review') ")
+    // const workflowDetailsItems = await this._Service.getDetailsWorkflow_Review(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
     //const workflowDetailsItems = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsListName).items.select("Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title").expand("Responsible,Editor").filter("HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'Review') ").get();
     console.log("Workflow detail items of header id", workflowDetailsItems);
     this.setState({
@@ -737,7 +758,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       }
     }
     var headerItems = "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate";
-    this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
+    this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID, "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate", "Approver,Requester")
+      // this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(workflowId[0].WorkflowID).select(headerItems).expand("Approver,Requester").get()
       .then(headerItemsFromList => {
         console.log("headerItemsFromList", headerItemsFromList);
@@ -753,13 +775,15 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       });
   }
   private underApprovalVoid = async (ID) => {
-    const workflowId = await this._Service.getFlowDataInDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
+    const workflowId = await this._Service.getSelectFilter(this.props.siteUrl, this.props.DocumentRevisionLog, "WorkflowID,ID,DueDate", "DocumentIndex eq '" + this.documentIndexID + "' and (ID eq '" + ID + "')")
+    // const workflowId = await this._Service.getFlowDataInDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
     //const workflowId = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.DocumentRevisionLog).items.select("WorkflowID,ID,DueDate").filter("DocumentIndex eq '" + this.documentIndexID + "' and (ID eq '" + ID + "')").get();
     // alert(workflowId[0].WorkflowID);    
     this.headerId = workflowId[0].WorkflowID;
     this.dueDateForModel = workflowId[0].DueDate;
     this.documentRevisionLogID = workflowId[0].ID;
-    const workflowDetailsItems = await this._Service.getDetailsWorkflow_Void(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
+    const workflowDetailsItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.workflowDetailsListName, "Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Workflow", "Responsible,Editor", "HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'Void') ")
+    // const workflowDetailsItems = await this._Service.getDetailsWorkflow_Void(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
     //const workflowDetailsItems = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsListName).items.select("Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Workflow").expand("Responsible,Editor").filter("HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'Void') ").get();
     console.log("Workflow detail items of header id", workflowDetailsItems);
     this.setState({
@@ -777,7 +801,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         });
       }
     }
-    this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
+    this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID, "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate", "Approver,Requester")
+      // this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(workflowId[0].WorkflowID).select("Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate").expand("Approver,Requester").get()
       .then(headerItemsFromList => {
         console.log("headerItemsFromList", headerItemsFromList);
@@ -794,13 +819,15 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
 
   }
   private approvedDetailsItems = async (ID) => {
-    const workflowId = await this._Service.getFlowDataInDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
+    const workflowId = await this._Service.getSelectFilter(this.props.siteUrl, this.props.DocumentRevisionLog, "WorkflowID,ID,DueDate", "DocumentIndex eq '" + this.documentIndexID + "' and (ID eq '" + ID + "')")
+    // const workflowId = await this._Service.getFlowDataInDocumentRevisionLog(this.props.siteUrl, this.props.DocumentRevisionLog, this.documentIndexID, ID)
     //const workflowId = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.DocumentRevisionLog).items.select("WorkflowID,ID,DueDate").filter("DocumentIndex eq '" + this.documentIndexID + "' and (ID eq '" + ID + "')").get();
     // alert(workflowId[0].WorkflowID)  ;
     this.headerId = workflowId[0].WorkflowID;
     this.documentRevisionLogID = workflowId[0].ID;
     this.dueDateForModel = workflowId[0].DueDate;
-    const workflowDetailsItems = await this._Service.getWorkflowApproval(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
+    const workflowDetailsItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.workflowDetailsListName, "Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Link,Workflow", "Responsible,Editor", "HeaderID eq '" +  workflowId[0].WorkflowID + "' and (Workflow eq 'Approval') ")
+    // const workflowDetailsItems = await this._Service.getWorkflowApproval(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
     //const workflowDetailsItems = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsListName).items.select("Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Link,Workflow").expand("Responsible,Editor").filter("HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'Approval') ").get();
     console.log("Workflow detail items of header id", workflowDetailsItems);
     this.setState({
@@ -817,7 +844,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         });
       }
     }
-    this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
+    this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID, "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate", "Approver,Requester")
+      // this._Service.getWorkflowHeaderWithApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, workflowId[0].WorkflowID)
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(workflowId[0].WorkflowID).select("Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,RequestedDate,DueDate").expand("Approver,Requester").get()
       .then(headerItemsFromList => {
         console.log("headerItemsFromList", headerItemsFromList);
@@ -1234,7 +1262,13 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
             /* let list = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName);
             await list.items.getById(item.TaskID).delete(); */
           }
-          const reviewersResponseStatus = await this._Service.getReviewersResponseStatus(this.props.siteUrl, this.props.workflowDetailsListName, this.headerId);
+          const reviewersResponseStatus = await this._Service.getSelectFilter(
+            this.props.siteUrl,
+            this.props.workflowDetailsListName,
+            "ResponseStatus",
+            "HeaderID eq " + this.headerId + " and (Workflow eq 'Review')"
+          );
+          //const reviewersResponseStatus = await this._Service.getReviewersResponseStatus(this.props.siteUrl, this.props.workflowDetailsListName, this.headerId);
           //const reviewersResponseStatus = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsListName).items.select("ResponseStatus").filter("HeaderID eq " + this.headerId + " and (Workflow eq 'Review')").get();
           console.log(reviewersResponseStatus.length);
           for (var k in reviewersResponseStatus) {
@@ -1316,7 +1350,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                   hubSiteUserId: user.Id,
                 });
                 //Task delegation 
-                const taskDelegation: any[] = await this._Service.getTaskDelegationData(this.props.siteUrl, this.props.taskDelegationListName, user.Id)
+                const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationListName, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" +  user.Id + "'")
+                // const taskDelegation: any[] = await this._Service.getTaskDelegationData(this.props.siteUrl, this.props.taskDelegationListName, user.Id)
                 //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "'").get();
                 console.log(taskDelegation);
                 if (taskDelegation.length > 0) {
@@ -1725,7 +1760,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                   hubSiteUserId: user.Id,
                 });
                 //Task delegation 
-                const taskDelegation: any[] = await this._Service.getTaskDelegationData(this.props.siteUrl, this.props.taskDelegationListName, user.Id)
+                const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationListName, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" +  user.Id + "'")
+                // const taskDelegation: any[] = await this._Service.getTaskDelegationData(this.props.siteUrl, this.props.taskDelegationListName, user.Id)
                 //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "'").get();
                 console.log(taskDelegation);
                 if (taskDelegation.length > 0) {
@@ -1959,7 +1995,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     let link;
 
     //console.log(queryVar);
-    const notificationPreference: any[] = await this._Service.getNotificationPref(this.props.siteUrl, this.props.notificationPrefListName, email)
+    const notificationPreference: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.notificationPrefListName, "Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail", "EmailUser", "EmailUser/EMail eq '" + email + "'")
+    // const notificationPreference: any[] = await this._Service.getNotificationPref(this.props.siteUrl, this.props.notificationPrefListName, email)
     //const notificationPreference: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPrefListName).items.select("Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail").expand("EmailUser").filter("EmailUser/EMail eq '" + email + "'").get();
     // console.log(notificationPreference);
     if (notificationPreference.length > 0) {
@@ -1980,7 +2017,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       this.status = "Yes";
     }
     //Email Notification Settings.
-    const emailNoficationSettings: any[] = await this._Service.getEmailNoficationSettings(this.props.siteUrl, this.props.emailNoficationSettings, type)
+    const emailNoficationSettings: any[] = await this._Service.getItemsFilter(this.props.siteUrl, this.props.emailNoficationSettings, "Title eq '" + type + "'")
+    // const emailNoficationSettings: any[] = await this._Service.getEmailNoficationSettings(this.props.siteUrl, this.props.emailNoficationSettings, type)
     //const emailNoficationSettings: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.emailNoficationSettings).items.filter("Title eq '" + type + "'").get();
     //console.log(emailNoficationSettings);
     Subject = emailNoficationSettings[0].Subject;
@@ -2054,7 +2092,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     let Body;
     let link;
     // //Email Notification Settings.
-    const emailNoficationSettings: any[] = await this._Service.getRevisionHistory(this.props.siteUrl, this.props.emailNoficationSettings)
+    const emailNoficationSettings: any[] = await this._Service.getItemsFilter(this.props.siteUrl, this.props.emailNoficationSettings, "PageName eq 'RevisionHistory'")
+    // const emailNoficationSettings: any[] = await this._Service.getRevisionHistory(this.props.siteUrl, this.props.emailNoficationSettings)
     //const emailNoficationSettings: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.emailNoficationSettings).items.filter("PageName eq 'RevisionHistory'").get();
     console.log("Notifications", emailNoficationSettings);
     Subject = emailNoficationSettings[0].Subject;
@@ -2235,7 +2274,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     link = `<a href=${Link}>Link</a>`;
     console.log(link);
     //console.log(queryVar);
-    const notificationPreference: any[] = await this._Service.getNotificationPref(this.props.siteUrl, this.props.notificationPrefListName, email)
+    const notificationPreference: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.notificationPrefListName, "Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail", "EmailUser", "EmailUser/EMail eq '" + email + "'")
+    // const notificationPreference: any[] = await this._Service.getNotificationPref(this.props.siteUrl, this.props.notificationPrefListName, email)
     //const notificationPreference: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPrefListName).items.select("Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail").expand("EmailUser").filter("EmailUser/EMail eq '" + email + "'").get();
     // console.log(notificationPreference);
     if (notificationPreference.length > 0) {
@@ -2259,7 +2299,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     if (type == "DCCReview") {
       type = "DocReview";
     }
-    const emailNoficationSettings: any[] = await this._Service.getEmailNoficationSettings(this.props.siteUrl, this.props.emailNoficationSettings, type)
+    const emailNoficationSettings: any[] = await this._Service.getItemsFilter(this.props.siteUrl, this.props.emailNoficationSettings, "Title eq '" + type + "'")
+    // const emailNoficationSettings: any[] = await this._Service.getEmailNoficationSettings(this.props.siteUrl, this.props.emailNoficationSettings, type)
     //const emailNoficationSettings: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.emailNoficationSettings).items.filter("Title eq '" + type + "'").get();
     //console.log(emailNoficationSettings);
     Subject = emailNoficationSettings[0].Subject;
@@ -2317,7 +2358,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     let link;
     console.log(link);
     //console.log(queryVar);
-    const notificationPreference: any[] = await this._Service.getNotificationPref(this.props.siteUrl, this.props.notificationPrefListName, email)
+    const notificationPreference: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.notificationPrefListName, "Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail", "EmailUser", "EmailUser/EMail eq '" + email + "'")
+    // const notificationPreference: any[] = await this._Service.getNotificationPref(this.props.siteUrl, this.props.notificationPrefListName, email)
     //const notificationPreference: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPrefListName).items.select("Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail").expand("EmailUser").filter("EmailUser/EMail eq '" + email + "'").get();
     // console.log(notificationPreference);
     if (notificationPreference.length > 0) {
@@ -2338,7 +2380,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       this.status = "Yes";
     }
     //Email Notification Settings.
-    const emailNoficationSettings: any[] = await this._Service.getEmailNoficationSettings(this.props.siteUrl, this.props.emailNoficationSettings, type)
+    const emailNoficationSettings: any[] = await this._Service.getItemsFilter(this.props.siteUrl, this.props.emailNoficationSettings, "Title eq '" + type + "'")
+    // const emailNoficationSettings: any[] = await this._Service.getEmailNoficationSettings(this.props.siteUrl, this.props.emailNoficationSettings, type)
     //const emailNoficationSettings: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.emailNoficationSettings).items.filter("Title eq '" + type + "'").get();
     //console.log(emailNoficationSettings);
     Subject = emailNoficationSettings[0].Subject;
