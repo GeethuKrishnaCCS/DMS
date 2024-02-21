@@ -160,7 +160,7 @@ export class DMSService extends BaseService {
     } */
 
 
-    
+
 
 
     /* public updateItemById(siteUrl: string, listname: string, itemid: number, dataitem: any): Promise<any> {
@@ -175,22 +175,22 @@ export class DMSService extends BaseService {
     } */
 
 
-    public getSourceDocumentItem(siteUrl: string, listname: string, documentIndexID: number): Promise<any> {
+    /* public getSourceDocumentItem(siteUrl: string, listname: string, documentIndexID: number): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/" + listname).items
             .filter('DocumentIndexId eq ' + documentIndexID)();
-    }
-    public getUnderReview(siteUrl: string, listname: string): Promise<any> {
+    } */
+    /* public getUnderReview(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .filter("Title eq 'QDMS_DocumentPermission_UnderReview'")();
-    }
-    public getUnderApproval(siteUrl: string, requestList: string): Promise<any> {
+    } */
+    /* public getUnderApproval(siteUrl: string, requestList: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + requestList).items
             .filter("Title eq 'QDMS_DocumentPermission_UnderApproval'")();
-    }
-    public getEmailNotification(siteUrl: string, listname: string, type: string): Promise<any> {
+    } */
+    /* public getEmailNotification(siteUrl: string, listname: string, type: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .filter("Title eq '" + type + "'")();
-    }
+    } */
 
 
 
