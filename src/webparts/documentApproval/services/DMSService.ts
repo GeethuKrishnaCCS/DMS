@@ -20,51 +20,51 @@ export class DMSService extends BaseService {
     public getCurrentUser(): Promise<any> {
         return this._spfi.web.currentUser();
     }
-    public getUserIdByEmail(email: string): Promise<any> {
+    /* public getUserIdByEmail(email: string): Promise<any> {
         return this._spfi.web.siteUsers.getByEmail(email)();
-    }
-    public getUserById(reviewID: number): Promise<any> {
+    } */
+    /* public getUserById(reviewID: number): Promise<any> {
         return this._spfi.web.siteUsers.getById(reviewID)()
-    }
+    } */
     public getItemById(siteUrl: string, listname: string, itemid: any): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid)();
     }
     public getItemByIdSelect(siteUrl: string, listname: string, itemid: any, select: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid).select(select)();
     }
-    public createNewItem(siteUrl: string, listname: string, metadata: any): Promise<any> {
+    /* public createNewItem(siteUrl: string, listname: string, metadata: any): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.add(metadata);
-    }
+    } */
     public updateItemById(siteUrl: string, listname: string, itemid: number, dataitem: any): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid).update(dataitem);
     }
-    public getItemTitleFilter(siteUrl: string, listname: string, title: string): Promise<any> {
+    /* public getItemTitleFilter(siteUrl: string, listname: string, title: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .filter("Title eq '" + title + "'")();
-    }
+    } */
     public deleteItemById(siteUrl: string, listname: string, itemid: number): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid).delete();
     }
-    public validateUpdateListItem(siteUrl: string, listname: string, itemid: number, arrayData: any[]): Promise<any> {
+    /* public validateUpdateListItem(siteUrl: string, listname: string, itemid: number, arrayData: any[]): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/" + listname).items.getById(itemid).validateUpdateListItem(arrayData);
-    }
-    public getItemsFromUserMsgSettings(siteUrl: string, listname: string): Promise<any> {
+    } */
+    /* public getItemsFromUserMsgSettings(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,Message").filter("PageName eq 'DocumentIndex'")();
-    }
-    public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
+    } */
+   /*  public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver")();
-    }
-    public async uploadDocument(filename: string, filedata: any, libraryname: string): Promise<any> {
+    } */
+    /* public async uploadDocument(filename: string, filedata: any, libraryname: string): Promise<any> {
         const file = await this._spfi.web.getFolderByServerRelativePath(libraryname)
             .files.addUsingPath(filename, filedata, { Overwrite: true });
         return file;
-    }
-    public getDocumentIndexID(siteUrl: string, listname: string, headerId: number): Promise<any> {
+    } */
+    /* public getDocumentIndexID(siteUrl: string, listname: string, headerId: number): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(headerId).select("DocumentIndexID")();
-    }
-    public getUserMessageForReview(siteUrl: string, listname: string): Promise<any> {
+    } */
+    /* public getUserMessageForReview(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,Message").filter("PageName eq 'Review'")();
-    }
+    } */
     public getApproverData(siteUrl: string, listname: string, headerid: number): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(headerid).select("Approver/ID,Approver/EMail,DocumentIndexID").expand("Approver")()
     }
