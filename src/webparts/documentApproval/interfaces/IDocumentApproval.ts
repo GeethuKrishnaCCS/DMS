@@ -2,7 +2,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 export interface IDocumentApprovalProps {
   description: string;
-  project: string;
+  // project: string;
   context: WebPartContext;
   siteUrl: string;
   hubUrl: string;
@@ -31,7 +31,7 @@ export interface IDocumentApprovalProps {
 
 export interface IDocumentApprovalWebPartProps {
   description: string;
-  project: string;
+  // project: string;
   context: WebPartContext;
   siteUrl: string;
   hubUrl: string;

@@ -106,7 +106,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this._userMessageSettings = this._userMessageSettings.bind(this);
     this._queryParamGetting = this._queryParamGetting.bind(this);
     this._documentIndexListBind = this._documentIndexListBind.bind(this);
-    this._docDCCReviewSubmit = this._docDCCReviewSubmit.bind(this);
+    //this._docDCCReviewSubmit = this._docDCCReviewSubmit.bind(this);
     this._revisionLogChecking = this._revisionLogChecking.bind(this);
     this._accessGroups = this._accessGroups.bind(this);
     this._projectInformation = this._projectInformation.bind(this);
@@ -215,39 +215,41 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this.workFlow = params.get('wf');
     //console.log(id);
     //console.log(this.detailID);
-    if (this.props.project) {
-      if (id != "" && id != null && detailid != "" && detailid != null && this.workFlow == "dcc" && this.workFlow !== null) {
-        this.headerId = parseInt(id);
-        this.valid = "ok";
-        this.detailID = parseInt(detailid);
-        this.setState({
-          divForDCC: "",
-          divForReview: "none",
-          ifDccComment: "none",
-        });
-      }
-      else if (id != "" && id != null && detailid != "" && detailid != null) {
-        this.headerId = parseInt(id);
-        this.valid = "ok";
-        this.detailID = parseInt(detailid);
-        this.setState({
-          divForDCC: "none",
-          ifDccComment: "none",
-          divForReview: "",
-        });
-      }
-      else if (id == "" || id == null || detailid == "" || detailid == null || this.workFlow !== "dcc" || this.workFlow == null) {
-        this.setState({ accessDeniedMsgBar: "", loaderDisplay: "none", invalidMessage: this.state.invalidQueryParam });
-        setTimeout(() => {
-          this.setState({ accessDeniedMsgBar: 'none', });
-          window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+    // if (this.props.project) {
+    //   if (id != "" && id != null && detailid != "" && detailid != null && this.workFlow == "dcc" && this.workFlow !== null) {
+    //     this.headerId = parseInt(id);
+    //     this.valid = "ok";
+    //     this.detailID = parseInt(detailid);
+    //     this.setState({
+    //       divForDCC: "",
+    //       divForReview: "none",
+    //       ifDccComment: "none",
+    //     });
+    //   }
+    //   else if (id != "" && id != null && detailid != "" && detailid != null) {
+    //     this.headerId = parseInt(id);
+    //     this.valid = "ok";
+    //     this.detailID = parseInt(detailid);
+    //     this.setState({
+    //       divForDCC: "none",
+    //       ifDccComment: "none",
+    //       divForReview: "",
+    //     });
+    //   }
+    //   else if (id == "" || id == null || detailid == "" || detailid == null || this.workFlow !== "dcc" || this.workFlow == null) {
+    //     this.setState({ accessDeniedMsgBar: "", loaderDisplay: "none", invalidMessage: this.state.invalidQueryParam });
+    //     setTimeout(() => {
+    //       this.setState({ accessDeniedMsgBar: 'none', });
+    //       window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
 
-        }, 10000);
-      }
+    //     }, 10000);
+    //   }
 
 
-    }
-    else {
+    // }
+    //else 
+    {
+
       if (id != "" && id != null && detailid != "" && detailid != null && this.workFlow !== "dcc") {
         this.headerId = parseInt(id);
         this.valid = "ok";
@@ -271,19 +273,21 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   private async _accessGroups() {
     let AccessGroup: any[] = [];
     let ok = "No";
-    if (this.props.project) {
-      //  AccessGroup = await this.reqWeb.getList("/sites/" + this.props.hubsite + "/Lists/" + this.props.accessGroups).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendReviewWF'").get();
-      // this._LAUrlGettingForPermission();
-      this.setState({
-        // access: "",
-        accessDeniedMsgBar: "none",
-        loaderDisplay: "none",
-      });
-      // this._queryParamGetting();
-      this._checkingReviewStatus();
-      this._onPageLoadDataBind();
-    }
-    else {
+    // if (this.props.project) 
+    // {
+    //   //  AccessGroup = await this.reqWeb.getList("/sites/" + this.props.hubsite + "/Lists/" + this.props.accessGroups).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendReviewWF'").get();
+    //   // this._LAUrlGettingForPermission();
+    //   this.setState({
+    //     // access: "",
+    //     accessDeniedMsgBar: "none",
+    //     loaderDisplay: "none",
+    //   });
+    //   // this._queryParamGetting();
+    //   this._checkingReviewStatus();
+    //   this._onPageLoadDataBind();
+    // }
+    // else 
+    {
       AccessGroup = await this._Service.getItemSelectFilter(this.props.siteUrl, this.props.accessGroups, "AccessGroups,AccessFields", "Title eq 'QDMS_SendReviewWF'")
       //AccessGroup = await this._Service.getQDMS_SendReviewWF(this.props.siteUrl, this.props.accessGroups)
       //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroups).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendReviewWF'").get();
@@ -470,70 +474,71 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   }
   //Headerlist items
   private _onPageLoadDataBind = () => {
-    if (this.props.project) {
-      //header list for project
-      //var headerItems = "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,Owner/Title,Owner/ID,Owner/EMail,Revision,WorkflowStatus,Title,DocumentIndexID,RequesterComment,RequestedDate,DueDate,PreviousReviewHeader,DocumentID,SourceDocumentID,DocumentController/Title,DocumentController/EMail,DocumentController/Id,DCCCompletionDate,Workflow";
+    // if (this.props.project) {
+    //   //header list for project
+    //   //var headerItems = "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,Owner/Title,Owner/ID,Owner/EMail,Revision,WorkflowStatus,Title,DocumentIndexID,RequesterComment,RequestedDate,DueDate,PreviousReviewHeader,DocumentID,SourceDocumentID,DocumentController/Title,DocumentController/EMail,DocumentController/Id,DCCCompletionDate,Workflow";
 
-      //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId)
-      //.select(headerItems).expand("Owner,Approver,Requester,DocumentController").get()
-      this._Service.getItemSelectExpand(
-        this.props.siteUrl,
-        this.props.workflowHeaderListName,
-        "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,Owner/Title,Owner/ID,Owner/EMail,Revision,WorkflowStatus,Title,DocumentIndexID,RequesterComment,RequestedDate,DueDate,PreviousReviewHeader,DocumentID,SourceDocumentID,DocumentController/Title,DocumentController/EMail,DocumentController/Id,DCCCompletionDate,Workflow",
-        "Owner,Approver,Requester,DocumentController"
-      )
-        //this._Service.getHeaderItemsDocumentController(this.props.siteUrl, this.props.workflowHeaderListName)
-        .then(dataitems => {
-          //console.log(workFlowHeaderItems);
-          let workFlowHeaderItems: any = dataitems;
-          let previousheadervalue = workFlowHeaderItems.PreviousReviewHeader;
-          console.log(workFlowHeaderItems.PreviousReviewHeader);
-          this.documentIndexId = workFlowHeaderItems.DocumentIndexID;
-          this.sourceDocumentID = workFlowHeaderItems.SourceDocumentID;
-          this.dueDateWithoutConversion = workFlowHeaderItems.DueDate;
-          this.setState({
-            requestorComment: workFlowHeaderItems.RequesterComment,
-            requestorDate: moment(workFlowHeaderItems.RequestedDate).format('DD/MM/YYYY'),
-            dueDate: moment(workFlowHeaderItems.DueDate).format('DD/MM/YYYY'),
-            DueDate: workFlowHeaderItems.DueDate,
-            workflowStatus: workFlowHeaderItems.WorkflowStatus,
-            owner: workFlowHeaderItems.Owner.Title,
-            ownerEmail: workFlowHeaderItems.Owner.EMail,
-            ownerID: workFlowHeaderItems.Owner.ID,
-            revision: workFlowHeaderItems.Revision,
-            requestor: workFlowHeaderItems.Requester.Title,
-            requestorEmail: workFlowHeaderItems.Requester.EMail,
-            approverEmail: workFlowHeaderItems.Approver.EMail,
-            approverName: workFlowHeaderItems.Approver.Title,
-            approverId: workFlowHeaderItems.Approver.ID,
-            documentID: workFlowHeaderItems.DocumentID,
-            headerListItem: workFlowHeaderItems,
-            hideproject: false,
-            documentControllerEmail: workFlowHeaderItems.DocumentController.EMail,
-            documentControllerName: workFlowHeaderItems.DocumentController.Title,
-          });
-          //if ((workFlowHeaderItems.PreviousReviewHeader != "0" || workFlowHeaderItems.PreviousReviewHeader != previousheadervalue)) {
-          if ((workFlowHeaderItems.PreviousReviewHeader != "0" && workFlowHeaderItems.Workflow == "Review")) {
-            this.setState({ hideReviewersTable: "", });
-            this._loadPreviousReturnWithComments(workFlowHeaderItems.PreviousReviewHeader);
-          }
-          this._documentIndexListBind(this.documentIndexId);
-          if (workFlowHeaderItems.DocumentController == null) { this.setState({ ifDccComment: "none", }); }
-          else {
-            this._loadPreviousReturnWithComments(workFlowHeaderItems.PreviousReviewHeader);
-            this._documentIndexListBind(this.documentIndexId);
-            this.setState({
-              ifDccComment: " ",
-              dcc: workFlowHeaderItems.DocumentController.Title,
-              dccCompletionDate: workFlowHeaderItems.DCCCompletionDate,
-            });
-          }
-        });
-      this._userMessageSettings();
-      this._projectInformation();
-      this._revisionLogChecking();
-    }
-    else {
+    //   //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId)
+    //   //.select(headerItems).expand("Owner,Approver,Requester,DocumentController").get()
+    //   this._Service.getItemSelectExpand(
+    //     this.props.siteUrl,
+    //     this.props.workflowHeaderListName,
+    //     "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,Owner/Title,Owner/ID,Owner/EMail,Revision,WorkflowStatus,Title,DocumentIndexID,RequesterComment,RequestedDate,DueDate,PreviousReviewHeader,DocumentID,SourceDocumentID,DocumentController/Title,DocumentController/EMail,DocumentController/Id,DCCCompletionDate,Workflow",
+    //     "Owner,Approver,Requester,DocumentController"
+    //   )
+    //     //this._Service.getHeaderItemsDocumentController(this.props.siteUrl, this.props.workflowHeaderListName)
+    //     .then(dataitems => {
+    //       //console.log(workFlowHeaderItems);
+    //       let workFlowHeaderItems: any = dataitems;
+    //       let previousheadervalue = workFlowHeaderItems.PreviousReviewHeader;
+    //       console.log(workFlowHeaderItems.PreviousReviewHeader);
+    //       this.documentIndexId = workFlowHeaderItems.DocumentIndexID;
+    //       this.sourceDocumentID = workFlowHeaderItems.SourceDocumentID;
+    //       this.dueDateWithoutConversion = workFlowHeaderItems.DueDate;
+    //       this.setState({
+    //         requestorComment: workFlowHeaderItems.RequesterComment,
+    //         requestorDate: moment(workFlowHeaderItems.RequestedDate).format('DD/MM/YYYY'),
+    //         dueDate: moment(workFlowHeaderItems.DueDate).format('DD/MM/YYYY'),
+    //         DueDate: workFlowHeaderItems.DueDate,
+    //         workflowStatus: workFlowHeaderItems.WorkflowStatus,
+    //         owner: workFlowHeaderItems.Owner.Title,
+    //         ownerEmail: workFlowHeaderItems.Owner.EMail,
+    //         ownerID: workFlowHeaderItems.Owner.ID,
+    //         revision: workFlowHeaderItems.Revision,
+    //         requestor: workFlowHeaderItems.Requester.Title,
+    //         requestorEmail: workFlowHeaderItems.Requester.EMail,
+    //         approverEmail: workFlowHeaderItems.Approver.EMail,
+    //         approverName: workFlowHeaderItems.Approver.Title,
+    //         approverId: workFlowHeaderItems.Approver.ID,
+    //         documentID: workFlowHeaderItems.DocumentID,
+    //         headerListItem: workFlowHeaderItems,
+    //         hideproject: false,
+    //         documentControllerEmail: workFlowHeaderItems.DocumentController.EMail,
+    //         documentControllerName: workFlowHeaderItems.DocumentController.Title,
+    //       });
+    //       //if ((workFlowHeaderItems.PreviousReviewHeader != "0" || workFlowHeaderItems.PreviousReviewHeader != previousheadervalue)) {
+    //       if ((workFlowHeaderItems.PreviousReviewHeader != "0" && workFlowHeaderItems.Workflow == "Review")) {
+    //         this.setState({ hideReviewersTable: "", });
+    //         this._loadPreviousReturnWithComments(workFlowHeaderItems.PreviousReviewHeader);
+    //       }
+    //       this._documentIndexListBind(this.documentIndexId);
+    //       if (workFlowHeaderItems.DocumentController == null) { this.setState({ ifDccComment: "none", }); }
+    //       else {
+    //         this._loadPreviousReturnWithComments(workFlowHeaderItems.PreviousReviewHeader);
+    //         this._documentIndexListBind(this.documentIndexId);
+    //         this.setState({
+    //           ifDccComment: " ",
+    //           dcc: workFlowHeaderItems.DocumentController.Title,
+    //           dccCompletionDate: workFlowHeaderItems.DCCCompletionDate,
+    //         });
+    //       }
+    //     });
+    //   this._userMessageSettings();
+    //   this._projectInformation();
+    //   this._revisionLogChecking();
+    // }
+    // else
+    {
       //header list for qdms 
       //var headerItems = "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,Owner/Title,Owner/ID,Owner/EMail,Revision,WorkflowStatus,Title,DocumentIndexID,RequesterComment,RequestedDate,DueDate,PreviousReviewHeader,DocumentID,SourceDocumentID,Workflow";
       this._Service.getByIdSelectExpand(
@@ -734,25 +739,26 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     var today = new Date();
     let date = today.toLocaleString();
     //Updationg DocumentRevisionlog
-    if (this.props.project && this.workFlow == "dcc") {
-      this._Service.getItemFilter(
-        this.props.siteUrl,
-        this.props.documentRevisionLog,
-        "WorkflowID eq '" + this.headerId + "' and (DocumentIndexId eq '" + this.documentIndexId + "') and (Workflow eq 'DCC Review') and (Status eq 'Under Review')"
-      )
-        //this._Service.getDCCReviewUnderReview(this.props.siteUrl, this.props.documentRevisionLog, this.headerId, this.documentIndexId)
-        //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.filter("WorkflowID eq '" + this.headerId + "' and (DocumentIndexId eq '" + this.documentIndexId + "') and (Workflow eq 'DCC Review') and (Status eq 'Under Review')").get()
-        .then(ifyes => {
-          if (ifyes.length > 0) {
-            this.revisionLogID = ifyes[0].ID;
-            console.log(ifyes[0].ID);
-            this.setState({
-              revisionLogID: ifyes[0].ID,
-            });
-          }
-        });
-    }
-    else {
+    // if (this.props.project && this.workFlow == "dcc") {
+    //   this._Service.getItemFilter(
+    //     this.props.siteUrl,
+    //     this.props.documentRevisionLog,
+    //     "WorkflowID eq '" + this.headerId + "' and (DocumentIndexId eq '" + this.documentIndexId + "') and (Workflow eq 'DCC Review') and (Status eq 'Under Review')"
+    //   )
+    //     //this._Service.getDCCReviewUnderReview(this.props.siteUrl, this.props.documentRevisionLog, this.headerId, this.documentIndexId)
+    //     //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.filter("WorkflowID eq '" + this.headerId + "' and (DocumentIndexId eq '" + this.documentIndexId + "') and (Workflow eq 'DCC Review') and (Status eq 'Under Review')").get()
+    //     .then(ifyes => {
+    //       if (ifyes.length > 0) {
+    //         this.revisionLogID = ifyes[0].ID;
+    //         console.log(ifyes[0].ID);
+    //         this.setState({
+    //           revisionLogID: ifyes[0].ID,
+    //         });
+    //       }
+    //     });
+    // }
+    // else 
+    {
       this._Service.getItemFilter(
         this.props.siteUrl,
         this.props.documentRevisionLog,
@@ -829,25 +835,25 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       });
       console.log("dccReviewItems", this.state.dccReviewItems);
     }
-    if (this.props.project && this.workFlow == "dcc") {
-      const dccComments: any[] = await this._Service.getItemSelectExpandFilter(
-        this.props.siteUrl,
-        this.props.workFlowDetail,
-        "Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate,ResponsibleComment,ResponseDate",
-        "Responsible",
-        "HeaderID eq '" + previousReviewHeader + "' and (Workflow eq 'DCC Review')  "
-      )
-      //const dccComments: any[] = await this._Service.getWorkflowDCCReview(this.props.siteUrl, this.props.workFlowDetail, previousReviewHeader)
-      //const dccComments: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate,ResponsibleComment,ResponseDate").expand("Responsible").filter("HeaderID eq '" + previousReviewHeader + "' and (Workflow eq 'DCC Review')  ").get();
-      if (dccComments.length > 0) {
-        this.setState({
-          dccReviewItems: dccComments,
-          dccComment: dccComments[0].ResponsibleComment,
-          dccCompletionDate: dccComments[0].ResponsibleComment
-        });
-        console.log("dccReviewItems", this.state.dccReviewItems);
-      }
-    }
+    // if (this.props.project && this.workFlow == "dcc") {
+    //   const dccComments: any[] = await this._Service.getItemSelectExpandFilter(
+    //     this.props.siteUrl,
+    //     this.props.workFlowDetail,
+    //     "Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate,ResponsibleComment,ResponseDate",
+    //     "Responsible",
+    //     "HeaderID eq '" + previousReviewHeader + "' and (Workflow eq 'DCC Review')  "
+    //   )
+    //   //const dccComments: any[] = await this._Service.getWorkflowDCCReview(this.props.siteUrl, this.props.workFlowDetail, previousReviewHeader)
+    //   //const dccComments: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate,ResponsibleComment,ResponseDate").expand("Responsible").filter("HeaderID eq '" + previousReviewHeader + "' and (Workflow eq 'DCC Review')  ").get();
+    //   if (dccComments.length > 0) {
+    //     this.setState({
+    //       dccReviewItems: dccComments,
+    //       dccComment: dccComments[0].ResponsibleComment,
+    //       dccCompletionDate: dccComments[0].ResponsibleComment
+    //     });
+    //     console.log("dccReviewItems", this.state.dccReviewItems);
+    //   }
+    // }
   }
   //Save as draft
   private _docReviewSaveAsDraft = () => {
@@ -1125,7 +1131,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                           Workflow: "Approval",
                                           Priority: (this.state.criticalDocument == true ? "Critical" : ""),
                                           DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
-                                          Source: (this.props.project ? "Project" : "QDMS"),
+                                          Source: "QDMS",
                                           DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
                                           Link: {
                                             "__metadata": { type: "SP.FieldUrlValue" },
@@ -1167,7 +1173,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                               .then(async aftermail => {
                                                 this.triggerDocumentReview(this.sourceDocumentID, "Under Approval");
                                                 //this._adaptiveCard("Approval");
-                                                if (!this.props.project) {
+                                                // if (!this.props.project)
+                                                {
                                                   await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
                                                 }
                                                 this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
@@ -1257,7 +1264,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                   AssignedToId: user.Id,
                                   Workflow: "Approval",
                                   Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                  Source: (this.props.project ? "Project" : "QDMS"),
+                                  Source: "QDMS",
                                   Link: {
                                     "__metadata": { type: "SP.FieldUrlValue" },
                                     Description: this.state.documentName + "-- Approve",
@@ -1317,9 +1324,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                       });//aftermai
                                     //notification preference checking  
                                     this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
-                                    if (!this.props.project) {
-                                      await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
-                                    }
+                                    //if (!this.props.project) {
+                                    await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
+                                    //}
                                   });//taskID
                               });//r
                           }//else no delegation
@@ -1385,7 +1392,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                 AssignedToId: user.Id,
                                 Workflow: "Approval",
                                 Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                Source: (this.props.project ? "Project" : "QDMS"),
+                                Source: "QDMS",
                                 Link: {
                                   "__metadata": { type: "SP.FieldUrlValue" },
                                   Description: this.state.documentName + "-- Approve",
@@ -1447,9 +1454,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                     });//aftermai
                                   //notification preference checking  
                                   this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
-                                  if (!this.props.project) {
-                                    await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
-                                  }
+                                  // if (!this.props.project) {
+                                  await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
+                                  // }
 
                                 });//taskID
                             });//r
@@ -1500,7 +1507,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                         this.triggerDocumentReview(this.sourceDocumentID, "Returned with comments");
                         this._returnWithComments();
                         //mail to document controller if any one reviewer return with comments.
-                        if (this.props.project) { this._sendAnEmailUsingMSGraph(this.state.documentControllerEmail, "DocReturn", this.state.documentControllerName, this.newDetailItemID); }
+                        // if (this.props.project) {
+                        //    this._sendAnEmailUsingMSGraph(this.state.documentControllerEmail, "DocReturn", this.state.documentControllerName, this.newDetailItemID); }
                         this.validator.hideMessages();
                         this.setState({
                           statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
@@ -1801,7 +1809,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                           Workflow: "Approval",
                                           Priority: (this.state.criticalDocument == true ? "Critical" : ""),
                                           DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
-                                          Source: (this.props.project ? "Project" : "QDMS"),
+                                          Source: "QDMS",
                                           DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
                                           Link: {
                                             "__metadata": { type: "SP.FieldUrlValue" },
@@ -1843,9 +1851,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                               .then(async aftermail => {
                                                 this.triggerDocumentReview(this.sourceDocumentID, "Under Approval");
                                                 //this._adaptiveCard("Approval");
-                                                if (!this.props.project) {
-                                                  await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
-                                                }
+                                                //if (!this.props.project) {
+                                                await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
+                                                //}
                                                 this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
                                                 //Email pending  emailbody to approver                 
                                                 this.validator.hideMessages();
@@ -1933,7 +1941,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                   AssignedToId: user.Id,
                                   Workflow: "Approval",
                                   Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                  Source: (this.props.project ? "Project" : "QDMS"),
+                                  Source: "QDMS",
                                   Link: {
                                     "__metadata": { type: "SP.FieldUrlValue" },
                                     Description: this.state.documentName + "-- Approve",
@@ -1994,9 +2002,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                       });//aftermai
                                     //notification preference checking  
                                     this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
-                                    if (!this.props.project) {
-                                      await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
-                                    }
+                                    //if (!this.props.project) {
+                                    await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
+                                    // }
                                   });//taskID
                               });//r
                           }//else no delegation
@@ -2063,7 +2071,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                 AssignedToId: user.Id,
                                 Workflow: "Approval",
                                 Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                Source: (this.props.project ? "Project" : "QDMS"),
+                                Source: "QDMS",
                                 Link: {
                                   "__metadata": { type: "SP.FieldUrlValue" },
                                   Description: this.state.documentName + "-- Approve",
@@ -2125,9 +2133,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                     });//aftermai
                                   //notification preference checking  
                                   this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
-                                  if (!this.props.project) {
-                                    await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
-                                  }
+                                  // if (!this.props.project) {
+                                  await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
+                                  //}
 
                                 });//taskID
                             });//r
@@ -2178,7 +2186,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                         this.triggerDocumentReview(this.sourceDocumentID, "Returned with comments");
                         this._returnWithComments();
                         //mail to document controller if any one reviewer return with comments.
-                        if (this.props.project) { this._sendAnEmailUsingMSGraph(this.state.documentControllerEmail, "DocReturn", this.state.documentControllerName, this.newDetailItemID); }
+                        // if (this.props.project) { this._sendAnEmailUsingMSGraph(this.state.documentControllerEmail, "DocReturn", this.state.documentControllerName, this.newDetailItemID); }
                         this.validator.hideMessages();
                         this.setState({
                           statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
@@ -2239,1150 +2247,1150 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this._sendAnEmailUsingMSGraph(this.state.ownerEmail, "DocReturn", this.state.owner, this.newDetailItemID);
 
   }
-  private _docDCCReviewSubmit = async () => {
-    this._revisionLogChecking();
-    this.setState({
-      revisionLogID: this.revisionLogID
-    });
-    let critical;
-    var today = new Date();
-    let date = today.toLocaleString();
-    if (this.validator.fieldValid("status") && this.validator.fieldValid("comments")) {
-      this.validator.hideMessages();
-      const detitem = {
-        ResponsibleComment: this.state.comments,
-        ResponseStatus: this.state.status,
-        ResponseDate: this.currentDate,
-      }
-      this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, this.detailID, detitem)
-        /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(this.detailID).update({
-          ResponsibleComment: this.state.comments,
-          ResponseStatus: this.state.status,
-          ResponseDate: this.currentDate,
-        }) */
-        .then(async deleteTask => {
-          if (this.taskID != null) {
-            let list = await this._Service.deleteItemById(this.props.siteUrl, this.props.workflowTaskListName, this.taskID)
-            //let list = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName);
-            //await list.items.getById(this.taskID).delete();
-          }
-        });
-      //if dcc review return with comments
-      if (this.state.status == "Returned with comments") {
-        this.setState({
-          buttonHidden: "none",
-        });
-        const headdata = {
-          WorkflowStatus: "Returned with comments",
-          DCCCompletionDate: this.currentDate,
-          Workflow: "DCC Review",
-        }
-        this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headdata)
-        /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update({
-          WorkflowStatus: "Returned with comments",
-          DCCCompletionDate: this.currentDate,
-          Workflow: "DCC Review",
-        }); */
-        const inditem = {
-          WorkflowStatus: "Returned with comments",
-          Workflow: "DCC Review",
-        }
-        this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
-        /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update({
-          WorkflowStatus: "Returned with comments",
-          Workflow: "DCC Review",
-        }); */
-        //upadting source library without version change.            
-        // let bodyArray = [
-        //   { "FieldName": "WorkflowStatus", "FieldValue": "Returned with comments" }, { "FieldName": "Workflow", "FieldValue": "DCC Review" }
-        // ];
-        // sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).validateUpdateListItem(
-        //   bodyArray,
-        // ).then(afterHeaderStatusUpdate => {
-        //Updationg DocumentRevisionlog 
-        const logitem = {
-          Status: "DCC Review - Returned with comments",
-          LogDate: this.currentDate,
-        }
-        this._Service.updateItemById(this.props.siteUrl, this.props.documentRevisionLog, this.revisionLogID, logitem)
-        /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.getById(this.revisionLogID).update({
-          Status: "DCC Review - Returned with comments",
-          LogDate: this.currentDate,
-        }); */
-        this.triggerDocumentReview(this.sourceDocumentID, "Returned with comments");
-        this._returnWithComments();
-        this.validator.hideMessages();
-        this.setState({
-          statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
-          comments: "",
-          statusKey: "",
-          buttonHidden: "none",
-        });
-        setTimeout(() => {
-          this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
-          window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
-          //this.RedirectUrl;
-        }, 10000);
+  // private _docDCCReviewSubmit = async () => {
+  //   this._revisionLogChecking();
+  //   this.setState({
+  //     revisionLogID: this.revisionLogID
+  //   });
+  //   let critical;
+  //   var today = new Date();
+  //   let date = today.toLocaleString();
+  //   if (this.validator.fieldValid("status") && this.validator.fieldValid("comments")) {
+  //     this.validator.hideMessages();
+  //     const detitem = {
+  //       ResponsibleComment: this.state.comments,
+  //       ResponseStatus: this.state.status,
+  //       ResponseDate: this.currentDate,
+  //     }
+  //     this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, this.detailID, detitem)
+  //       /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(this.detailID).update({
+  //         ResponsibleComment: this.state.comments,
+  //         ResponseStatus: this.state.status,
+  //         ResponseDate: this.currentDate,
+  //       }) */
+  //       .then(async deleteTask => {
+  //         if (this.taskID != null) {
+  //           let list = await this._Service.deleteItemById(this.props.siteUrl, this.props.workflowTaskListName, this.taskID)
+  //           //let list = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName);
+  //           //await list.items.getById(this.taskID).delete();
+  //         }
+  //       });
+  //     //if dcc review return with comments
+  //     if (this.state.status == "Returned with comments") {
+  //       this.setState({
+  //         buttonHidden: "none",
+  //       });
+  //       const headdata = {
+  //         WorkflowStatus: "Returned with comments",
+  //         DCCCompletionDate: this.currentDate,
+  //         Workflow: "DCC Review",
+  //       }
+  //       this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headdata)
+  //       /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update({
+  //         WorkflowStatus: "Returned with comments",
+  //         DCCCompletionDate: this.currentDate,
+  //         Workflow: "DCC Review",
+  //       }); */
+  //       const inditem = {
+  //         WorkflowStatus: "Returned with comments",
+  //         Workflow: "DCC Review",
+  //       }
+  //       this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
+  //       /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update({
+  //         WorkflowStatus: "Returned with comments",
+  //         Workflow: "DCC Review",
+  //       }); */
+  //       //upadting source library without version change.            
+  //       // let bodyArray = [
+  //       //   { "FieldName": "WorkflowStatus", "FieldValue": "Returned with comments" }, { "FieldName": "Workflow", "FieldValue": "DCC Review" }
+  //       // ];
+  //       // sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).validateUpdateListItem(
+  //       //   bodyArray,
+  //       // ).then(afterHeaderStatusUpdate => {
+  //       //Updationg DocumentRevisionlog 
+  //       const logitem = {
+  //         Status: "DCC Review - Returned with comments",
+  //         LogDate: this.currentDate,
+  //       }
+  //       this._Service.updateItemById(this.props.siteUrl, this.props.documentRevisionLog, this.revisionLogID, logitem)
+  //       /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.getById(this.revisionLogID).update({
+  //         Status: "DCC Review - Returned with comments",
+  //         LogDate: this.currentDate,
+  //       }); */
+  //       this.triggerDocumentReview(this.sourceDocumentID, "Returned with comments");
+  //       this._returnWithComments();
+  //       this.validator.hideMessages();
+  //       this.setState({
+  //         statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
+  //         comments: "",
+  //         statusKey: "",
+  //         buttonHidden: "none",
+  //       });
+  //       setTimeout(() => {
+  //         this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
+  //         window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+  //         //this.RedirectUrl;
+  //       }, 10000);
 
-        //  });
+  //       //  });
 
-      }
-      //if there is reviewers and Reviewed
-      else {
-        const headerItemsForDCCSubmit = await this._Service.getByIdSelectExpand(
-          this.props.siteUrl,
-          this.props.workflowHeaderListName,
-          this.headerId,
-          "Reviewers/ID,Reviewers/Title,Reviewers/EMail",
-          "Reviewers"
-        )
-        //const headerItemsForDCCSubmit = await this._Service.getReviewersData(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId)
-        //const headerItemsForDCCSubmit = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.select("Reviewers/ID,Reviewers/Title,Reviewers/EMail").expand("Reviewers").getById(this.headerId).get();
-        console.log(headerItemsForDCCSubmit);
-        this.setState({
-          reviewers: headerItemsForDCCSubmit.ReviewersId,
-        });
-        console.log(this.state.reviewers);
-        if (this.state.reviewers != null) {
-          this.setState({
-            buttonHidden: "none",
-          });
-          //for reviewers if exist
-          //Updationg DocumentRevisionlog 
-          const logitem = {
-            Status: "DCC - Reviewed",
-            LogDate: this.currentDate,
-          }
-          this._Service.updateItemById(this.props.siteUrl, this.props.documentRevisionLog, this.state.revisionLogID, logitem)
-          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.getById(this.state.revisionLogID).update({
-            Status: "DCC - Reviewed",
-            LogDate: this.currentDate,
-          }); */
-          const logdata = {
-            Status: "Under Review",
-            LogDate: this.currentDate,
-            WorkflowID: this.headerId,
-            DocumentIndexId: this.documentIndexId,
-            DueDate: this.state.DueDate,
-            Workflow: "Review",
-            Revision: this.state.revision,
-            Title: this.state.documentID,
-          }
-          this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLog, logdata)
-          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.add({
-            Status: "Under Review",
-            LogDate: this.currentDate,
-            WorkflowID: this.headerId,
-            DocumentIndexId: this.documentIndexId,
-            DueDate: this.state.DueDate,
-            Workflow: "Review",
-            Revision: this.state.revision,
-            Title: this.state.documentID,
-          }); */
-          const headitem = {
-            WorkflowStatus: "Under Review",
-            Workflow: "Review",
-            ReviewedDate: this.currentDate,
-          }
-          this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headitem)
-          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update
-            ({                   //headerlist
-              WorkflowStatus: "Under Review",
-              Workflow: "Review",
-              ReviewedDate: this.currentDate,
-            }); */
-          const inditem = {
-            WorkflowStatus: "Under Review",//docIndex
-            Workflow: "Review",
-          }
-          this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
-          /*  sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update
-             ({
-               WorkflowStatus: "Under Review",//docIndex
-               Workflow: "Review",
-             }); */
+  //     }
+  //     //if there is reviewers and Reviewed
+  //     else {
+  //       const headerItemsForDCCSubmit = await this._Service.getByIdSelectExpand(
+  //         this.props.siteUrl,
+  //         this.props.workflowHeaderListName,
+  //         this.headerId,
+  //         "Reviewers/ID,Reviewers/Title,Reviewers/EMail",
+  //         "Reviewers"
+  //       )
+  //       //const headerItemsForDCCSubmit = await this._Service.getReviewersData(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId)
+  //       //const headerItemsForDCCSubmit = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.select("Reviewers/ID,Reviewers/Title,Reviewers/EMail").expand("Reviewers").getById(this.headerId).get();
+  //       console.log(headerItemsForDCCSubmit);
+  //       this.setState({
+  //         reviewers: headerItemsForDCCSubmit.ReviewersId,
+  //       });
+  //       console.log(this.state.reviewers);
+  //       if (this.state.reviewers != null) {
+  //         this.setState({
+  //           buttonHidden: "none",
+  //         });
+  //         //for reviewers if exist
+  //         //Updationg DocumentRevisionlog 
+  //         const logitem = {
+  //           Status: "DCC - Reviewed",
+  //           LogDate: this.currentDate,
+  //         }
+  //         this._Service.updateItemById(this.props.siteUrl, this.props.documentRevisionLog, this.state.revisionLogID, logitem)
+  //         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.getById(this.state.revisionLogID).update({
+  //           Status: "DCC - Reviewed",
+  //           LogDate: this.currentDate,
+  //         }); */
+  //         const logdata = {
+  //           Status: "Under Review",
+  //           LogDate: this.currentDate,
+  //           WorkflowID: this.headerId,
+  //           DocumentIndexId: this.documentIndexId,
+  //           DueDate: this.state.DueDate,
+  //           Workflow: "Review",
+  //           Revision: this.state.revision,
+  //           Title: this.state.documentID,
+  //         }
+  //         this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLog, logdata)
+  //         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.add({
+  //           Status: "Under Review",
+  //           LogDate: this.currentDate,
+  //           WorkflowID: this.headerId,
+  //           DocumentIndexId: this.documentIndexId,
+  //           DueDate: this.state.DueDate,
+  //           Workflow: "Review",
+  //           Revision: this.state.revision,
+  //           Title: this.state.documentID,
+  //         }); */
+  //         const headitem = {
+  //           WorkflowStatus: "Under Review",
+  //           Workflow: "Review",
+  //           ReviewedDate: this.currentDate,
+  //         }
+  //         this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headitem)
+  //         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update
+  //           ({                   //headerlist
+  //             WorkflowStatus: "Under Review",
+  //             Workflow: "Review",
+  //             ReviewedDate: this.currentDate,
+  //           }); */
+  //         const inditem = {
+  //           WorkflowStatus: "Under Review",//docIndex
+  //           Workflow: "Review",
+  //         }
+  //         this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
+  //         /*  sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update
+  //            ({
+  //              WorkflowStatus: "Under Review",//docIndex
+  //              Workflow: "Review",
+  //            }); */
 
-          //upadting source library without version change.           
-          // sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).update({
-          //   WorkflowStatus: "Under Review",
-          //   Workflow: "Review",
-          // });
-          //for reviewers if exist
-          for (var k = 0; k <= this.state.reviewers.length; k++) {
-            console.log(this.state.reviewers[k]);
-            let reviewID = this.state.reviewers[k];
-            await this._Service.getUserById(parseInt(reviewID))
-              //await sp.web.siteUsers.getById(parseInt(reviewID)).get()
-              .then(async user => {
-                console.log(user);
-                await this._Service.getUserIdByEmail(user.Email)
-                  //await sp.web.siteUsers.getByEmail(user.Email).get()
-                  .then(async hubsieUser => {
-                    console.log(hubsieUser.Id);
-                    const taskDelegation: any[] = await this._Service.getItemSelectExpandFilter(
-                      this.props.siteUrl,
-                      this.props.taskDelegationSettingsListName,
-                      "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate",
-                      "DelegatedFor,DelegatedTo",
-                      "DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')"
-                    )
-                    //const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, hubsieUser.Id)
-                    //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettingsListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')").get();
-                    console.log(taskDelegation);
-                    //Check if Task Delegation
-                    if (taskDelegation.length > 0) {
-                      let duedate = moment(this.dueDateWithoutConversion).toDate();
-                      let toDate = moment(taskDelegation[0].ToDate).toDate();
-                      let fromDate = moment(taskDelegation[0].FromDate).toDate();
-                      duedate = new Date(duedate.getFullYear(), duedate.getMonth(), duedate.getDate());
-                      toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
-                      fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
-                      if (moment(duedate).isBetween(fromDate, toDate) || moment(duedate).isSame(fromDate) || moment(duedate).isSame(toDate)) {
-                        this.setState({
-                          approverEmail: taskDelegation[0].DelegatedTo.EMail,
-                          approverName: taskDelegation[0].DelegatedTo.Title,
-                          delegatedToId: taskDelegation[0].DelegatedTo.ID,
-                          delegatedFromId: taskDelegation[0].DelegatedFor.ID,
-                        });
+  //         //upadting source library without version change.           
+  //         // sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).update({
+  //         //   WorkflowStatus: "Under Review",
+  //         //   Workflow: "Review",
+  //         // });
+  //         //for reviewers if exist
+  //         for (var k = 0; k <= this.state.reviewers.length; k++) {
+  //           console.log(this.state.reviewers[k]);
+  //           let reviewID = this.state.reviewers[k];
+  //           await this._Service.getUserById(parseInt(reviewID))
+  //             //await sp.web.siteUsers.getById(parseInt(reviewID)).get()
+  //             .then(async user => {
+  //               console.log(user);
+  //               await this._Service.getUserIdByEmail(user.Email)
+  //                 //await sp.web.siteUsers.getByEmail(user.Email).get()
+  //                 .then(async hubsieUser => {
+  //                   console.log(hubsieUser.Id);
+  //                   const taskDelegation: any[] = await this._Service.getItemSelectExpandFilter(
+  //                     this.props.siteUrl,
+  //                     this.props.taskDelegationSettingsListName,
+  //                     "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate",
+  //                     "DelegatedFor,DelegatedTo",
+  //                     "DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')"
+  //                   )
+  //                   //const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, hubsieUser.Id)
+  //                   //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettingsListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')").get();
+  //                   console.log(taskDelegation);
+  //                   //Check if Task Delegation
+  //                   if (taskDelegation.length > 0) {
+  //                     let duedate = moment(this.dueDateWithoutConversion).toDate();
+  //                     let toDate = moment(taskDelegation[0].ToDate).toDate();
+  //                     let fromDate = moment(taskDelegation[0].FromDate).toDate();
+  //                     duedate = new Date(duedate.getFullYear(), duedate.getMonth(), duedate.getDate());
+  //                     toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+  //                     fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+  //                     if (moment(duedate).isBetween(fromDate, toDate) || moment(duedate).isSame(fromDate) || moment(duedate).isSame(toDate)) {
+  //                       this.setState({
+  //                         approverEmail: taskDelegation[0].DelegatedTo.EMail,
+  //                         approverName: taskDelegation[0].DelegatedTo.Title,
+  //                         delegatedToId: taskDelegation[0].DelegatedTo.ID,
+  //                         delegatedFromId: taskDelegation[0].DelegatedFor.ID,
+  //                       });
 
-                        //Get Delegated To ID
-                        this._Service.getUserIdByEmail(taskDelegation[0].DelegatedTo.EMail)
-                          //sp.web.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get()
-                          .then(async DelegatedTo => {
+  //                       //Get Delegated To ID
+  //                       this._Service.getUserIdByEmail(taskDelegation[0].DelegatedTo.EMail)
+  //                         //sp.web.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get()
+  //                         .then(async DelegatedTo => {
 
-                            this.setState({
-                              delegateToIdInSubSite: DelegatedTo.Id,
-                            });
-                            //Get Delegated For ID
-                            this._Service.getUserIdByEmail(taskDelegation[0].DelegatedFor.EMail)
-                              //sp.web.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get()
-                              .then(async DelegatedFor => {
+  //                           this.setState({
+  //                             delegateToIdInSubSite: DelegatedTo.Id,
+  //                           });
+  //                           //Get Delegated For ID
+  //                           this._Service.getUserIdByEmail(taskDelegation[0].DelegatedFor.EMail)
+  //                             //sp.web.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get()
+  //                             .then(async DelegatedFor => {
 
-                                this.setState({
-                                  delegateForIdInSubSite: DelegatedFor.Id,
-                                });
-                                //detail list adding an item for reviewers
-                                let index = this.state.reviewers.indexOf(DelegatedFor.Id);
-                                this.state.reviewers[index] = DelegatedTo.Id;
-                                const detailitem = {
-                                  HeaderIDId: Number(this.headerId),
-                                  Workflow: "Review",
-                                  Title: this.state.documentName,
-                                  ResponsibleId: DelegatedTo.Id,
-                                  DueDate: this.state.DueDate,
-                                  DelegatedFromId: DelegatedFor.Id,
-                                  OwnerId: this.state.ownerID,
-                                  ResponseStatus: "Under Review",
-                                  SourceDocument: {
-                                    "__metadata": { type: "SP.FieldUrlValue" },
-                                    Description: this.state.documentName,
-                                    Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                                  },
-                                }
-                                this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detailitem)
-                                  /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add({
-                                    HeaderIDId: Number(this.headerId),
-                                    Workflow: "Review",
-                                    Title: this.state.documentName,
-                                    ResponsibleId: DelegatedTo.Id,
-                                    DueDate: this.state.DueDate,
-                                    DelegatedFromId: DelegatedFor.Id,
-                                    OwnerId: this.state.ownerID,
-                                    ResponseStatus: "Under Review",
-                                    SourceDocument: {
-                                      "__metadata": { type: "SP.FieldUrlValue" },
-                                      Description: this.state.documentName,
-                                      Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                                    },
-                                  }) */
-                                  .then(async r => {
-                                    this.setState({ detailIdForApprover: r.data.ID });
-                                    this.newDetailItemID = r.data.ID;
-                                    const detailitem = {
-                                      Link: {
-                                        "__metadata": { type: "SP.FieldUrlValue" },
-                                        Description: this.state.documentName + "-- Review",
-                                        Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                      },
-                                    }
-                                    await this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
-                                    /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
-                                      Link: {
-                                        "__metadata": { type: "SP.FieldUrlValue" },
-                                        Description: this.state.documentName + "-- Review",
-                                        Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                      },
-                                    }); *///Update link
-                                    const headitem = {                   //headerlist
-                                      ReviewersId: { results: this.state.reviewers }
-                                    }
-                                    await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headitem)
-                                    /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update
-                                      ({                   //headerlist
-                                        ReviewersId: { results: this.state.reviewers }
-                                      }); */
-                                    const inditem = {
-                                      ReviewersId: { results: this.state.reviewers }
-                                    }
-                                    await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
-                                    /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update
-                                      ({
-                                        ReviewersId: { results: this.state.reviewers }
-                                      }); */
-                                    const sourceitem = {
-                                      ReviewersId: { results: this.state.reviewers }
-                                    }
-                                    await this._Service.updateItemById(this.props.siteUrl, "SourceDocuments", this.sourceDocumentID, sourceitem)
-                                    /* sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).update({
-                                      ReviewersId: { results: this.state.reviewers }
-                                    }); */
-                                    //MY tasks list updation with delegated from
-                                    const taskdata = {
-                                      Title: "Review '" + this.state.documentName + "'",
-                                      Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
-                                      DueDate: this.state.DueDate,
-                                      StartDate: this.currentDate,
-                                      AssignedToId: taskDelegation[0].DelegatedTo.ID,
-                                      Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                      DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
-                                      Source: (this.props.project ? "Project" : "QDMS"),
-                                      DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
-                                      Workflow: "Review",
-                                      Link: {
-                                        "__metadata": { type: "SP.FieldUrlValue" },
-                                        Description: this.state.documentName + "-- Review",
-                                        Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                      },
-                                    }
-                                    await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
-                                      /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add({
-                                        Title: "Review '" + this.state.documentName + "'",
-                                        Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
-                                        DueDate: this.state.DueDate,
-                                        StartDate: this.currentDate,
-                                        AssignedToId: taskDelegation[0].DelegatedTo.ID,
-                                        Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                        DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
-                                        Source: (this.props.project ? "Project" : "QDMS"),
-                                        DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
-                                        Workflow: "Review",
-                                        Link: {
-                                          "__metadata": { type: "SP.FieldUrlValue" },
-                                          Description: this.state.documentName + "-- Review",
-                                          Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                        },
-                                      }) */
-                                      .then(taskId => {
-                                        const taskitem = {
-                                          TaskID: taskId.data.ID,
-                                        }
-                                        this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, taskitem)
-                                          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
-                                            ({
-                                              TaskID: taskId.data.ID,
-                                            }) */
-                                          .then(async aftermail => {
-                                            //Email pending  emailbody to approver                 
-                                            this.triggerDocumentUnderReview(this.sourceDocumentID, "Under Review");
-                                            // this._adaptiveCard("Review");
-                                            //await this._adaptiveCard("Review",this.state.approverEmail,this.state.approverName,"General");
-                                            //aftermail
-                                            this._sendAnEmailUsingMSGraph(DelegatedTo.Email, "DocReview", DelegatedTo.Title, this.newDetailItemID);
-                                            this.setState({
-                                              statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
-                                              comments: "",
-                                              statusKey: "",
-                                              approverEmail: "",
-                                              approverName: "",
-                                              approverId: "",
-                                              buttonHidden: "none"
-                                            });
+  //                               this.setState({
+  //                                 delegateForIdInSubSite: DelegatedFor.Id,
+  //                               });
+  //                               //detail list adding an item for reviewers
+  //                               let index = this.state.reviewers.indexOf(DelegatedFor.Id);
+  //                               this.state.reviewers[index] = DelegatedTo.Id;
+  //                               const detailitem = {
+  //                                 HeaderIDId: Number(this.headerId),
+  //                                 Workflow: "Review",
+  //                                 Title: this.state.documentName,
+  //                                 ResponsibleId: DelegatedTo.Id,
+  //                                 DueDate: this.state.DueDate,
+  //                                 DelegatedFromId: DelegatedFor.Id,
+  //                                 OwnerId: this.state.ownerID,
+  //                                 ResponseStatus: "Under Review",
+  //                                 SourceDocument: {
+  //                                   "__metadata": { type: "SP.FieldUrlValue" },
+  //                                   Description: this.state.documentName,
+  //                                   Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                                 },
+  //                               }
+  //                               this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detailitem)
+  //                                 /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add({
+  //                                   HeaderIDId: Number(this.headerId),
+  //                                   Workflow: "Review",
+  //                                   Title: this.state.documentName,
+  //                                   ResponsibleId: DelegatedTo.Id,
+  //                                   DueDate: this.state.DueDate,
+  //                                   DelegatedFromId: DelegatedFor.Id,
+  //                                   OwnerId: this.state.ownerID,
+  //                                   ResponseStatus: "Under Review",
+  //                                   SourceDocument: {
+  //                                     "__metadata": { type: "SP.FieldUrlValue" },
+  //                                     Description: this.state.documentName,
+  //                                     Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                                   },
+  //                                 }) */
+  //                                 .then(async r => {
+  //                                   this.setState({ detailIdForApprover: r.data.ID });
+  //                                   this.newDetailItemID = r.data.ID;
+  //                                   const detailitem = {
+  //                                     Link: {
+  //                                       "__metadata": { type: "SP.FieldUrlValue" },
+  //                                       Description: this.state.documentName + "-- Review",
+  //                                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                                     },
+  //                                   }
+  //                                   await this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
+  //                                   /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
+  //                                     Link: {
+  //                                       "__metadata": { type: "SP.FieldUrlValue" },
+  //                                       Description: this.state.documentName + "-- Review",
+  //                                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                                     },
+  //                                   }); *///Update link
+  //                                   const headitem = {                   //headerlist
+  //                                     ReviewersId: { results: this.state.reviewers }
+  //                                   }
+  //                                   await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headitem)
+  //                                   /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update
+  //                                     ({                   //headerlist
+  //                                       ReviewersId: { results: this.state.reviewers }
+  //                                     }); */
+  //                                   const inditem = {
+  //                                     ReviewersId: { results: this.state.reviewers }
+  //                                   }
+  //                                   await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
+  //                                   /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update
+  //                                     ({
+  //                                       ReviewersId: { results: this.state.reviewers }
+  //                                     }); */
+  //                                   const sourceitem = {
+  //                                     ReviewersId: { results: this.state.reviewers }
+  //                                   }
+  //                                   await this._Service.updateItemById(this.props.siteUrl, "SourceDocuments", this.sourceDocumentID, sourceitem)
+  //                                   /* sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).update({
+  //                                     ReviewersId: { results: this.state.reviewers }
+  //                                   }); */
+  //                                   //MY tasks list updation with delegated from
+  //                                   const taskdata = {
+  //                                     Title: "Review '" + this.state.documentName + "'",
+  //                                     Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
+  //                                     DueDate: this.state.DueDate,
+  //                                     StartDate: this.currentDate,
+  //                                     AssignedToId: taskDelegation[0].DelegatedTo.ID,
+  //                                     Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                                     DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
+  //                                     Source: (this.props.project ? "Project" : "QDMS"),
+  //                                     DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
+  //                                     Workflow: "Review",
+  //                                     Link: {
+  //                                       "__metadata": { type: "SP.FieldUrlValue" },
+  //                                       Description: this.state.documentName + "-- Review",
+  //                                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                                     },
+  //                                   }
+  //                                   await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
+  //                                     /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add({
+  //                                       Title: "Review '" + this.state.documentName + "'",
+  //                                       Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
+  //                                       DueDate: this.state.DueDate,
+  //                                       StartDate: this.currentDate,
+  //                                       AssignedToId: taskDelegation[0].DelegatedTo.ID,
+  //                                       Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                                       DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
+  //                                       Source: (this.props.project ? "Project" : "QDMS"),
+  //                                       DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
+  //                                       Workflow: "Review",
+  //                                       Link: {
+  //                                         "__metadata": { type: "SP.FieldUrlValue" },
+  //                                         Description: this.state.documentName + "-- Review",
+  //                                         Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                                       },
+  //                                     }) */
+  //                                     .then(taskId => {
+  //                                       const taskitem = {
+  //                                         TaskID: taskId.data.ID,
+  //                                       }
+  //                                       this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, taskitem)
+  //                                         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
+  //                                           ({
+  //                                             TaskID: taskId.data.ID,
+  //                                           }) */
+  //                                         .then(async aftermail => {
+  //                                           //Email pending  emailbody to approver                 
+  //                                           this.triggerDocumentUnderReview(this.sourceDocumentID, "Under Review");
+  //                                           // this._adaptiveCard("Review");
+  //                                           //await this._adaptiveCard("Review",this.state.approverEmail,this.state.approverName,"General");
+  //                                           //aftermail
+  //                                           this._sendAnEmailUsingMSGraph(DelegatedTo.Email, "DocReview", DelegatedTo.Title, this.newDetailItemID);
+  //                                           this.setState({
+  //                                             statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
+  //                                             comments: "",
+  //                                             statusKey: "",
+  //                                             approverEmail: "",
+  //                                             approverName: "",
+  //                                             approverId: "",
+  //                                             buttonHidden: "none"
+  //                                           });
 
-                                          }).then(redirect => {
-                                            setTimeout(() => {
-                                              this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
-                                              window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
-                                              // this.RedirectUrl;
-                                            }, 10000);
-                                          });//aftermail
+  //                                         }).then(redirect => {
+  //                                           setTimeout(() => {
+  //                                             this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
+  //                                             window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+  //                                             // this.RedirectUrl;
+  //                                           }, 10000);
+  //                                         });//aftermail
 
 
-                                      });
+  //                                     });
 
-                                  });//r
-                              });//Delegated For
-                          });//Delegated To
-                      }
-                      else {
-                        //detail list adding an item for reviewers
-                        const detailitem = {
-                          HeaderIDId: Number(this.headerId),
-                          Workflow: "Review",
-                          Title: this.state.documentName,
-                          ResponsibleId: user.Id,
-                          OwnerId: this.state.ownerID,
-                          DueDate: this.state.DueDate,
-                          ResponseStatus: "Under Review",
-                          SourceDocument: {
-                            "__metadata": { type: "SP.FieldUrlValue" },
-                            Description: this.state.documentName,
-                            Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                          },
-                        }
-                        await this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detailitem)
-                          /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add({
-                            HeaderIDId: Number(this.headerId),
-                            Workflow: "Review",
-                            Title: this.state.documentName,
-                            ResponsibleId: user.Id,
-                            OwnerId: this.state.ownerID,
-                            DueDate: this.state.DueDate,
-                            ResponseStatus: "Under Review",
-                            SourceDocument: {
-                              "__metadata": { type: "SP.FieldUrlValue" },
-                              Description: this.state.documentName,
-                              Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                            },
-  
-                          }) */
-                          .then(async r => {
-                            this.setState({ detailIdForApprover: r.data.ID });
-                            this.newDetailItemID = r.data.ID;
-                            const detailitem = {
-                              Link: {
-                                "__metadata": { type: "SP.FieldUrlValue" },
-                                Description: this.state.documentName + "-- Review",
-                                Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                              },
-                            }
-                            this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
-                            /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
-                              Link: {
-                                "__metadata": { type: "SP.FieldUrlValue" },
-                                Description: this.state.documentName + "-- Review",
-                                Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                              },
-                            }); */
-                            //MY tasks list updation with delegated from
-                            const taskdata = {
-                              Title: "Review '" + this.state.documentName + "'",
-                              Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
-                              DueDate: this.state.DueDate,
-                              StartDate: this.currentDate,
-                              AssignedToId: hubsieUser.Id,
-                              Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                              Source: (this.props.project ? "Project" : "QDMS"),
-                              Workflow: "Review",
-                              Link: {
-                                "__metadata": { type: "SP.FieldUrlValue" },
-                                Description: this.state.documentName + "-- Review",
-                                Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                              },
-                            }
-                            await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
-                              /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add({
-                                Title: "Review '" + this.state.documentName + "'",
-                                Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
-                                DueDate: this.state.DueDate,
-                                StartDate: this.currentDate,
-                                AssignedToId: hubsieUser.Id,
-                                Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                Source: (this.props.project ? "Project" : "QDMS"),
-                                Workflow: "Review",
-                                Link: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
-                                  Description: this.state.documentName + "-- Review",
-                                  Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                },
-                              }) */
-                              .then(taskId => {
-                                const detailitem = {
-                                  TaskID: taskId.data.ID,
-                                }
-                                this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
-                                  /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
-                                    ({
-                                      TaskID: taskId.data.ID,
-                                    }) */
-                                  .then(aftermail => {
-                                    //Email pending  emailbody to approver                 
-                                    this.triggerDocumentUnderReview(this.sourceDocumentID, "Under Review");
-                                    //this._adaptiveCard("Review");
-                                    //aftermail
-                                    this._sendAnEmailUsingMSGraph(user.Email, "DocReview", user.Title, this.newDetailItemID);
-                                    this.setState({
-                                      statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
-                                      comments: "",
-                                      statusKey: "",
-                                      approverEmail: "",
-                                      approverName: "",
-                                      approverId: "",
-                                      buttonHidden: "none"
-                                    });
+  //                                 });//r
+  //                             });//Delegated For
+  //                         });//Delegated To
+  //                     }
+  //                     else {
+  //                       //detail list adding an item for reviewers
+  //                       const detailitem = {
+  //                         HeaderIDId: Number(this.headerId),
+  //                         Workflow: "Review",
+  //                         Title: this.state.documentName,
+  //                         ResponsibleId: user.Id,
+  //                         OwnerId: this.state.ownerID,
+  //                         DueDate: this.state.DueDate,
+  //                         ResponseStatus: "Under Review",
+  //                         SourceDocument: {
+  //                           "__metadata": { type: "SP.FieldUrlValue" },
+  //                           Description: this.state.documentName,
+  //                           Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                         },
+  //                       }
+  //                       await this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detailitem)
+  //                         /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add({
+  //                           HeaderIDId: Number(this.headerId),
+  //                           Workflow: "Review",
+  //                           Title: this.state.documentName,
+  //                           ResponsibleId: user.Id,
+  //                           OwnerId: this.state.ownerID,
+  //                           DueDate: this.state.DueDate,
+  //                           ResponseStatus: "Under Review",
+  //                           SourceDocument: {
+  //                             "__metadata": { type: "SP.FieldUrlValue" },
+  //                             Description: this.state.documentName,
+  //                             Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                           },
 
-                                  }).then(redirect => {
-                                    setTimeout(() => {
-                                      this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
-                                      window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
-                                      // this.RedirectUrl;
-                                    }, 10000);
-                                  });//aftermail
+  //                         }) */
+  //                         .then(async r => {
+  //                           this.setState({ detailIdForApprover: r.data.ID });
+  //                           this.newDetailItemID = r.data.ID;
+  //                           const detailitem = {
+  //                             Link: {
+  //                               "__metadata": { type: "SP.FieldUrlValue" },
+  //                               Description: this.state.documentName + "-- Review",
+  //                               Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                             },
+  //                           }
+  //                           this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
+  //                           /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
+  //                             Link: {
+  //                               "__metadata": { type: "SP.FieldUrlValue" },
+  //                               Description: this.state.documentName + "-- Review",
+  //                               Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                             },
+  //                           }); */
+  //                           //MY tasks list updation with delegated from
+  //                           const taskdata = {
+  //                             Title: "Review '" + this.state.documentName + "'",
+  //                             Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
+  //                             DueDate: this.state.DueDate,
+  //                             StartDate: this.currentDate,
+  //                             AssignedToId: hubsieUser.Id,
+  //                             Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                             Source: (this.props.project ? "Project" : "QDMS"),
+  //                             Workflow: "Review",
+  //                             Link: {
+  //                               "__metadata": { type: "SP.FieldUrlValue" },
+  //                               Description: this.state.documentName + "-- Review",
+  //                               Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                             },
+  //                           }
+  //                           await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
+  //                             /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add({
+  //                               Title: "Review '" + this.state.documentName + "'",
+  //                               Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
+  //                               DueDate: this.state.DueDate,
+  //                               StartDate: this.currentDate,
+  //                               AssignedToId: hubsieUser.Id,
+  //                               Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                               Source: (this.props.project ? "Project" : "QDMS"),
+  //                               Workflow: "Review",
+  //                               Link: {
+  //                                 "__metadata": { type: "SP.FieldUrlValue" },
+  //                                 Description: this.state.documentName + "-- Review",
+  //                                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                               },
+  //                             }) */
+  //                             .then(taskId => {
+  //                               const detailitem = {
+  //                                 TaskID: taskId.data.ID,
+  //                               }
+  //                               this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
+  //                                 /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
+  //                                   ({
+  //                                     TaskID: taskId.data.ID,
+  //                                   }) */
+  //                                 .then(aftermail => {
+  //                                   //Email pending  emailbody to approver                 
+  //                                   this.triggerDocumentUnderReview(this.sourceDocumentID, "Under Review");
+  //                                   //this._adaptiveCard("Review");
+  //                                   //aftermail
+  //                                   this._sendAnEmailUsingMSGraph(user.Email, "DocReview", user.Title, this.newDetailItemID);
+  //                                   this.setState({
+  //                                     statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
+  //                                     comments: "",
+  //                                     statusKey: "",
+  //                                     approverEmail: "",
+  //                                     approverName: "",
+  //                                     approverId: "",
+  //                                     buttonHidden: "none"
+  //                                   });
 
-                              });
-                          });//r
-                      }
-                    }//IF
-                    //If no task delegation
-                    else {
-                      //detail list adding an item for reviewers
-                      const detaildata = {
-                        HeaderIDId: Number(this.headerId),
-                        Workflow: "Review",
-                        Title: this.state.documentName,
-                        ResponsibleId: user.Id,
-                        OwnerId: this.state.ownerID,
-                        DueDate: this.state.DueDate,
-                        ResponseStatus: "Under Review",
-                        SourceDocument: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
-                          Description: this.state.documentName,
-                          Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                        },
-                      }
-                      await this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detaildata)
-                        /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add({
-                          HeaderIDId: Number(this.headerId),
-                          Workflow: "Review",
-                          Title: this.state.documentName,
-                          ResponsibleId: user.Id,
-                          OwnerId: this.state.ownerID,
-                          DueDate: this.state.DueDate,
-                          ResponseStatus: "Under Review",
-                          SourceDocument: {
-                            "__metadata": { type: "SP.FieldUrlValue" },
-                            Description: this.state.documentName,
-                            Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                          },
-                        }) */
-                        .then(async r => {
-                          this.setState({ detailIdForApprover: r.data.ID });
-                          this.newDetailItemID = r.data.ID;
-                          const detailitem = {
-                            Link: {
-                              "__metadata": { type: "SP.FieldUrlValue" },
-                              Description: this.state.documentName + "-- Review",
-                              Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                            },
-                          }
-                          this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
-                          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
-                            Link: {
-                              "__metadata": { type: "SP.FieldUrlValue" },
-                              Description: this.state.documentName + "-- Review",
-                              Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                            },
-                          }); */
-                          //MY tasks list updation with delegated from
-                          const taskdata = {
-                            Title: "Review '" + this.state.documentName + "'",
-                            Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
-                            DueDate: this.state.DueDate,
-                            StartDate: this.currentDate,
-                            AssignedToId: hubsieUser.Id,
-                            Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                            Source: (this.props.project ? "Project" : "QDMS"),
-                            Workflow: "Review",
-                            Link: {
-                              "__metadata": { type: "SP.FieldUrlValue" },
-                              Description: this.state.documentName + "-- Review",
-                              Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                            },
-                          }
-                          await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
-                            /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add({
-                              Title: "Review '" + this.state.documentName + "'",
-                              Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
-                              DueDate: this.state.DueDate,
-                              StartDate: this.currentDate,
-                              AssignedToId: hubsieUser.Id,
-                              Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                              Source: (this.props.project ? "Project" : "QDMS"),
-                              Workflow: "Review",
-                              Link: {
-                                "__metadata": { type: "SP.FieldUrlValue" },
-                                Description: this.state.documentName + "-- Review",
-                                Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                              },
-                            }) */
-                            .then(taskId => {
-                              const detailitem = {
-                                TaskID: taskId.data.ID,
-                              }
-                              this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
-                                /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
-                                  ({
-                                    TaskID: taskId.data.ID,
-                                  }) */
-                                .then(aftermail => {
-                                  //Email pending  emailbody to approver                 
-                                  this.triggerDocumentUnderReview(this.sourceDocumentID, "Under Review");
-                                  //this._adaptiveCard("Review");
+  //                                 }).then(redirect => {
+  //                                   setTimeout(() => {
+  //                                     this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
+  //                                     window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+  //                                     // this.RedirectUrl;
+  //                                   }, 10000);
+  //                                 });//aftermail
 
-                                  //aftermail
-                                  this._sendAnEmailUsingMSGraph(user.Email, "DocReview", user.Title, this.newDetailItemID);
-                                  this.setState({
-                                    statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
-                                    comments: "",
-                                    statusKey: "",
-                                    approverEmail: "",
-                                    approverName: "",
-                                    approverId: "",
-                                    buttonHidden: "none"
-                                  });
+  //                             });
+  //                         });//r
+  //                     }
+  //                   }//IF
+  //                   //If no task delegation
+  //                   else {
+  //                     //detail list adding an item for reviewers
+  //                     const detaildata = {
+  //                       HeaderIDId: Number(this.headerId),
+  //                       Workflow: "Review",
+  //                       Title: this.state.documentName,
+  //                       ResponsibleId: user.Id,
+  //                       OwnerId: this.state.ownerID,
+  //                       DueDate: this.state.DueDate,
+  //                       ResponseStatus: "Under Review",
+  //                       SourceDocument: {
+  //                         "__metadata": { type: "SP.FieldUrlValue" },
+  //                         Description: this.state.documentName,
+  //                         Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                       },
+  //                     }
+  //                     await this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detaildata)
+  //                       /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add({
+  //                         HeaderIDId: Number(this.headerId),
+  //                         Workflow: "Review",
+  //                         Title: this.state.documentName,
+  //                         ResponsibleId: user.Id,
+  //                         OwnerId: this.state.ownerID,
+  //                         DueDate: this.state.DueDate,
+  //                         ResponseStatus: "Under Review",
+  //                         SourceDocument: {
+  //                           "__metadata": { type: "SP.FieldUrlValue" },
+  //                           Description: this.state.documentName,
+  //                           Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                         },
+  //                       }) */
+  //                       .then(async r => {
+  //                         this.setState({ detailIdForApprover: r.data.ID });
+  //                         this.newDetailItemID = r.data.ID;
+  //                         const detailitem = {
+  //                           Link: {
+  //                             "__metadata": { type: "SP.FieldUrlValue" },
+  //                             Description: this.state.documentName + "-- Review",
+  //                             Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                           },
+  //                         }
+  //                         this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
+  //                         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
+  //                           Link: {
+  //                             "__metadata": { type: "SP.FieldUrlValue" },
+  //                             Description: this.state.documentName + "-- Review",
+  //                             Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                           },
+  //                         }); */
+  //                         //MY tasks list updation with delegated from
+  //                         const taskdata = {
+  //                           Title: "Review '" + this.state.documentName + "'",
+  //                           Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
+  //                           DueDate: this.state.DueDate,
+  //                           StartDate: this.currentDate,
+  //                           AssignedToId: hubsieUser.Id,
+  //                           Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                           Source: (this.props.project ? "Project" : "QDMS"),
+  //                           Workflow: "Review",
+  //                           Link: {
+  //                             "__metadata": { type: "SP.FieldUrlValue" },
+  //                             Description: this.state.documentName + "-- Review",
+  //                             Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                           },
+  //                         }
+  //                         await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
+  //                           /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add({
+  //                             Title: "Review '" + this.state.documentName + "'",
+  //                             Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.currentDate + "'",
+  //                             DueDate: this.state.DueDate,
+  //                             StartDate: this.currentDate,
+  //                             AssignedToId: hubsieUser.Id,
+  //                             Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                             Source: (this.props.project ? "Project" : "QDMS"),
+  //                             Workflow: "Review",
+  //                             Link: {
+  //                               "__metadata": { type: "SP.FieldUrlValue" },
+  //                               Description: this.state.documentName + "-- Review",
+  //                               Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                             },
+  //                           }) */
+  //                           .then(taskId => {
+  //                             const detailitem = {
+  //                               TaskID: taskId.data.ID,
+  //                             }
+  //                             this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detailitem)
+  //                               /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
+  //                                 ({
+  //                                   TaskID: taskId.data.ID,
+  //                                 }) */
+  //                               .then(aftermail => {
+  //                                 //Email pending  emailbody to approver                 
+  //                                 this.triggerDocumentUnderReview(this.sourceDocumentID, "Under Review");
+  //                                 //this._adaptiveCard("Review");
 
-                                }).then(redirect => {
-                                  setTimeout(() => {
-                                    this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
-                                    window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
-                                    // this.RedirectUrl;
-                                  }, 10000);
-                                });//aftermail
+  //                                 //aftermail
+  //                                 this._sendAnEmailUsingMSGraph(user.Email, "DocReview", user.Title, this.newDetailItemID);
+  //                                 this.setState({
+  //                                   statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
+  //                                   comments: "",
+  //                                   statusKey: "",
+  //                                   approverEmail: "",
+  //                                   approverName: "",
+  //                                   approverId: "",
+  //                                   buttonHidden: "none"
+  //                                 });
 
-                            });
-                        });//r
-                    }//else
-                  });//hubsiteuser
-              });//user
-          }
+  //                               }).then(redirect => {
+  //                                 setTimeout(() => {
+  //                                   this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
+  //                                   window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+  //                                   // this.RedirectUrl;
+  //                                 }, 10000);
+  //                               });//aftermail
 
-        }
-        //if no reviewers  to approve     
-        else {
-          this.setState({
-            buttonHidden: "none",
-          });
-          const headitem = {                   //headerlist
-            WorkflowStatus: "Under Approval",
-            Workflow: "Approval",
-            ReviewedDate: this.currentDate,
-          }
-          this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headitem)
-          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update
-            ({                   //headerlist
-              WorkflowStatus: "Under Approval",
-              Workflow: "Approval",
-              ReviewedDate: this.currentDate,
-            }); */
-          const inditem = {
-            WorkflowStatus: "Under Approval",//docIndex
-            Workflow: "Approval",
-          }
-          this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
-          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update
-            ({
-              WorkflowStatus: "Under Approval",//docIndex
-              Workflow: "Approval",
-            }); */
-          //Updationg DocumentRevisionlog 
-          const logitem = {
-            Status: "DCC - Reviewed",
-            LogDate: this.currentDate,
-          }
-          this._Service.updateItemById(this.props.siteUrl, this.props.documentRevisionLog, this.state.revisionLogID, logitem)
-          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.getById(this.state.revisionLogID).update({
-            Status: "DCC - Reviewed",
-            LogDate: this.currentDate,
-          }); */
-          const logdata = {
-            Status: "Under Approval",
-            LogDate: this.currentDate,
-            WorkflowID: this.headerId,
-            DocumentIndexId: this.documentIndexId,
-            DueDate: this.state.DueDate,
-            Workflow: "Approval",
-            Revision: this.state.revision,
-            Title: this.state.documentID,
-          }
-          this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLog, logdata)
-          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.add({
-            Status: "Under Approval",
-            LogDate: this.currentDate,
-            WorkflowID: this.headerId,
-            DocumentIndexId: this.documentIndexId,
-            DueDate: this.state.DueDate,
-            Workflow: "Approval",
-            Revision: this.state.revision,
-            Title: this.state.documentID,
-          }); */
-          //upadting source library without version change.            
-          // let bodyArray = [
-          //   { "FieldName": "WorkflowStatus", "FieldValue": "Under Approval" }, { "FieldName": "Workflow", "FieldValue": "Approval" }
-          // ];
-          // sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).validateUpdateListItem
-          //   (
-          //     bodyArray,
-          //   );
-          //Task delegation getting user id from hubsite
-          this._Service.getUserIdByEmail(this.state.approverEmail)
-            //sp.web.siteUsers.getByEmail(this.state.approverEmail).get()
-            .then(async user => {
-              console.log('User Id: ', user.Id);
-              this.setState({
-                hubSiteUserId: user.Id,
-              });
-              //Task delegation 
-              const taskDelegation: any[] = await this._Service.getItemSelectExpandFilter(
-                this.props.siteUrl,
-                this.props.taskDelegationSettingsListName,
-                "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate",
-                "DelegatedFor,DelegatedTo",
-                "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')"
-              )
-              //const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, user.Id)
-              //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettingsListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')").get();
-              console.log(taskDelegation);
-              if (taskDelegation.length > 0) {
-                let duedate = moment(this.dueDateWithoutConversion).toDate();
-                let toDate = moment(taskDelegation[0].ToDate).toDate();
-                let fromDate = moment(taskDelegation[0].FromDate).toDate();
-                duedate = new Date(duedate.getFullYear(), duedate.getMonth(), duedate.getDate());
-                toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
-                fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
-                if (moment(duedate).isBetween(fromDate, toDate) || moment(duedate).isSame(fromDate) || moment(duedate).isSame(toDate)) {
-                  this.setState({
-                    approverEmail: taskDelegation[0].DelegatedTo.EMail,
-                    approverName: taskDelegation[0].DelegatedTo.Title,
-                    delegatedToId: taskDelegation[0].DelegatedTo.ID,
-                    delegatedFromId: taskDelegation[0].DelegatedFor.ID,
-                  });
-                  //duedate checking
+  //                           });
+  //                       });//r
+  //                   }//else
+  //                 });//hubsiteuser
+  //             });//user
+  //         }
 
-                  //detail list adding an item for approval
-                  this._Service.getUserIdByEmail(taskDelegation[0].DelegatedTo.EMail)
-                    //sp.web.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get()
-                    .then(async DelegatedTo => {
-                      this.setState({
-                        delegateToIdInSubSite: DelegatedTo.Id,
-                      });
-                      this._Service.getUserIdByEmail(taskDelegation[0].DelegatedFor.EMail)
-                        //sp.web.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get()
-                        .then(async DelegatedFor => {
-                          this.setState({
-                            delegateForIdInSubSite: DelegatedFor.Id,
-                          });
-                          const detaildata = {
-                            HeaderIDId: Number(this.headerId),
-                            Workflow: "Approval",
-                            Title: this.state.documentName,
-                            ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approverId),
-                            DueDate: this.state.DueDate,
-                            OwnerId: this.state.ownerID,
-                            DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
-                            ResponseStatus: "Under Approval",
-                            SourceDocument: {
-                              "__metadata": { type: "SP.FieldUrlValue" },
-                              Description: this.state.documentName,
-                              Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                            },
-                          }
-                          this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detaildata)
-                            /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add
-                              ({
-                                HeaderIDId: Number(this.headerId),
-                                Workflow: "Approval",
-                                Title: this.state.documentName,
-                                ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approverId),
-                                DueDate: this.state.DueDate,
-                                OwnerId: this.state.ownerID,
-                                DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
-                                ResponseStatus: "Under Approval",
-                                SourceDocument: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
-                                  Description: this.state.documentName,
-                                  Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                                },
-                              }) */
-                            .then(async r => {
-                              this.setState({ detailIdForApprover: r.data.ID });
-                              this.newDetailItemID = r.data.ID;
-                              const detitem = {
-                                Link: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
-                                  Description: this.state.documentName + "-- Approve",
-                                  Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                },
-                              }
-                              this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
-                              /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
-                                Link: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
-                                  Description: this.state.documentName + "-- Approve",
-                                  Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                },
-                              }); */
-                              const headitem = {
-                                ApproverId: this.state.delegateToIdInSubSite
-                              }
-                              this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headitem)
-                              /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update
-                                ({                   //headerlist
-                                  ApproverId: this.state.delegateToIdInSubSite
-                                }); */
-                              const iditem = {
-                                ApproverId: this.state.delegateToIdInSubSite
-                              }
-                              this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
-                              /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update
-                                ({
-                                  ApproverId: this.state.delegateToIdInSubSite
-                                }); */
-                              //upadting source library without version change.   
-                              const sourceitem = {
-                                ApproverId: this.state.delegateToIdInSubSite,
-                              }
-                              this._Service.updateItemById(this.props.siteUrl, "SourceDocuments", this.sourceDocumentID, sourceitem)
-                              /* sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).update({
-                                ApproverId: this.state.delegateToIdInSubSite,
-                              }); */
-                              //MY tasks list updation
-                              const taskdata = {
-                                Title: "Approve '" + this.state.documentName + "'",
-                                Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
-                                DueDate: this.state.DueDate,
-                                StartDate: this.currentDate,
-                                AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : user.Id),
-                                Workflow: "Approval",
-                                Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
-                                Source: (this.props.project ? "Project" : "QDMS"),
-                                DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
-                                Link: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
-                                  Description: this.state.documentName + "-- Approve",
-                                  Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                },
+  //       }
+  //       //if no reviewers  to approve     
+  //       else {
+  //         this.setState({
+  //           buttonHidden: "none",
+  //         });
+  //         const headitem = {                   //headerlist
+  //           WorkflowStatus: "Under Approval",
+  //           Workflow: "Approval",
+  //           ReviewedDate: this.currentDate,
+  //         }
+  //         this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headitem)
+  //         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update
+  //           ({                   //headerlist
+  //             WorkflowStatus: "Under Approval",
+  //             Workflow: "Approval",
+  //             ReviewedDate: this.currentDate,
+  //           }); */
+  //         const inditem = {
+  //           WorkflowStatus: "Under Approval",//docIndex
+  //           Workflow: "Approval",
+  //         }
+  //         this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
+  //         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update
+  //           ({
+  //             WorkflowStatus: "Under Approval",//docIndex
+  //             Workflow: "Approval",
+  //           }); */
+  //         //Updationg DocumentRevisionlog 
+  //         const logitem = {
+  //           Status: "DCC - Reviewed",
+  //           LogDate: this.currentDate,
+  //         }
+  //         this._Service.updateItemById(this.props.siteUrl, this.props.documentRevisionLog, this.state.revisionLogID, logitem)
+  //         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.getById(this.state.revisionLogID).update({
+  //           Status: "DCC - Reviewed",
+  //           LogDate: this.currentDate,
+  //         }); */
+  //         const logdata = {
+  //           Status: "Under Approval",
+  //           LogDate: this.currentDate,
+  //           WorkflowID: this.headerId,
+  //           DocumentIndexId: this.documentIndexId,
+  //           DueDate: this.state.DueDate,
+  //           Workflow: "Approval",
+  //           Revision: this.state.revision,
+  //           Title: this.state.documentID,
+  //         }
+  //         this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLog, logdata)
+  //         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.add({
+  //           Status: "Under Approval",
+  //           LogDate: this.currentDate,
+  //           WorkflowID: this.headerId,
+  //           DocumentIndexId: this.documentIndexId,
+  //           DueDate: this.state.DueDate,
+  //           Workflow: "Approval",
+  //           Revision: this.state.revision,
+  //           Title: this.state.documentID,
+  //         }); */
+  //         //upadting source library without version change.            
+  //         // let bodyArray = [
+  //         //   { "FieldName": "WorkflowStatus", "FieldValue": "Under Approval" }, { "FieldName": "Workflow", "FieldValue": "Approval" }
+  //         // ];
+  //         // sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).validateUpdateListItem
+  //         //   (
+  //         //     bodyArray,
+  //         //   );
+  //         //Task delegation getting user id from hubsite
+  //         this._Service.getUserIdByEmail(this.state.approverEmail)
+  //           //sp.web.siteUsers.getByEmail(this.state.approverEmail).get()
+  //           .then(async user => {
+  //             console.log('User Id: ', user.Id);
+  //             this.setState({
+  //               hubSiteUserId: user.Id,
+  //             });
+  //             //Task delegation 
+  //             const taskDelegation: any[] = await this._Service.getItemSelectExpandFilter(
+  //               this.props.siteUrl,
+  //               this.props.taskDelegationSettingsListName,
+  //               "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate",
+  //               "DelegatedFor,DelegatedTo",
+  //               "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')"
+  //             )
+  //             //const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, user.Id)
+  //             //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettingsListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')").get();
+  //             console.log(taskDelegation);
+  //             if (taskDelegation.length > 0) {
+  //               let duedate = moment(this.dueDateWithoutConversion).toDate();
+  //               let toDate = moment(taskDelegation[0].ToDate).toDate();
+  //               let fromDate = moment(taskDelegation[0].FromDate).toDate();
+  //               duedate = new Date(duedate.getFullYear(), duedate.getMonth(), duedate.getDate());
+  //               toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+  //               fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+  //               if (moment(duedate).isBetween(fromDate, toDate) || moment(duedate).isSame(fromDate) || moment(duedate).isSame(toDate)) {
+  //                 this.setState({
+  //                   approverEmail: taskDelegation[0].DelegatedTo.EMail,
+  //                   approverName: taskDelegation[0].DelegatedTo.Title,
+  //                   delegatedToId: taskDelegation[0].DelegatedTo.ID,
+  //                   delegatedFromId: taskDelegation[0].DelegatedFor.ID,
+  //                 });
+  //                 //duedate checking
 
-                              }
-                              await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
-                                /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add
-                                  ({
-                                    Title: "Approve '" + this.state.documentName + "'",
-                                    Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
-                                    DueDate: this.state.DueDate,
-                                    StartDate: this.currentDate,
-                                    AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : user.Id),
-                                    Workflow: "Approval",
-                                    Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                                    DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
-                                    Source: (this.props.project ? "Project" : "QDMS"),
-                                    DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
-                                    Link: {
-                                      "__metadata": { type: "SP.FieldUrlValue" },
-                                      Description: this.state.documentName + "-- Approve",
-                                      Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                                    },
-  
-                                  }) */
-                                .then(taskId => {
-                                  const detitem = {
-                                    TaskID: taskId.data.ID,
-                                  }
-                                  this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
-                                    /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
-                                      ({
-                                        TaskID: taskId.data.ID,
-                                      }) */
-                                    .then(mailSend => {
-                                      //notification preference checking  
-                                      // this._adaptiveCard("Review");
-                                      this.triggerDocumentReview(this.sourceDocumentID, "Under Approval")
+  //                 //detail list adding an item for approval
+  //                 this._Service.getUserIdByEmail(taskDelegation[0].DelegatedTo.EMail)
+  //                   //sp.web.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get()
+  //                   .then(async DelegatedTo => {
+  //                     this.setState({
+  //                       delegateToIdInSubSite: DelegatedTo.Id,
+  //                     });
+  //                     this._Service.getUserIdByEmail(taskDelegation[0].DelegatedFor.EMail)
+  //                       //sp.web.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get()
+  //                       .then(async DelegatedFor => {
+  //                         this.setState({
+  //                           delegateForIdInSubSite: DelegatedFor.Id,
+  //                         });
+  //                         const detaildata = {
+  //                           HeaderIDId: Number(this.headerId),
+  //                           Workflow: "Approval",
+  //                           Title: this.state.documentName,
+  //                           ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approverId),
+  //                           DueDate: this.state.DueDate,
+  //                           OwnerId: this.state.ownerID,
+  //                           DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+  //                           ResponseStatus: "Under Approval",
+  //                           SourceDocument: {
+  //                             "__metadata": { type: "SP.FieldUrlValue" },
+  //                             Description: this.state.documentName,
+  //                             Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                           },
+  //                         }
+  //                         this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detaildata)
+  //                           /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add
+  //                             ({
+  //                               HeaderIDId: Number(this.headerId),
+  //                               Workflow: "Approval",
+  //                               Title: this.state.documentName,
+  //                               ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approverId),
+  //                               DueDate: this.state.DueDate,
+  //                               OwnerId: this.state.ownerID,
+  //                               DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+  //                               ResponseStatus: "Under Approval",
+  //                               SourceDocument: {
+  //                                 "__metadata": { type: "SP.FieldUrlValue" },
+  //                                 Description: this.state.documentName,
+  //                                 Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                               },
+  //                             }) */
+  //                           .then(async r => {
+  //                             this.setState({ detailIdForApprover: r.data.ID });
+  //                             this.newDetailItemID = r.data.ID;
+  //                             const detitem = {
+  //                               Link: {
+  //                                 "__metadata": { type: "SP.FieldUrlValue" },
+  //                                 Description: this.state.documentName + "-- Approve",
+  //                                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                               },
+  //                             }
+  //                             this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
+  //                             /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
+  //                               Link: {
+  //                                 "__metadata": { type: "SP.FieldUrlValue" },
+  //                                 Description: this.state.documentName + "-- Approve",
+  //                                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                               },
+  //                             }); */
+  //                             const headitem = {
+  //                               ApproverId: this.state.delegateToIdInSubSite
+  //                             }
+  //                             this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, headitem)
+  //                             /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).update
+  //                               ({                   //headerlist
+  //                                 ApproverId: this.state.delegateToIdInSubSite
+  //                               }); */
+  //                             const iditem = {
+  //                               ApproverId: this.state.delegateToIdInSubSite
+  //                             }
+  //                             this._Service.updateItemById(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, inditem)
+  //                             /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).update
+  //                               ({
+  //                                 ApproverId: this.state.delegateToIdInSubSite
+  //                               }); */
+  //                             //upadting source library without version change.   
+  //                             const sourceitem = {
+  //                               ApproverId: this.state.delegateToIdInSubSite,
+  //                             }
+  //                             this._Service.updateItemById(this.props.siteUrl, "SourceDocuments", this.sourceDocumentID, sourceitem)
+  //                             /* sp.web.getList(this.props.siteUrl + "/SourceDocuments").items.getById(this.sourceDocumentID).update({
+  //                               ApproverId: this.state.delegateToIdInSubSite,
+  //                             }); */
+  //                             //MY tasks list updation
+  //                             const taskdata = {
+  //                               Title: "Approve '" + this.state.documentName + "'",
+  //                               Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
+  //                               DueDate: this.state.DueDate,
+  //                               StartDate: this.currentDate,
+  //                               AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : user.Id),
+  //                               Workflow: "Approval",
+  //                               Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                               DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
+  //                               Source: (this.props.project ? "Project" : "QDMS"),
+  //                               DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
+  //                               Link: {
+  //                                 "__metadata": { type: "SP.FieldUrlValue" },
+  //                                 Description: this.state.documentName + "-- Approve",
+  //                                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                               },
 
-                                        .then(aftermail => {
-                                          //Email pending  emailbody to approver                 
-                                          this.validator.hideMessages();
-                                          this.setState({
-                                            comments: "",
-                                            statusKey: "",
-                                            approverEmail: "",
-                                            approverName: "",
-                                            approverId: "",
-                                            buttonHidden: "none"
-                                          });
-                                        }).then(redirect => {
-                                          setTimeout(() => {
-                                            this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
-                                            window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
-                                            // this.RedirectUrl;
-                                          }, 10000);
+  //                             }
+  //                             await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
+  //                               /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add
+  //                                 ({
+  //                                   Title: "Approve '" + this.state.documentName + "'",
+  //                                   Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
+  //                                   DueDate: this.state.DueDate,
+  //                                   StartDate: this.currentDate,
+  //                                   AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : user.Id),
+  //                                   Workflow: "Approval",
+  //                                   Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                                   DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
+  //                                   Source: (this.props.project ? "Project" : "QDMS"),
+  //                                   DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
+  //                                   Link: {
+  //                                     "__metadata": { type: "SP.FieldUrlValue" },
+  //                                     Description: this.state.documentName + "-- Approve",
+  //                                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                                   },
 
-                                        });//aftermail
-                                      this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
-                                    });
-                                });//taskID
-                            });//r
+  //                                 }) */
+  //                               .then(taskId => {
+  //                                 const detitem = {
+  //                                   TaskID: taskId.data.ID,
+  //                                 }
+  //                                 this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
+  //                                   /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
+  //                                     ({
+  //                                       TaskID: taskId.data.ID,
+  //                                     }) */
+  //                                   .then(mailSend => {
+  //                                     //notification preference checking  
+  //                                     // this._adaptiveCard("Review");
+  //                                     this.triggerDocumentReview(this.sourceDocumentID, "Under Approval")
 
-                        });//DelegatedFor
-                    });//DelegatedTo
-                }
-                else {
-                  const detdata = {
-                    HeaderIDId: Number(this.headerId),
-                    Workflow: "Approval",
-                    Title: this.state.documentName,
-                    ResponsibleId: this.state.approverId,
-                    OwnerId: this.state.ownerID,
-                    DueDate: this.state.DueDate,
-                    ResponseStatus: "Under Approval",
-                    SourceDocument: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
-                      Description: this.state.documentName,
-                      Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                    },
-                  }
+  //                                       .then(aftermail => {
+  //                                         //Email pending  emailbody to approver                 
+  //                                         this.validator.hideMessages();
+  //                                         this.setState({
+  //                                           comments: "",
+  //                                           statusKey: "",
+  //                                           approverEmail: "",
+  //                                           approverName: "",
+  //                                           approverId: "",
+  //                                           buttonHidden: "none"
+  //                                         });
+  //                                       }).then(redirect => {
+  //                                         setTimeout(() => {
+  //                                           this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
+  //                                           window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+  //                                           // this.RedirectUrl;
+  //                                         }, 10000);
 
-                  this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detdata)
-                    /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add
-                      ({
-                        HeaderIDId: Number(this.headerId),
-                        Workflow: "Approval",
-                        Title: this.state.documentName,
-                        ResponsibleId: this.state.approverId,
-                        OwnerId: this.state.ownerID,
-                        DueDate: this.state.DueDate,
-                        ResponseStatus: "Under Approval",
-                        SourceDocument: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
-                          Description: this.state.documentName,
-                          Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                        },
-                      }) */
-                    .then(async r => {
-                      this.setState({ detailIdForApprover: r.data.ID });
-                      this.newDetailItemID = r.data.ID;
-                      const detitem = {
-                        Link: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
-                          Description: this.state.documentName + "-- Approve",
-                          Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                        },
-                      }
-                      this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
-                      /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
-                        Link: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
-                          Description: this.state.documentName + "-- Approve",
-                          Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                        },
-                      }); */
+  //                                       });//aftermail
+  //                                     this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
+  //                                   });
+  //                               });//taskID
+  //                           });//r
 
-                      //MY tasks list updation
-                      const taskdata = {
-                        Title: "Approve '" + this.state.documentName + "'",
-                        Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
-                        DueDate: this.state.DueDate,
-                        StartDate: this.currentDate,
-                        AssignedToId: user.Id,
-                        Workflow: "Approval",
-                        Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                        Source: (this.props.project ? "Project" : "QDMS"),
-                        Link: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
-                          Description: this.state.documentName + "-- Approve",
-                          Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                        },
+  //                       });//DelegatedFor
+  //                   });//DelegatedTo
+  //               }
+  //               else {
+  //                 const detdata = {
+  //                   HeaderIDId: Number(this.headerId),
+  //                   Workflow: "Approval",
+  //                   Title: this.state.documentName,
+  //                   ResponsibleId: this.state.approverId,
+  //                   OwnerId: this.state.ownerID,
+  //                   DueDate: this.state.DueDate,
+  //                   ResponseStatus: "Under Approval",
+  //                   SourceDocument: {
+  //                     "__metadata": { type: "SP.FieldUrlValue" },
+  //                     Description: this.state.documentName,
+  //                     Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                   },
+  //                 }
 
-                      }
-                      await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
-                        /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add
-                          ({
-                            Title: "Approve '" + this.state.documentName + "'",
-                            Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
-                            DueDate: this.state.DueDate,
-                            StartDate: this.currentDate,
-                            AssignedToId: user.Id,
-                            Workflow: "Approval",
-                            Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                            Source: (this.props.project ? "Project" : "QDMS"),
-                            Link: {
-                              "__metadata": { type: "SP.FieldUrlValue" },
-                              Description: this.state.documentName + "-- Approve",
-                              Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                            },
-  
-                          }) */
-                        .then(taskId => {
-                          const detitem = {
-                            TaskID: taskId.data.ID,
-                          }
-                          this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
-                            /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
-                              ({
-                                TaskID: taskId.data.ID,
-                              }) */
-                            .then(mailSend => {
-                              //notification preference checking  
-                              //this._adaptiveCard("Review");
-                              this.triggerDocumentReview(this.sourceDocumentID, "Under Approval")
-                                .then(aftermail => {
-                                  //Email pending  emailbody to approver    
-                                  this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
-                                  this.validator.hideMessages();
-                                  this.setState({
-                                    statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
-                                    comments: "",
-                                    statusKey: "",
-                                    approverEmail: "",
-                                    approverName: "",
-                                    approverId: "",
-                                    buttonHidden: "none"
-                                  });
-                                }).then(redirect => {
-                                  setTimeout(() => {
-                                    this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
-                                    window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
-                                    // this.RedirectUrl;
-                                  }, 10000);
-                                });//aftermail
-                            });
-                        });//taskID
-                    });//r
-                }//else no delegation
+  //                 this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detdata)
+  //                   /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add
+  //                     ({
+  //                       HeaderIDId: Number(this.headerId),
+  //                       Workflow: "Approval",
+  //                       Title: this.state.documentName,
+  //                       ResponsibleId: this.state.approverId,
+  //                       OwnerId: this.state.ownerID,
+  //                       DueDate: this.state.DueDate,
+  //                       ResponseStatus: "Under Approval",
+  //                       SourceDocument: {
+  //                         "__metadata": { type: "SP.FieldUrlValue" },
+  //                         Description: this.state.documentName,
+  //                         Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                       },
+  //                     }) */
+  //                   .then(async r => {
+  //                     this.setState({ detailIdForApprover: r.data.ID });
+  //                     this.newDetailItemID = r.data.ID;
+  //                     const detitem = {
+  //                       Link: {
+  //                         "__metadata": { type: "SP.FieldUrlValue" },
+  //                         Description: this.state.documentName + "-- Approve",
+  //                         Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                       },
+  //                     }
+  //                     this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
+  //                     /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
+  //                       Link: {
+  //                         "__metadata": { type: "SP.FieldUrlValue" },
+  //                         Description: this.state.documentName + "-- Approve",
+  //                         Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                       },
+  //                     }); */
 
-              }
+  //                     //MY tasks list updation
+  //                     const taskdata = {
+  //                       Title: "Approve '" + this.state.documentName + "'",
+  //                       Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
+  //                       DueDate: this.state.DueDate,
+  //                       StartDate: this.currentDate,
+  //                       AssignedToId: user.Id,
+  //                       Workflow: "Approval",
+  //                       Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                       Source: (this.props.project ? "Project" : "QDMS"),
+  //                       Link: {
+  //                         "__metadata": { type: "SP.FieldUrlValue" },
+  //                         Description: this.state.documentName + "-- Approve",
+  //                         Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                       },
 
-              else {
-                const detdata = {
-                  HeaderIDId: Number(this.headerId),
-                  Workflow: "Approval",
-                  Title: this.state.documentName,
-                  ResponsibleId: this.state.approverId,
-                  OwnerId: this.state.ownerID,
-                  DueDate: this.state.DueDate,
-                  ResponseStatus: "Under Approval",
-                  SourceDocument: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
-                    Description: this.state.documentName,
-                    Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                  },
-                }
-                this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detdata)
-                  /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add
-                    ({
-                      HeaderIDId: Number(this.headerId),
-                      Workflow: "Approval",
-                      Title: this.state.documentName,
-                      ResponsibleId: this.state.approverId,
-                      OwnerId: this.state.ownerID,
-                      DueDate: this.state.DueDate,
-                      ResponseStatus: "Under Approval",
-                      SourceDocument: {
-                        "__metadata": { type: "SP.FieldUrlValue" },
-                        Description: this.state.documentName,
-                        Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                      },
-                    }) */
-                  .then(async r => {
-                    this.setState({ detailIdForApprover: r.data.ID });
-                    this.newDetailItemID = r.data.ID;
-                    const detitem = {
-                      Link: {
-                        "__metadata": { type: "SP.FieldUrlValue" },
-                        Description: this.state.documentName + "-- Approve",
-                        Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                      },
-                    }
-                    this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
-                    /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
-                      Link: {
-                        "__metadata": { type: "SP.FieldUrlValue" },
-                        Description: this.state.documentName + "-- Approve",
-                        Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                      },
-                    }); */
+  //                     }
+  //                     await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
+  //                       /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add
+  //                         ({
+  //                           Title: "Approve '" + this.state.documentName + "'",
+  //                           Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
+  //                           DueDate: this.state.DueDate,
+  //                           StartDate: this.currentDate,
+  //                           AssignedToId: user.Id,
+  //                           Workflow: "Approval",
+  //                           Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                           Source: (this.props.project ? "Project" : "QDMS"),
+  //                           Link: {
+  //                             "__metadata": { type: "SP.FieldUrlValue" },
+  //                             Description: this.state.documentName + "-- Approve",
+  //                             Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                           },
 
-                    //MY tasks list updation
-                    const taskdata = {
-                      Title: "Approve '" + this.state.documentName + "'",
-                      Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
-                      DueDate: this.state.DueDate,
-                      StartDate: this.currentDate,
-                      AssignedToId: user.Id,
-                      Workflow: "Approval",
-                      Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                      Source: (this.props.project ? "Project" : "QDMS"),
-                      Link: {
-                        "__metadata": { type: "SP.FieldUrlValue" },
-                        Description: this.state.documentName + "-- Approve",
-                        Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                      },
-                    }
-                    await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
-                      /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add
-                        ({
-                          Title: "Approve '" + this.state.documentName + "'",
-                          Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
-                          DueDate: this.state.DueDate,
-                          StartDate: this.currentDate,
-                          AssignedToId: user.Id,
-                          Workflow: "Approval",
-                          Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                          Source: (this.props.project ? "Project" : "QDMS"),
-                          Link: {
-                            "__metadata": { type: "SP.FieldUrlValue" },
-                            Description: this.state.documentName + "-- Approve",
-                            Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
-                          },
-  
-                        }) */
-                      .then(taskId => {
-                        const detitem = {
-                          TaskID: taskId.data.ID,
-                        }
-                        this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
-                          /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
-                            ({
-                              TaskID: taskId.data.ID,
-                            }) */
-                          .then(mailSend => {
-                            //notification preference checking  
-                            // this._adaptiveCard("Approval");
-                            this.triggerDocumentReview(this.sourceDocumentID, "Under Approval")
-                              .then(aftermail => {
-                                //Email pending  emailbody to approver    
-                                this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
-                                this.validator.hideMessages();
-                                this.setState({
-                                  statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
-                                  comments: "",
-                                  statusKey: "",
-                                  approverEmail: "",
-                                  approverName: "",
-                                  approverId: "",
-                                  buttonHidden: "none"
-                                });
-                              }).then(redirect => {
-                                setTimeout(() => {
-                                  this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
-                                  window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
-                                  //this.RedirectUrl;
-                                }, 10000);
-                              });//aftermail
-                          });
-                      });//taskID
-                  });//r
-              }//else no delegation
+  //                         }) */
+  //                       .then(taskId => {
+  //                         const detitem = {
+  //                           TaskID: taskId.data.ID,
+  //                         }
+  //                         this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
+  //                           /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
+  //                             ({
+  //                               TaskID: taskId.data.ID,
+  //                             }) */
+  //                           .then(mailSend => {
+  //                             //notification preference checking  
+  //                             //this._adaptiveCard("Review");
+  //                             this.triggerDocumentReview(this.sourceDocumentID, "Under Approval")
+  //                               .then(aftermail => {
+  //                                 //Email pending  emailbody to approver    
+  //                                 this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
+  //                                 this.validator.hideMessages();
+  //                                 this.setState({
+  //                                   statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
+  //                                   comments: "",
+  //                                   statusKey: "",
+  //                                   approverEmail: "",
+  //                                   approverName: "",
+  //                                   approverId: "",
+  //                                   buttonHidden: "none"
+  //                                 });
+  //                               }).then(redirect => {
+  //                                 setTimeout(() => {
+  //                                   this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
+  //                                   window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+  //                                   // this.RedirectUrl;
+  //                                 }, 10000);
+  //                               });//aftermail
+  //                           });
+  //                       });//taskID
+  //                   });//r
+  //               }//else no delegation
 
-            }).catch(reject => console.error('Error getting Id of user by Email ', reject));
+  //             }
 
-        }
-      }
-    }
+  //             else {
+  //               const detdata = {
+  //                 HeaderIDId: Number(this.headerId),
+  //                 Workflow: "Approval",
+  //                 Title: this.state.documentName,
+  //                 ResponsibleId: this.state.approverId,
+  //                 OwnerId: this.state.ownerID,
+  //                 DueDate: this.state.DueDate,
+  //                 ResponseStatus: "Under Approval",
+  //                 SourceDocument: {
+  //                   "__metadata": { type: "SP.FieldUrlValue" },
+  //                   Description: this.state.documentName,
+  //                   Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                 },
+  //               }
+  //               this._Service.createNewItem(this.props.siteUrl, this.props.workFlowDetail, detdata)
+  //                 /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.add
+  //                   ({
+  //                     HeaderIDId: Number(this.headerId),
+  //                     Workflow: "Approval",
+  //                     Title: this.state.documentName,
+  //                     ResponsibleId: this.state.approverId,
+  //                     OwnerId: this.state.ownerID,
+  //                     DueDate: this.state.DueDate,
+  //                     ResponseStatus: "Under Approval",
+  //                     SourceDocument: {
+  //                       "__metadata": { type: "SP.FieldUrlValue" },
+  //                       Description: this.state.documentName,
+  //                       Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+  //                     },
+  //                   }) */
+  //                 .then(async r => {
+  //                   this.setState({ detailIdForApprover: r.data.ID });
+  //                   this.newDetailItemID = r.data.ID;
+  //                   const detitem = {
+  //                     Link: {
+  //                       "__metadata": { type: "SP.FieldUrlValue" },
+  //                       Description: this.state.documentName + "-- Approve",
+  //                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                     },
+  //                   }
+  //                   this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
+  //                   /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update({
+  //                     Link: {
+  //                       "__metadata": { type: "SP.FieldUrlValue" },
+  //                       Description: this.state.documentName + "-- Approve",
+  //                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                     },
+  //                   }); */
 
-    else {
-      this.validator.showMessages();
-      this.forceUpdate();
-    }
-  }
+  //                   //MY tasks list updation
+  //                   const taskdata = {
+  //                     Title: "Approve '" + this.state.documentName + "'",
+  //                     Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
+  //                     DueDate: this.state.DueDate,
+  //                     StartDate: this.currentDate,
+  //                     AssignedToId: user.Id,
+  //                     Workflow: "Approval",
+  //                     Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                     Source: (this.props.project ? "Project" : "QDMS"),
+  //                     Link: {
+  //                       "__metadata": { type: "SP.FieldUrlValue" },
+  //                       Description: this.state.documentName + "-- Approve",
+  //                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                     },
+  //                   }
+  //                   await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskdata)
+  //                     /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add
+  //                       ({
+  //                         Title: "Approve '" + this.state.documentName + "'",
+  //                         Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
+  //                         DueDate: this.state.DueDate,
+  //                         StartDate: this.currentDate,
+  //                         AssignedToId: user.Id,
+  //                         Workflow: "Approval",
+  //                         Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                         Source: (this.props.project ? "Project" : "QDMS"),
+  //                         Link: {
+  //                           "__metadata": { type: "SP.FieldUrlValue" },
+  //                           Description: this.state.documentName + "-- Approve",
+  //                           Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
+  //                         },
+
+  //                       }) */
+  //                     .then(taskId => {
+  //                       const detitem = {
+  //                         TaskID: taskId.data.ID,
+  //                       }
+  //                       this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detitem)
+  //                         /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
+  //                           ({
+  //                             TaskID: taskId.data.ID,
+  //                           }) */
+  //                         .then(mailSend => {
+  //                           //notification preference checking  
+  //                           // this._adaptiveCard("Approval");
+  //                           this.triggerDocumentReview(this.sourceDocumentID, "Under Approval")
+  //                             .then(aftermail => {
+  //                               //Email pending  emailbody to approver    
+  //                               this._sendAnEmailUsingMSGraph(this.state.approverEmail, "DocApproval", this.state.approverName, this.newDetailItemID);
+  //                               this.validator.hideMessages();
+  //                               this.setState({
+  //                                 statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
+  //                                 comments: "",
+  //                                 statusKey: "",
+  //                                 approverEmail: "",
+  //                                 approverName: "",
+  //                                 approverId: "",
+  //                                 buttonHidden: "none"
+  //                               });
+  //                             }).then(redirect => {
+  //                               setTimeout(() => {
+  //                                 this.setState({ statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 }, });
+  //                                 window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+  //                                 //this.RedirectUrl;
+  //                               }, 10000);
+  //                             });//aftermail
+  //                         });
+  //                     });//taskID
+  //                 });//r
+  //             }//else no delegation
+
+  //           }).catch(reject => console.error('Error getting Id of user by Email ', reject));
+
+  //       }
+  //     }
+  //   }
+
+  //   else {
+  //     this.validator.showMessages();
+  //     this.forceUpdate();
+  //   }
+  // }
   // sending Email
   private async _sendAnEmailUsingMSGraph(email, type, name, detailID): Promise<void> {
     let Subject;
@@ -3424,47 +3432,48 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     if (type == "DocApproval") {
       link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + detailID}>Link</a>`;
       //for binding current reviewers comments in table
-      if (this.props.project) {
-        await this._Service.getItemSelectExpandFilter(
-          this.props.siteUrl,
-          this.props.workFlowDetail,
-          "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow",
-          "Responsible",
-          "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')"
-        )
-          //await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
-          //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow")
-          //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')").get()
-          .then(currentReviewersItems => {
-            console.log("currentReviewersItems", currentReviewersItems);
-            if (currentReviewersItems.length > 0) {
-              console.log("currentReviewersItems", currentReviewersItems);
-              this.setState({
-                currentReviewComment: "",
-                currentReviewItems: currentReviewersItems,
-              });
-              currentReviewersItems.map((item) => {
-                tableBody += "<tr><td>" + item.Responsible.Title + "</td><td>" + moment(item.ResponseDate).format('DD/MM/YYYY, h:mm a') + "</td><td>" + item.ResponseStatus + "</td><td>" + item.ResponsibleComment + "</td><td>" + item.Workflow + "</td></tr>";
-              });
-            }
-          }).then(after => {
-            tableHeader = `<table style=" border: 1px solid #ddd;width: 100%;border-collapse: collapse;text-align: center;v">
-   <tr  style="background-color: #002d71;     color: white;text-align: center;">
-   <th >Reviewer</th>
-   <th >Review Date</th>
-   <th >Response Status</th>
-   <th >Review Comment</th>
-   <th >Workflow</th>
- </tr>
- <tbody style ="width: 100%;
- border-collapse: collapse;border: 2px solid #ddd";text-align: center;>`;
+      //       if (this.props.project) {
+      //         await this._Service.getItemSelectExpandFilter(
+      //           this.props.siteUrl,
+      //           this.props.workFlowDetail,
+      //           "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow",
+      //           "Responsible",
+      //           "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')"
+      //         )
+      //           //await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+      //           //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow")
+      //           //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')").get()
+      //           .then(currentReviewersItems => {
+      //             console.log("currentReviewersItems", currentReviewersItems);
+      //             if (currentReviewersItems.length > 0) {
+      //               console.log("currentReviewersItems", currentReviewersItems);
+      //               this.setState({
+      //                 currentReviewComment: "",
+      //                 currentReviewItems: currentReviewersItems,
+      //               });
+      //               currentReviewersItems.map((item) => {
+      //                 tableBody += "<tr><td>" + item.Responsible.Title + "</td><td>" + moment(item.ResponseDate).format('DD/MM/YYYY, h:mm a') + "</td><td>" + item.ResponseStatus + "</td><td>" + item.ResponsibleComment + "</td><td>" + item.Workflow + "</td></tr>";
+      //               });
+      //             }
+      //           }).then(after => {
+      //             tableHeader = `<table style=" border: 1px solid #ddd;width: 100%;border-collapse: collapse;text-align: center;v">
+      //    <tr  style="background-color: #002d71;     color: white;text-align: center;">
+      //    <th >Reviewer</th>
+      //    <th >Review Date</th>
+      //    <th >Response Status</th>
+      //    <th >Review Comment</th>
+      //    <th >Workflow</th>
+      //  </tr>
+      //  <tbody style ="width: 100%;
+      //  border-collapse: collapse;border: 2px solid #ddd";text-align: center;>`;
 
-            tableFooter = `</tbody>
- </table>`;
-            finalBody = tableHeader + tableBody + tableFooter;
-          });
-      }
-      else {
+      //             tableFooter = `</tbody>
+      //  </table>`;
+      //             finalBody = tableHeader + tableBody + tableFooter;
+      //           });
+      //       }
+      //       else
+      {
         await this._Service.getItemSelectExpandFilter(
           this.props.siteUrl,
           this.props.workFlowDetail,
@@ -3507,92 +3516,93 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     }
     else if (type == "DocReview") {
       link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + detailID}>Link</a>`;
-      if (this.props.project) {
-        await this._Service.getItemSelectExpandFilter(
-          this.props.siteUrl,
-          this.props.workFlowDetail,
-          "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow",
-          "Responsible",
-          "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review') and (ResponseStatus ne 'Under Review') "
-        )
-          //await this._Service.getResponseStatusNeUnderReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
-          //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow")
-          //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review') and (ResponseStatus ne 'Under Review') ").get()
-          .then(currentReviewersItems => {
-            console.log("currentReviewersItems", currentReviewersItems);
-            if (currentReviewersItems.length > 0) {
-              console.log("currentReviewersItems", currentReviewersItems);
-              this.setState({
-                currentReviewComment: "",
-                currentReviewItems: currentReviewersItems,
-              });
-              currentReviewersItems.map((item) => {
-                tableBody += "<tr><td>" + item.Responsible.Title + "</td><td>" + moment(item.ResponseDate).format('DD/MM/YYYY, h:mm a') + "</td><td>" + item.ResponseStatus + "</td><td>" + item.ResponsibleComment + "</td><td>" + item.Workflow + "</td></tr>";
-              });
-            }
-          }).then(after => {
-            tableHeader = `<table style=" border: 1px solid #ddd;width: 100%;border-collapse: collapse;text-align: center;">
-   <tr  style="background-color: #002d71;     color: white;text-align: center;">
-   <th >Reviewer</th>
-   <th >Review Date</th>
-   <th >Response Status</th>
-   <th >Review Comment</th>
-   <th >Workflow</th>
- </tr>
- <tbody style ="width: 100%;
- border-collapse: collapse;border: 2px solid #ddd";text-align: center;>`;
+      //       if (this.props.project) {
+      //         await this._Service.getItemSelectExpandFilter(
+      //           this.props.siteUrl,
+      //           this.props.workFlowDetail,
+      //           "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow",
+      //           "Responsible",
+      //           "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review') and (ResponseStatus ne 'Under Review') "
+      //         )
+      //           //await this._Service.getResponseStatusNeUnderReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+      //           //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow")
+      //           //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review') and (ResponseStatus ne 'Under Review') ").get()
+      //           .then(currentReviewersItems => {
+      //             console.log("currentReviewersItems", currentReviewersItems);
+      //             if (currentReviewersItems.length > 0) {
+      //               console.log("currentReviewersItems", currentReviewersItems);
+      //               this.setState({
+      //                 currentReviewComment: "",
+      //                 currentReviewItems: currentReviewersItems,
+      //               });
+      //               currentReviewersItems.map((item) => {
+      //                 tableBody += "<tr><td>" + item.Responsible.Title + "</td><td>" + moment(item.ResponseDate).format('DD/MM/YYYY, h:mm a') + "</td><td>" + item.ResponseStatus + "</td><td>" + item.ResponsibleComment + "</td><td>" + item.Workflow + "</td></tr>";
+      //               });
+      //             }
+      //           }).then(after => {
+      //             tableHeader = `<table style=" border: 1px solid #ddd;width: 100%;border-collapse: collapse;text-align: center;">
+      //    <tr  style="background-color: #002d71;     color: white;text-align: center;">
+      //    <th >Reviewer</th>
+      //    <th >Review Date</th>
+      //    <th >Response Status</th>
+      //    <th >Review Comment</th>
+      //    <th >Workflow</th>
+      //  </tr>
+      //  <tbody style ="width: 100%;
+      //  border-collapse: collapse;border: 2px solid #ddd";text-align: center;>`;
 
-            tableFooter = `</tbody>
- </table>`;
-            finalBody = tableHeader + tableBody + tableFooter;
-          });
-      }
+      //             tableFooter = `</tbody>
+      //  </table>`;
+      //             finalBody = tableHeader + tableBody + tableFooter;
+      //           });
+      //       }
     }
     //returned with comments mail body
     else if (type == "DocReturn") {
-      if (this.props.project) {
-        await this._Service.getItemSelectExpandFilter(
-          this.props.siteUrl,
-          this.props.workFlowDetail,
-          "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,SourceDocument,Workflow",
-          "Responsible",
-          "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')"
-        )
-          //await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
-          //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,SourceDocument,Workflow")
-          //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')").get()
-          .then(currentReviewersItems => {
-            console.log("currentReviewersItems", currentReviewersItems);
-            if (currentReviewersItems.length > 0) {
-              console.log("currentReviewersItems", currentReviewersItems);
-              this.setState({
-                currentReviewComment: "",
-                currentReviewItems: currentReviewersItems,
-                linkToDoc: currentReviewersItems[0].SourceDocument.Url,
-              });
-              currentReviewersItems.map((item) => {
-                tableBody += "<tr><td>" + item.Responsible.Title + "</td><td>" + moment(item.ResponseDate).format('DD/MM/YYYY, h:mm a') + "</td><td>" + item.ResponseStatus + "</td><td>" + item.ResponsibleComment + "</td><td>" + item.Workflow + "</td></tr>";
-              });
-            }
-          }).then(after => {
-            tableHeader = `<table style=" border: 1px solid #ddd;width: 100%;border-collapse: collapse;text-align: center;">
-   <tr  style="background-color: #002d71;     color: white;text-align: center;">
-   <th >Reviewer</th>
-   <th >Review Date</th>
-   <th >Response Status</th>
-   <th >Review Comment</th>
-   <th >Workflow</th>
- </tr>
- <tbody style ="width: 100%;
- border-collapse: collapse;border: 2px solid #ddd";text-align: center;>`;
+      //       if (this.props.project) {
+      //         await this._Service.getItemSelectExpandFilter(
+      //           this.props.siteUrl,
+      //           this.props.workFlowDetail,
+      //           "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,SourceDocument,Workflow",
+      //           "Responsible",
+      //           "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')"
+      //         )
+      //           //await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+      //           //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,SourceDocument,Workflow")
+      //           //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')").get()
+      //           .then(currentReviewersItems => {
+      //             console.log("currentReviewersItems", currentReviewersItems);
+      //             if (currentReviewersItems.length > 0) {
+      //               console.log("currentReviewersItems", currentReviewersItems);
+      //               this.setState({
+      //                 currentReviewComment: "",
+      //                 currentReviewItems: currentReviewersItems,
+      //                 linkToDoc: currentReviewersItems[0].SourceDocument.Url,
+      //               });
+      //               currentReviewersItems.map((item) => {
+      //                 tableBody += "<tr><td>" + item.Responsible.Title + "</td><td>" + moment(item.ResponseDate).format('DD/MM/YYYY, h:mm a') + "</td><td>" + item.ResponseStatus + "</td><td>" + item.ResponsibleComment + "</td><td>" + item.Workflow + "</td></tr>";
+      //               });
+      //             }
+      //           }).then(after => {
+      //             tableHeader = `<table style=" border: 1px solid #ddd;width: 100%;border-collapse: collapse;text-align: center;">
+      //    <tr  style="background-color: #002d71;     color: white;text-align: center;">
+      //    <th >Reviewer</th>
+      //    <th >Review Date</th>
+      //    <th >Response Status</th>
+      //    <th >Review Comment</th>
+      //    <th >Workflow</th>
+      //  </tr>
+      //  <tbody style ="width: 100%;
+      //  border-collapse: collapse;border: 2px solid #ddd";text-align: center;>`;
 
-            tableFooter = `</tbody>
- </table>`;
-            finalBody = tableHeader + tableBody + tableFooter;
-            DocumentLink = `<a href=${this.state.linkToDoc}>Document Link </a>`;
-          });
-      }
-      else {
+      //             tableFooter = `</tbody>
+      //  </table>`;
+      //             finalBody = tableHeader + tableBody + tableFooter;
+      //             DocumentLink = `<a href=${this.state.linkToDoc}>Document Link </a>`;
+      //           });
+      //       }
+      //       else
+      {
         await this._Service.getItemSelectExpandFilter(
           this.props.siteUrl,
           this.props.workFlowDetail,

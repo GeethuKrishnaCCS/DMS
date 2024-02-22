@@ -32,7 +32,6 @@ export default class EditDocumentWebPart extends BaseClientSideWebPart<IEditDocu
         hubUrl: this.properties.hubUrl,
         hubsite: this.properties.hubsite,
         redirectUrl: this.properties.redirectUrl,
-        project: this.properties.project,
         notificationPreference: this.properties.notificationPreference,
         emailNotification: this.properties.emailNotification,
         userMessageSettings: this.properties.userMessageSettings,
@@ -49,9 +48,6 @@ export default class EditDocumentWebPart extends BaseClientSideWebPart<IEditDocu
         siteAddress: this.properties.siteAddress,
         sourceDocumentViewLibrary: this.properties.sourceDocumentViewLibrary,
         documentRevisionLogList: this.properties.documentRevisionLogList,
-        revisionLevelList: this.properties.revisionLevelList,
-        revisionSettingsList: this.properties.revisionSettingsList,
-        projectInformationListName: this.properties.projectInformationListName,
         backUrl: this.properties.backUrl,
         transmittalHistory: this.properties.transmittalHistory,
         revokePage: this.properties.revokePage,
@@ -238,26 +234,8 @@ export default class EditDocumentWebPart extends BaseClientSideWebPart<IEditDocu
                   label: 'Source Document View Library'
                 }),
               ]
-            },
-            {
-              groupName: "Project",
-              groupFields: [
-                PropertyPaneToggle('project', {
-                  label: 'Project',
-                  onText: 'On',
-                  offText: 'Off'
-                }),
-                PropertyPaneTextField('revisionLevelList', {
-                  label: 'Revision Level List'
-                }),
-                PropertyPaneTextField('revisionSettingsList', {
-                  label: 'Revision Settings List'
-                }),
-                PropertyPaneTextField('projectInformationListName', {
-                  label: 'Project Information ListName'
-                }),
-              ]
             }
+
           ]
         }
       ]

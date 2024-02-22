@@ -25,7 +25,7 @@ export default class RevisionHistoryWebPart extends BaseClientSideWebPart<IRevis
         description: this.properties.description,
         timeLineColor: this.properties.timeLineColor,
         context: this.context,
-        project: this.properties.project,
+        //project: this.properties.project,
         hubSiteUrl: this.properties.hubSiteUrl,
         hubSite: this.properties.hubSite,
         siteUrl: this.context.pageContext.web.serverRelativeUrl,
@@ -138,11 +138,11 @@ export default class RevisionHistoryWebPart extends BaseClientSideWebPart<IRevis
                 PropertyPaneTextField('description', {
                   label: strings.DescriptionFieldLabel
                 }),
-                PropertyPaneToggle('project', {
-                  label: 'Project',
-                  onText: 'On',
-                  offText: 'Off'
-                }),
+                //PropertyPaneToggle('project', {
+                //  label: 'Project',
+                //  onText: 'On',
+                //  offText: 'Off'
+                // }),
                 PropertyPaneTextField('timeLineColor', {
                   label: "Time Line Color"
                 }),

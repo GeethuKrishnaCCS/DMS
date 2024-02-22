@@ -10,7 +10,6 @@ import * as _ from 'lodash';
 import replaceString from 'replace-string';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { cdmsEditService } from '../services';
-//import Iframe from 'react-iframe';
 
 const back: IIconProps = { iconName: 'ChromeBack' };
 
@@ -456,15 +455,15 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let approverEmail;
     let approverName;
     let getSelectedApprover: any[] = [];
-    if (this.props.project) {
-      for (let item in items) {
-        approverEmail = items[item].secondaryText,
-          approverName = items[item].text,
-          getSelectedApprover.push(items[item].id);
-      }
-      this.setState({ approver: getSelectedApprover[0], approverEmail: approverEmail, approverName: approverName, saveDisable: false });
-    }
-    else {
+    // if (this.props.project) {
+    //   for (let item in items) {
+    //     approverEmail = items[item].secondaryText,
+    //       approverName = items[item].text,
+    //       getSelectedApprover.push(items[item].id);
+    //   }
+    //   this.setState({ approver: getSelectedApprover[0], approverEmail: approverEmail, approverName: approverName, saveDisable: false });
+    // }
+    {
       this.setState({ validApprover: "", approver: null, approverEmail: "", approverName: "", });
 
       const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
@@ -535,12 +534,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
         hideupload: "none",
         replaceDocumentCheckbox: false,
       });
-      if (this.props.project) {
-        upload = "#editproject";
-      }
-      else {
-        upload = "#editqdms";
-      }
+      // if (this.props.project) {
+      //   upload = "#editproject";
+      // }
+      // else {
+      upload = "#editqdms";
+      //}
       // @ts-ignore
       (document.querySelector(upload) as HTMLInputElement).value = null;
     }
@@ -562,7 +561,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     if (isChecked) {
       console.log("site :" + this.siteUrl);
       console.log("qdms :" + qdms);
-      if (!this.props.project) {
+      //if (!this.props.project)
+      {
         if (this.siteUrl == qdms) {
           this.setState({ hidesource: "none" })
         }
@@ -584,7 +584,9 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
         sorted_PublishedDocument = _.orderBy(publishedDocumentArray, 'text', ['asc']);
         this.setState({ templateDocuments: sorted_PublishedDocument });
       }
-      else {
+      // else
+      {
+
         this.setState({ template: true, hidesource: "", upload: false, hideupload: "none", hidetemplate: "" });
       }
 
@@ -601,12 +603,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let type;
     let doctype;
     this.isDocument = "Yes";
-    if (this.props.project) {
-      //  upload = "#editproject";
-    }
-    else {
-      // upload = "#editqdms";
-    }
+    // if (this.props.project) {
+    //   //  upload = "#editproject";
+    // }
+    // else {
+    //   // upload = "#editqdms";
+    // }
     let myfile = e.target.files[0];
     console.log(myfile);
     this.isDocument = "Yes";
@@ -744,11 +746,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   //Direct Publish change
   private _onDirectPublishChecked = (ev: React.FormEvent<HTMLInputElement>, isChecked?: boolean) => {
     if (isChecked) {
-      if (this.props.project) {
-        this.setState({ checkdirect: "", });
-        this._checkdirectPublish('Project_DirectPublish');
-      }
-      else {
+      // if (this.props.project) {
+      //   this.setState({ checkdirect: "", });
+      //   this._checkdirectPublish('Project_DirectPublish');
+      // }
+      // else
+      {
         this.setState({ checkdirect: "", });
         this._checkdirectPublish('QDMS_DirectPublish');
       }
@@ -1060,12 +1063,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 await this._updateSourceDocument();
               }).then(async updateDocumentIndex => {
                 let revision;
-                if (this.props.project) {
-                  revision = "-";
-                }
-                else {
-                  revision = "0";
-                }
+                // if (this.props.project) {
+                //   revision = "-";
+                // }
+                // else {
+                revision = "0";
+                //}
                 this._updatePublishDocument();
                 let logItems = {
                   Title: this.state.documentid,

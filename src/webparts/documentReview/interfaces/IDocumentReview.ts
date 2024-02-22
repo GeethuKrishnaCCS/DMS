@@ -3,7 +3,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 export interface IDocumentReviewProps {
   description: string;
   webPartName: string;
-  project: string;
+  //project: string;
   redirectUrl: string;
   siteUrl: string;
   workflowHeaderListName: string;
@@ -105,7 +105,7 @@ export interface IDocumentReviewState {
 export interface IDocumentReviewWebPartProps {
   description: string;
   webPartName: string;
-  project: string;
+  // project: string;
   redirectUrl: string;
   siteUrl: string;
   workflowHeaderListName: string;

@@ -14,7 +14,6 @@ export interface IEditDocumentProps {
     hubsite: string;
     userMessageSettings: string;
     documentIndexList: string;
-    project: string;
     notificationPreference: string;
     emailNotification: string;
     businessUnit: string;
@@ -29,9 +28,6 @@ export interface IEditDocumentProps {
     siteAddress: string;
     sourceDocumentViewLibrary: string;
     documentRevisionLogList: string;
-    revisionLevelList: string;
-    revisionSettingsList: string;
-    projectInformationListName: string;
     backUrl: string;
     transmittalHistory: string;
     revokePage: string;
@@ -180,7 +176,6 @@ export interface IEditDocumentWebPartProps {
     hubsite: string;
     userMessageSettings: string;
     documentIndexList: string;
-    project: string;
     notificationPreference: string;
     emailNotification: string;
     businessUnit: string;
