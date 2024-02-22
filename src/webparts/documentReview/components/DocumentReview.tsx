@@ -156,8 +156,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this._currentUser();
     this._queryParamGetting();
     //Get Approver
-
-    const headerItem: any = await this._Service.getDocumentIndexID(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId)
+    const headerItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, "DocumentIndexID")
+    //const headerItem: any = await this._Service.getDocumentIndexID(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId)
     //const headerItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).select("DocumentIndexID").get();
     this.documentIndexId = headerItem.DocumentIndexID;
     //Permission handiling 
@@ -169,7 +169,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   }
   //user message settings..
   private async _userMessageSettings() {
-    const userMessageSettings: any[] = await this._Service.getUserMessageForReview(this.props.siteUrl, this.props.userMessageSettings);
+    const userMessageSettings: any[] = await this._Service.getItemSelectFilter(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'Review'")
+    //const userMessageSettings: any[] = await this._Service.getUserMessageForReview(this.props.siteUrl, this.props.userMessageSettings);
     //const userMessageSettings: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.userMessageSettings).items.select("Title,Message").filter("PageName eq 'Review'").get();
     console.log(userMessageSettings);
     for (var i in userMessageSettings) {
@@ -283,11 +284,13 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       this._onPageLoadDataBind();
     }
     else {
-      AccessGroup = await this._Service.getQDMS_SendReviewWF(this.props.siteUrl, this.props.accessGroups)
+      AccessGroup = await this._Service.getItemSelectFilter(this.props.siteUrl, this.props.accessGroups, "AccessGroups,AccessFields", "Title eq 'QDMS_SendReviewWF'")
+      //AccessGroup = await this._Service.getQDMS_SendReviewWF(this.props.siteUrl, this.props.accessGroups)
       //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroups).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendReviewWF'").get();
       let AccessGroupItems: any[] = AccessGroup[0].AccessGroups.split(',');
       console.log("AccessGroupItems", AccessGroupItems);
-      const DocumentIndexItem: any = await this._Service.getBusinessDepartment(this.props.siteUrl, this.props.documentIndex, this.documentIndexId)
+      const DocumentIndexItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, "DepartmentID,BusinessUnitID")
+      //const DocumentIndexItem: any = await this._Service.getBusinessDepartment(this.props.siteUrl, this.props.documentIndex, this.documentIndexId)
       //const DocumentIndexItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).select("DepartmentID,BusinessUnitID").get();
       console.log("DocumentIndexItem", DocumentIndexItem);
       //cheching if department selected
@@ -341,7 +344,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     let AG;
     for (let a = 0; a < AccessGroupItems.length; a++) {
       AG = AccessGroupItems[a];
-      const accessGroupID: any = await this._Service.getItemTitleFilter(this.props.siteUrl, this.props.accessGroupDetailsList, AG)
+      const accessGroupID: any = await this._Service.getItemFilter(this.props.siteUrl, this.props.accessGroupDetailsList, "Title eq '" + AG + "'")
+      //const accessGroupID: any = await this._Service.getItemTitleFilter(this.props.siteUrl, this.props.accessGroupDetailsList, AG)
       //const accessGroupID: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroupDetailsList).items.filter("Title eq '" + AG + "'").get();
       let AccessGroupID;
       if (accessGroupID.length > 0) {
@@ -353,7 +357,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     }
   }
   private _LAUrlGettingForPermission = async () => {
-    const laUrl = await this._Service.getItemTitleFilter(this.props.siteUrl, this.props.masterListName, "QDMS_PermissionWebpart")
+    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.masterListName, "Title eq 'QDMS_PermissionWebpart'")
+    //const laUrl = await this._Service.getItemTitleFilter(this.props.siteUrl, this.props.masterListName, "QDMS_PermissionWebpart")
     //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.masterListName).items.filter("Title eq 'QDMS_PermissionWebpart'").get();
     console.log("PosturlForPermission", laUrl[0].PostUrl);
     this.postUrlForPermission = laUrl[0].PostUrl;
@@ -413,7 +418,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
 
   //checking current user  is a reviewer
   private async _checkingReviewStatus() {
-    this._Service.getWFDetailWithResponsible(this.props.siteUrl, this.props.workFlowDetail, this.detailID)
+    this._Service.getItemSelectExpandFilter(
+      this.props.siteUrl,
+      this.props.workFlowDetail,
+      "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,TaskID",
+      "Responsible",
+      "ID eq '" + this.detailID + "'"
+    )
+      //this._Service.getWFDetailWithResponsible(this.props.siteUrl, this.props.workFlowDetail, this.detailID)
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,TaskID").expand("Responsible").filter("ID eq '" + this.detailID + "'").get()
       .then(Items => {
         // console.log(Items);
@@ -434,7 +446,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
         }
       });
     //for binding current reviewers comments in table
-    this._Service.getDetailWorkflowReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+    this._Service.getItemSelectExpandFilter(
+      this.props.siteUrl,
+      this.props.workFlowDetail,
+      "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate",
+      "Responsible",
+      "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review') "
+    )
+      //this._Service.getDetailWorkflowReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate")
       //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review') ").get()
       .then(currentReviewersItems => {
@@ -457,7 +476,13 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
 
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId)
       //.select(headerItems).expand("Owner,Approver,Requester,DocumentController").get()
-      this._Service.getHeaderItemsDocumentController(this.props.siteUrl, this.props.workflowHeaderListName)
+      this._Service.getItemSelectExpand(
+        this.props.siteUrl,
+        this.props.workflowHeaderListName,
+        "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,Owner/Title,Owner/ID,Owner/EMail,Revision,WorkflowStatus,Title,DocumentIndexID,RequesterComment,RequestedDate,DueDate,PreviousReviewHeader,DocumentID,SourceDocumentID,DocumentController/Title,DocumentController/EMail,DocumentController/Id,DCCCompletionDate,Workflow",
+        "Owner,Approver,Requester,DocumentController"
+      )
+        //this._Service.getHeaderItemsDocumentController(this.props.siteUrl, this.props.workflowHeaderListName)
         .then(dataitems => {
           //console.log(workFlowHeaderItems);
           let workFlowHeaderItems: any = dataitems;
@@ -511,7 +536,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     else {
       //header list for qdms 
       //var headerItems = "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,Owner/Title,Owner/ID,Owner/EMail,Revision,WorkflowStatus,Title,DocumentIndexID,RequesterComment,RequestedDate,DueDate,PreviousReviewHeader,DocumentID,SourceDocumentID,Workflow";
-      this._Service.getWFHOwnerApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId)
+      this._Service.getByIdSelectExpand(
+        this.props.siteUrl,
+        this.props.workflowHeaderListName,
+        this.headerId,
+        "Requester/ID,Requester/Title,Requester/EMail,Approver/ID,Approver/Title,Approver/EMail,Owner/Title,Owner/ID,Owner/EMail,Revision,WorkflowStatus,Title,DocumentIndexID,RequesterComment,RequestedDate,DueDate,PreviousReviewHeader,DocumentID,SourceDocumentID,Workflow",
+        "Owner,Approver,Requester"
+      )
+        //this._Service.getWFHOwnerApproverRequester(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId)
         //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.getById(this.headerId).select(headerItems).expand("Owner,Approver,Requester").get()
         .then(dataitems => {
           // console.log(workFlowHeaderItems);
@@ -599,13 +631,15 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     }
   }
   private _LAUrlGetting = async () => {
-    const laUrl = await this._Service.getQDMS_DocumentPermission_UnderApproval(this.props.siteUrl, this.props.masterListName)
+    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.masterListName, "Title eq 'QDMS_DocumentPermission_UnderApproval'")
+    //const laUrl = await this._Service.getQDMS_DocumentPermission_UnderApproval(this.props.siteUrl, this.props.masterListName)
     //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.masterListName).items.filter("Title eq 'QDMS_DocumentPermission_UnderApproval'").get();
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
   }
   private _LAUrlGettingForUnderReview = async () => {
-    const laUrl = await this._Service.getQDMS_DocumentPermission_UnderReview(this.props.siteUrl, this.props.masterListName)
+    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.masterListName, "Title eq 'QDMS_DocumentPermission_UnderReview'")
+    //const laUrl = await this._Service.getQDMS_DocumentPermission_UnderReview(this.props.siteUrl, this.props.masterListName)
     //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.masterListName).items.filter("Title eq 'QDMS_DocumentPermission_UnderReview'").get();
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrlForUnderReview = laUrl[0].PostUrl;
@@ -663,7 +697,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //getting document id
   private _documentIndexListBind(documentIndexId) {
     //document index list with document id
-    this._Service.getItemByIdSelect(this.props.siteUrl, this.props.documentIndex, documentIndexId, "CriticalDocument,DocumentName,SourceDocument")
+    this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndex, documentIndexId, "CriticalDocument,DocumentName,SourceDocument")
       //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(documentIndexId).select("CriticalDocument,DocumentName,SourceDocument").get()
       .then(documentIndexItems => {
         console.log(documentIndexItems);
@@ -701,7 +735,12 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     let date = today.toLocaleString();
     //Updationg DocumentRevisionlog
     if (this.props.project && this.workFlow == "dcc") {
-      this._Service.getDCCReviewUnderReview(this.props.siteUrl, this.props.documentRevisionLog, this.headerId, this.documentIndexId)
+      this._Service.getItemFilter(
+        this.props.siteUrl,
+        this.props.documentRevisionLog,
+        "WorkflowID eq '" + this.headerId + "' and (DocumentIndexId eq '" + this.documentIndexId + "') and (Workflow eq 'DCC Review') and (Status eq 'Under Review')"
+      )
+        //this._Service.getDCCReviewUnderReview(this.props.siteUrl, this.props.documentRevisionLog, this.headerId, this.documentIndexId)
         //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.filter("WorkflowID eq '" + this.headerId + "' and (DocumentIndexId eq '" + this.documentIndexId + "') and (Workflow eq 'DCC Review') and (Status eq 'Under Review')").get()
         .then(ifyes => {
           if (ifyes.length > 0) {
@@ -714,7 +753,12 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
         });
     }
     else {
-      this._Service.getWorkflowReviewUnderReview(this.props.siteUrl, this.props.documentRevisionLog, this.headerId, this.documentIndexId)
+      this._Service.getItemFilter(
+        this.props.siteUrl,
+        this.props.documentRevisionLog,
+        "WorkflowID eq '" + this.headerId + "' and (DocumentIndexId eq '" + this.documentIndexId + "') and (Workflow eq 'Review') and (Status eq 'Under Review')"
+      )
+        //this._Service.getWorkflowReviewUnderReview(this.props.siteUrl, this.props.documentRevisionLog, this.headerId, this.documentIndexId)
         //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLog).items.filter("WorkflowID eq '" + this.headerId + "' and (DocumentIndexId eq '" + this.documentIndexId + "') and (Workflow eq 'Review') and (Status eq 'Under Review')").get()
         .then(ifyes => {
           if (ifyes.length > 0) {
@@ -755,13 +799,27 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   }
   //To view response comments in table.
   private async _loadPreviousReturnWithComments(previousReviewHeader) {
-    const workflowDetailItems: any[] = await this._Service.getResponsibleWithWFReview(this.props.siteUrl, this.props.workFlowDetail, previousReviewHeader)
+    const workflowDetailItems: any[] = await this._Service.getItemSelectExpandFilter(
+      this.props.siteUrl,
+      this.props.workFlowDetail,
+      "Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate",
+      "Responsible",
+      "HeaderID eq '" + previousReviewHeader + "' and (Workflow eq 'Review')  "
+    )
+    //const workflowDetailItems: any[] = await this._Service.getResponsibleWithWFReview(this.props.siteUrl, this.props.workFlowDetail, previousReviewHeader)
     //const workflowDetailItems: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate").expand("Responsible").filter("HeaderID eq '" + previousReviewHeader + "' and (Workflow eq 'Review')  ").get();
     this.setState({
       reviewerItems: workflowDetailItems,
     });
     console.log(workflowDetailItems);
-    const dccComments: any[] = await this._Service.getWorkflowDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+    const dccComments: any[] = await this._Service.getItemSelectExpandFilter(
+      this.props.siteUrl,
+      this.props.workFlowDetail,
+      "Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate,ResponsibleComment,ResponseDate",
+      "Responsible",
+      "HeaderID eq '" + this.headerId + "' and (Workflow eq 'DCC Review')  "
+    )
+    //const dccComments: any[] = await this._Service.getWorkflowDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
     //const dccComments: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate,ResponsibleComment,ResponseDate").expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'DCC Review')  ").get();
     if (dccComments.length > 0) {
       this.setState({
@@ -772,7 +830,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       console.log("dccReviewItems", this.state.dccReviewItems);
     }
     if (this.props.project && this.workFlow == "dcc") {
-      const dccComments: any[] = await this._Service.getWorkflowDCCReview(this.props.siteUrl, this.props.workFlowDetail, previousReviewHeader)
+      const dccComments: any[] = await this._Service.getItemSelectExpandFilter(
+        this.props.siteUrl,
+        this.props.workFlowDetail,
+        "Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate,ResponsibleComment,ResponseDate",
+        "Responsible",
+        "HeaderID eq '" + previousReviewHeader + "' and (Workflow eq 'DCC Review')  "
+      )
+      //const dccComments: any[] = await this._Service.getWorkflowDCCReview(this.props.siteUrl, this.props.workFlowDetail, previousReviewHeader)
       //const dccComments: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,ResponsibleComment,ResponseDate,ResponsibleComment,ResponseDate").expand("Responsible").filter("HeaderID eq '" + previousReviewHeader + "' and (Workflow eq 'DCC Review')  ").get();
       if (dccComments.length > 0) {
         this.setState({
@@ -835,7 +900,13 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
               //await list.items.getById(this.taskID).delete();
             }
           }).then(detailLIstUpdate => {
-            this._Service.getWFDetailResponseStatus(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+            this._Service.getItemSelectFilter(
+              this.props.siteUrl,
+              this.props.workFlowDetail,
+              "ResponseStatus",
+              "HeaderID eq " + this.headerId + " and (Workflow eq 'Review')"
+            )
+              //this._Service.getWFDetailResponseStatus(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
               //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("ResponseStatus").filter("HeaderID eq " + this.headerId + " and (Workflow eq 'Review')").get()
               .then(async ResponseStatus => {
                 if (ResponseStatus.length > 0) { //checking all reviewers response status
@@ -931,7 +1002,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                           hubSiteUserId: user.Id,
                         });
                         //Task delegation 
-                        const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, user.Id)
+                        const taskDelegation: any[] = await this._Service.getItemSelectExpandFilter(
+                          this.props.siteUrl,
+                          this.props.taskDelegationSettingsListName,
+                          "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate",
+                          "DelegatedFor,DelegatedTo",
+                          "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')"
+                        )
+                        //const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, user.Id)
                         //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettingsListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')").get();
                         console.log(taskDelegation);
                         if (taskDelegation.length > 0) {
@@ -1497,7 +1575,13 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
               //await list.items.getById(this.taskID).delete();
             }
           }).then(detailLIstUpdate => {
-            this._Service.getWFDetailResponseStatus(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+            this._Service.getItemSelectFilter(
+              this.props.siteUrl,
+              this.props.workFlowDetail,
+              "ResponseStatus",
+              "HeaderID eq " + this.headerId + " and (Workflow eq 'Review')"
+            )
+              //this._Service.getWFDetailResponseStatus(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
               //sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("ResponseStatus").filter("HeaderID eq " + this.headerId + " and (Workflow eq 'Review')").get()
               .then(async ResponseStatus => {
                 if (ResponseStatus.length > 0) { //checking all reviewers response status
@@ -1593,7 +1677,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                           hubSiteUserId: user.Id,
                         });
                         //Task delegation 
-                        const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, user.Id)
+                        const taskDelegation: any[] = await this._Service.getItemSelectExpandFilter(
+                          this.props.siteUrl,
+                          this.props.taskDelegationSettingsListName,
+                          "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate",
+                          "DelegatedFor,DelegatedTo",
+                          "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')"
+                        )
+                        //const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, user.Id)
                         //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettingsListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')").get();
                         console.log(taskDelegation);
                         if (taskDelegation.length > 0) {
@@ -2238,7 +2329,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       }
       //if there is reviewers and Reviewed
       else {
-        const headerItemsForDCCSubmit = await this._Service.getReviewersData(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId)
+        const headerItemsForDCCSubmit = await this._Service.getByIdSelectExpand(
+          this.props.siteUrl,
+          this.props.workflowHeaderListName,
+          this.headerId,
+          "Reviewers/ID,Reviewers/Title,Reviewers/EMail",
+          "Reviewers"
+        )
+        //const headerItemsForDCCSubmit = await this._Service.getReviewersData(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId)
         //const headerItemsForDCCSubmit = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderListName).items.select("Reviewers/ID,Reviewers/Title,Reviewers/EMail").expand("Reviewers").getById(this.headerId).get();
         console.log(headerItemsForDCCSubmit);
         this.setState({
@@ -2321,7 +2419,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                   //await sp.web.siteUsers.getByEmail(user.Email).get()
                   .then(async hubsieUser => {
                     console.log(hubsieUser.Id);
-                    const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, hubsieUser.Id)
+                    const taskDelegation: any[] = await this._Service.getItemSelectExpandFilter(
+                      this.props.siteUrl,
+                      this.props.taskDelegationSettingsListName,
+                      "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate",
+                      "DelegatedFor,DelegatedTo",
+                      "DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')"
+                    )
+                    //const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, hubsieUser.Id)
                     //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettingsListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')").get();
                     console.log(taskDelegation);
                     //Check if Task Delegation
@@ -2826,7 +2931,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                 hubSiteUserId: user.Id,
               });
               //Task delegation 
-              const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, user.Id)
+              const taskDelegation: any[] = await this._Service.getItemSelectExpandFilter(
+                this.props.siteUrl,
+                this.props.taskDelegationSettingsListName,
+                "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate",
+                "DelegatedFor,DelegatedTo",
+                "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')"
+              )
+              //const taskDelegation: any[] = await this._Service.getDelegateAndActive(this.props.siteUrl, this.props.taskDelegationSettingsListName, user.Id)
               //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettingsListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')").get();
               console.log(taskDelegation);
               if (taskDelegation.length > 0) {
@@ -3282,7 +3394,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     let finalBody;
     let DocumentLink;
     //console.log(queryVar);
-    const notificationPreference: any[] = await this._Service.getEmailUserandPreference(this.props.siteUrl, this.props.notificationPrefListName, email)
+    const notificationPreference: any[] = await this._Service.getItemSelectExpandFilter(
+      this.props.siteUrl,
+      this.props.notificationPrefListName,
+      "Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail",
+      "EmailUser",
+      "EmailUser/EMail eq '" + email + "'"
+    )
+    //const notificationPreference: any[] = await this._Service.getEmailUserandPreference(this.props.siteUrl, this.props.notificationPrefListName, email)
     //const notificationPreference: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPrefListName).items.select("Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail").expand("EmailUser").filter("EmailUser/EMail eq '" + email + "'").get();
     // console.log(notificationPreference);
     if (notificationPreference.length > 0) {
@@ -3295,7 +3414,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       this.status = "Yes";
     }
     //Email Notification Settings.
-    const emailNoficationSettings: any[] = await this._Service.getItemTitleFilter(this.props.siteUrl, this.props.emailNotificationSettings, type)
+    const emailNoficationSettings: any[] = await this._Service.getItemFilter(this.props.siteUrl, this.props.emailNotificationSettings, "Title eq '" + type + "'")
+    //const emailNoficationSettings: any[] = await this._Service.getItemTitleFilter(this.props.siteUrl, this.props.emailNotificationSettings, type)
     //const emailNoficationSettings: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.emailNotificationSettings).items.filter("Title eq '" + type + "'").get();
     //console.log(emailNoficationSettings);
     Subject = emailNoficationSettings[0].Subject;
@@ -3305,7 +3425,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + detailID}>Link</a>`;
       //for binding current reviewers comments in table
       if (this.props.project) {
-        await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+        await this._Service.getItemSelectExpandFilter(
+          this.props.siteUrl,
+          this.props.workFlowDetail,
+          "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow",
+          "Responsible",
+          "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')"
+        )
+          //await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
           //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow")
           //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')").get()
           .then(currentReviewersItems => {
@@ -3338,7 +3465,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
           });
       }
       else {
-        await this._Service.getDetailWorkflowReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+        await this._Service.getItemSelectExpandFilter(
+          this.props.siteUrl,
+          this.props.workFlowDetail,
+          "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow",
+          "Responsible",
+          "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review') "
+        )
+          //await this._Service.getDetailWorkflowReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
           //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow")
           //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review')").get()
           .then(currentReviewersItems => {
@@ -3374,7 +3508,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     else if (type == "DocReview") {
       link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + detailID}>Link</a>`;
       if (this.props.project) {
-        await this._Service.getResponseStatusNeUnderReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+        await this._Service.getItemSelectExpandFilter(
+          this.props.siteUrl,
+          this.props.workFlowDetail,
+          "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow",
+          "Responsible",
+          "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review') and (ResponseStatus ne 'Under Review') "
+        )
+          //await this._Service.getResponseStatusNeUnderReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
           //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,Workflow")
           //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review') and (ResponseStatus ne 'Under Review') ").get()
           .then(currentReviewersItems => {
@@ -3410,7 +3551,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //returned with comments mail body
     else if (type == "DocReturn") {
       if (this.props.project) {
-        await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+        await this._Service.getItemSelectExpandFilter(
+          this.props.siteUrl,
+          this.props.workFlowDetail,
+          "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,SourceDocument,Workflow",
+          "Responsible",
+          "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')"
+        )
+          //await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
           //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,SourceDocument,Workflow")
           //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review' or Workflow eq 'DCC Review')").get()
           .then(currentReviewersItems => {
@@ -3445,7 +3593,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
           });
       }
       else {
-        await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
+        await this._Service.getItemSelectExpandFilter(
+          this.props.siteUrl,
+          this.props.workFlowDetail,
+          "Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,SourceDocument,Workflow",
+          "Responsible",
+          "HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review')"
+        )
+          //await this._Service.getWorkflowReviewDCCReview(this.props.siteUrl, this.props.workFlowDetail, this.headerId)
           //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.select("Responsible/ID,Responsible/Title,Responsible/EMail,ResponsibleComment,ResponseStatus,ResponseDate,SourceDocument,Workflow")
           //.expand("Responsible").filter("HeaderID eq '" + this.headerId + "' and (Workflow eq 'Review')").get()
           .then(currentReviewersItems => {
