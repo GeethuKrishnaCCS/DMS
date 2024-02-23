@@ -219,19 +219,20 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     let AccessGroupForCancel: any[] = [];
     let AccessGroupForDelegate: any[] = [];
     let ok = "No";
-    if (this.props.project) {
-      AccessGroupForCancel = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_CancelWF'");
-      // AccessGroupForCancel = await this._Service.getProject_CancelWF(this.props.siteUrl, this.props.permissionMatrixSettings);
-      //AccessGroupForCancel = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_CancelWF'").get();
-      AccessGroup = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_SendReminderWFTasks'")
-      // AccessGroup = await this._Service.getProject_SendReminderWFTasks(this.props.siteUrl, this.props.permissionMatrixSettings)
-      //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendReminderWFTasks'").get();
-      AccessGroupForDelegate = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_DelegateWFTask'");
-      // AccessGroupForDelegate = await this._Service.getProject_DelegateWFTask(this.props.siteUrl, this.props.permissionMatrixSettings);
-      //AccessGroupForDelegate = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_DelegateWFTask'").get();
+    // if (this.props.project) {
+    //   AccessGroupForCancel = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_CancelWF'");
+    //   // AccessGroupForCancel = await this._Service.getProject_CancelWF(this.props.siteUrl, this.props.permissionMatrixSettings);
+    //   //AccessGroupForCancel = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_CancelWF'").get();
+    //   AccessGroup = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_SendReminderWFTasks'")
+    //   // AccessGroup = await this._Service.getProject_SendReminderWFTasks(this.props.siteUrl, this.props.permissionMatrixSettings)
+    //   //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendReminderWFTasks'").get();
+    //   AccessGroupForDelegate = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'Project_DelegateWFTask'");
+    //   // AccessGroupForDelegate = await this._Service.getProject_DelegateWFTask(this.props.siteUrl, this.props.permissionMatrixSettings);
+    //   //AccessGroupForDelegate = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_DelegateWFTask'").get();
 
-    }
-    else {
+    // }
+    // else
+    {
       AccessGroup = await this._Service.getSelectFilter(this.props.siteUrl, this.props.permissionMatrixSettings, "AccessGroups,AccessFields", "Title eq 'QDMS_SendReminderWFTasks'")
       // AccessGroup = await this._Service.getQDMS_SendReminderWFTasks(this.props.siteUrl, this.props.permissionMatrixSettings)
       //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.permissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendReminderWFTasks'").get();
@@ -248,23 +249,24 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     console.log("AccessGroupItems", AccessGroupItems);
     console.log("AccessGroupItemsForCancel", AccessGroupItemsForCancel);
     console.log("AccessGroupItemsForDelegate", AccessGroupItemsForDelegate);
-    if (this.props.project) {
-      if (AccessGroupItemsForCancel.length > 0) {
-        this.statusForCancel = "Yes";
-        this._gettingGroupID(AccessGroupItemsForCancel);
-      }
-      if (AccessGroupItems.length > 0) {
-        this.statusForRemainder = "Yes";
-        this._gettingGroupID(AccessGroupItems);
-      }
+    // if (this.props.project) {
+    //   if (AccessGroupItemsForCancel.length > 0) {
+    //     this.statusForCancel = "Yes";
+    //     this._gettingGroupID(AccessGroupItemsForCancel);
+    //   }
+    //   if (AccessGroupItems.length > 0) {
+    //     this.statusForRemainder = "Yes";
+    //     this._gettingGroupID(AccessGroupItems);
+    //   }
 
-      if (AccessGroupItemsForDelegate.length > 0) {
-        this.statusForDelegate = "Yes";
-        this._gettingGroupID(AccessGroupItemsForDelegate);
+    //   if (AccessGroupItemsForDelegate.length > 0) {
+    //     this.statusForDelegate = "Yes";
+    //     this._gettingGroupID(AccessGroupItemsForDelegate);
 
-      }
-    }
-    else {
+    //   }
+    // }
+    // else
+    {
       if (AccessGroupItems.length > 0) {
         this.statusForRemainder = "Yes";
         this.departmentOrBUIdGetting(AccessGroupItems);
@@ -455,7 +457,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         documentName: logItems[0].Title,
         dueDate: logItems[0].DueDate,
       });
-      const documentIndexItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.documentIndexListName,"Owner/Title,Owner/ID,Owner/EMail,DocumentName,SourceDocumentID,CriticalDocument,Revision,DocumentID,Approver/Title,Approver/ID", "Owner,Approver", "ID eq '" + this.documentIndexID + "'");
+      const documentIndexItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.documentIndexListName, "Owner/Title,Owner/ID,Owner/EMail,DocumentName,SourceDocumentID,CriticalDocument,Revision,DocumentID,Approver/Title,Approver/ID", "Owner,Approver", "ID eq '" + this.documentIndexID + "'");
       // const documentIndexItems = await this._Service.getIndexItemsWithOwnerApprover(this.props.siteUrl, this.props.documentIndexListName, this.documentIndexID);
       //const documentIndexItems = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexListName).items.select("Owner/Title,Owner/ID,Owner/EMail,DocumentName,SourceDocumentID,CriticalDocument,Revision,DocumentID,Approver/Title,Approver/ID").expand("Owner,Approver").filter("ID eq '" + this.documentIndexID + "'").get();
       console.log("Document Index items", documentIndexItems);
@@ -738,7 +740,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     this.headerId = workflowId[0].WorkflowID;
     this.documentRevisionLogID = workflowId[0].ID;
     this.dueDateForModel = workflowId[0].DueDate;
-    const workflowDetailsItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.workflowDetailsListName, "Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Workflow", "Responsible,Editor", "HeaderID eq '" +  workflowId[0].WorkflowID + "' and (Workflow eq 'Review') ")
+    const workflowDetailsItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.workflowDetailsListName, "Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Workflow", "Responsible,Editor", "HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'Review') ")
     // const workflowDetailsItems = await this._Service.getDetailsWorkflow_Review(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
     //const workflowDetailsItems = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsListName).items.select("Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title").expand("Responsible,Editor").filter("HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'Review') ").get();
     console.log("Workflow detail items of header id", workflowDetailsItems);
@@ -826,7 +828,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     this.headerId = workflowId[0].WorkflowID;
     this.documentRevisionLogID = workflowId[0].ID;
     this.dueDateForModel = workflowId[0].DueDate;
-    const workflowDetailsItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.workflowDetailsListName, "Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Link,Workflow", "Responsible,Editor", "HeaderID eq '" +  workflowId[0].WorkflowID + "' and (Workflow eq 'Approval') ")
+    const workflowDetailsItems = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.workflowDetailsListName, "Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Link,Workflow", "Responsible,Editor", "HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'Approval') ")
     // const workflowDetailsItems = await this._Service.getWorkflowApproval(this.props.siteUrl, this.props.workflowDetailsListName, workflowId[0].WorkflowID)
     //const workflowDetailsItems = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsListName).items.select("Responsible/Title,Responsible/ID,Responsible/EMail,ResponseDate,ResponseStatus,ResponsibleComment,DueDate,ID,TaskID,Editor/Title,Link,Workflow").expand("Responsible,Editor").filter("HeaderID eq '" + workflowId[0].WorkflowID + "' and (Workflow eq 'Approval') ").get();
     console.log("Workflow detail items of header id", workflowDetailsItems);
@@ -1350,7 +1352,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                   hubSiteUserId: user.Id,
                 });
                 //Task delegation 
-                const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationListName, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" +  user.Id + "'")
+                const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationListName, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + user.Id + "'")
                 // const taskDelegation: any[] = await this._Service.getTaskDelegationData(this.props.siteUrl, this.props.taskDelegationListName, user.Id)
                 //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "'").get();
                 console.log(taskDelegation);
@@ -1470,7 +1472,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                                 Workflow: "Approval",
                                 // Priority:(this.state.criticalDocument == true ? "Critical" :""),
                                 DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
-                                Source: (this.props.project ? "Project" : "QDMS"),
+                                Source: "QDMS",
                                 DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
                                 Link: {
                                   "__metadata": { type: "SP.FieldUrlValue" },
@@ -1588,7 +1590,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                         AssignedToId: user.Id,
                         Workflow: "Approval",
                         Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                        Source: (this.props.project ? "Project" : "QDMS"),
+                        Source: "QDMS",
                         Link: {
                           "__metadata": { type: "SP.FieldUrlValue" },
                           Description: "Link to Approve",
@@ -1760,7 +1762,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                   hubSiteUserId: user.Id,
                 });
                 //Task delegation 
-                const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationListName, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" +  user.Id + "'")
+                const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationListName, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + user.Id + "'")
                 // const taskDelegation: any[] = await this._Service.getTaskDelegationData(this.props.siteUrl, this.props.taskDelegationListName, user.Id)
                 //const taskDelegation: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationListName).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + user.Id + "'").get();
                 console.log(taskDelegation);
@@ -1853,7 +1855,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                               Workflow: "Approval",
                               Priority: (this.state.criticalDocument == true ? "Critical" : ""),
                               DelegatedOn: (this.state.delegatedToId !== "" ? date : " "),
-                              Source: (this.props.project ? "Project" : "QDMS"),
+                              Source: "QDMS",
                               DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : parseInt("")),
                               Link: {
                                 "__metadata": { type: "SP.FieldUrlValue" },
