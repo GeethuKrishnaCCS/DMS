@@ -10,8 +10,6 @@ export interface IEditDocumentProps {
     context: WebPartContext;
     siteUrl: string;
     redirectUrl: string;
-    hubUrl: string;
-    hubsite: string;
     userMessageSettings: string;
     documentIndexList: string;
     notificationPreference: string;
@@ -29,12 +27,9 @@ export interface IEditDocumentProps {
     sourceDocumentViewLibrary: string;
     documentRevisionLogList: string;
     backUrl: string;
-    transmittalHistory: string;
     revokePage: string;
     legalEntity: string;
-    permissionMatrix: string;
     departmentList: string;
-    accessGroupDetailsList: string;
     businessUnitList: string;
     requestList: string;
     webpartHeader: string;
@@ -56,7 +51,7 @@ export interface IEditDocumentState {
     templateDocument: boolean;
     templateDocuments: any;
     approvalDate: any;
-
+    dateValid: string;
     uploadOrTemplateRadioBtn: any;
     publishOptionKey: any;
     hideDoc: string;
