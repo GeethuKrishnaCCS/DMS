@@ -348,7 +348,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         businessUnitID: businessUnitID,
         departmentId: departmentId
       });
-      const sourceDocumentItem: any = await this._Service.getSourceDocumentItem(this.props.siteUrl, this.props.sourceDocumentLibrary, this.documentIndexID);
+      // const sourceDocumentItem: any = await this._Service.getSourceDocumentItem(this.props.siteUrl, this.props.sourceDocumentLibrary, this.documentIndexID);
+      const sourceDocumentItem: any = await this._Service.getFilter(this.props.siteUrl, this.props.sourceDocumentLibrary, 'DocumentIndexId eq ' + this.documentIndexID);
       //const sourceDocumentItem: any = await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.filter('DocumentIndexId eq ' + this.documentIndexID).get();
 
       this.sourceDocumentID = sourceDocumentItem[0].ID;
@@ -998,7 +999,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   // la for under review permission
   private _LAUrlGettingForUnderReview = async () => {
-    const laUrl = await this._Service.getUnderReview(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPermission_UnderReview'");
+    // const laUrl = await this._Service.getUnderReview(this.props.siteUrl, this.props.requestList);
     //const laUrl = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.requestList).items.filter("Title eq 'QDMS_DocumentPermission_UnderReview'").get();
 
     this.postUrlForUnderReview = laUrl[0].PostUrl;
@@ -1667,7 +1669,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   // La for under approval permission
   private async _LAUrlGetting() {
-    const laUrl = await this._Service.getUnderApproval(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.getUnderApproval(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPermission_UnderApproval'");
     //const laUrl = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.requestList).items.filter("Title eq 'QDMS_DocumentPermission_UnderApproval'").get();
 
     this.postUrl = laUrl[0].PostUrl;
@@ -1758,7 +1761,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     }
 
     if (mailSend == "Yes") {
-      const emailNotification: any[] = await this._Service.getEmailNotification(this.props.siteUrl, this.props.emailNotification, type)
+      const emailNotification: any[] = await this._Service.getFilter(this.props.siteUrl, this.props.emailNotification, "Title eq '" + type + "'")
+      // const emailNotification: any[] = await this._Service.getEmailNotification(this.props.siteUrl, this.props.emailNotification, type)
       //const emailNotification: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.emailNotification).items.filter("Title eq '" + type + "'").get();
 
       Subject = emailNotification[0].Subject;

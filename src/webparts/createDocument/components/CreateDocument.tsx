@@ -265,7 +265,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   }
   //Messages
   private async _userMessageSettings() {
-    const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
+    // const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
+    const userMessageSettings: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'DocumentIndex'");
     console.log(userMessageSettings);
     for (var i in userMessageSettings) {
       if (userMessageSettings[i].Title == "CreateDocumentSuccess") {
@@ -292,7 +293,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let departmentCode = department.Title;
     this.setState({ departmentId: option.key, departmentCode: departmentCode, department: option.text, saveDisable: false });
     if (this.state.businessUnitCode == "") {
-      const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
+      // const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
+      const departments = await this._Service.getSelectExpand(this.props.siteUrl, this.props.department, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
       for (let i = 0; i < departments.length; i++) {
         if (departments[i].ID == option.key) {
           const deptapprove = await this._Service.getUserIdByEmail(departments[i].Approver.EMail);
@@ -332,7 +334,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     });
     let publishedDocumentArray: any[] = [];
     let sorted_PublishedDocument: any[];
-    let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+    // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+    let publishedDocument: any[] = await this._Service.getItemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
     for (let i = 0; i < publishedDocument.length; i++) {
       if (publishedDocument[i].Template === true && publishedDocument[i].Category === this.state.category) {
         let publishedDocumentdata = {
@@ -383,7 +386,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     if (this.state.businessUnitCode != "") {
     }
     else {
-      const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
+      // const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
+      const departments = await this._Service.getSelectExpand(this.props.siteUrl, this.props.department, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
       for (let i = 0; i < departments.length; i++) {
         if (departments[i].ID == this.state.departmentId) {
           const deptapprove = await this._Service.getUserIdByEmail(departments[i].Approver.EMail);
@@ -431,7 +435,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       let publishedDocumentArray: any[] = [];
       let sorted_PublishedDocument: any[];
       this.setState({ template: true, upload: false, hideupload: "none", hidetemplate: "" });
-      let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      let publishedDocument: any[] = await this._Service.getItemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true && publishedDocument[i].Category === this.state.category) {
           let publishedDocumentdata = {
@@ -458,7 +463,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let sorted_PublishedDocument: any[];
     if (isChecked) {
       this.setState({ template: true, upload: false, hideupload: "none", hidetemplate: "" });
-      let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      let publishedDocument: any[] = await this._Service.getItemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true) {
           let publishedDocumentdata = {
@@ -502,7 +508,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let publishedDocumentArray: any[] = [];
     let sorted_PublishedDocument: any[];
     if (option.key === "Quality") {
-      let publishedDocument: any[] = await this._Service.getqdmsLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
+      // let publishedDocument: any[] = await this._Service.getqdmsLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
+      let publishedDocument: any[] = await this._Service.getItemFromLibrary(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true) {
           let publishedDocumentdata = {
@@ -516,7 +523,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       this.setState({ templateDocuments: sorted_PublishedDocument, sourceId: option.key });
     }
     else {
-      let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      let publishedDocument: any[] = await this._Service.getItemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true) {
           let publishedDocumentdata = {
@@ -539,7 +547,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let publishName: any;
     this.isDocument = "Yes";
     if (this.state.sourceId === "Quality") {
-      await this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
+      // await this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
+      await this._Service.getSelectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,FileLeafRef,DocumentName").then((publishdoc: any) => {
         console.log(publishdoc);
         for (let i = 0; i < publishdoc.length; i++) {
           if (publishdoc[i].Id === this.state.templateId) {
@@ -558,7 +567,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       });
     }
     else {
-      await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
+      // await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
+      await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName").then((publishdoc: any) => {
         console.log(publishdoc);
         for (let i = 0; i < publishdoc.length; i++) {
           if (publishdoc[i].Id === this.state.templateId) {
@@ -589,7 +599,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   }
   // Direct publish change
   public async _checkdirectPublish(type) {
-    const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_PermissionWebpart'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.permissionpostUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
@@ -789,7 +800,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
             Title: idcode,
             Sequence: incrementstring
           }
-          const afterCounter = await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIdSequenceSettings, settingsid, idItems);
+          // const afterCounter = await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIdSequenceSettings, settingsid, idItems);
+          const afterCounter = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIdSequenceSettings, settingsid, idItems);
           if (afterCounter) {
             await this._incrementSequenceNumber(incrementstring, sequenceNumber);
             if (this.state.departmentCode != "") {
@@ -873,7 +885,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                     Url: this.revokeUrl
                   },
                 }
-                await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
+                // await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
+                await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
               }
               else {
                 let indexItems = {
@@ -889,7 +902,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                     Url: this.revokeUrl
                   },
                 }
-                await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
+                // await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
+                await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
               }
               await this._triggerPermission(sourceDocumentId);
               if (this.state.directPublishCheck === true) {
@@ -922,7 +936,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         let newDocumentName;
         // Get template
         if (this.state.sourceId === "Quality") {
-          this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary)
+          // this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary)
+          this._Service.getSelectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,FileLeafRef,DocumentName")
             .then(publishdoc => {
               console.log(publishdoc);
               for (let i = 0; i < publishdoc.length; i++) {
@@ -983,7 +998,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                           Url: this.revokeUrl
                         }
                       }
-                      this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                      // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                      this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
 
                     }
                     else {
@@ -1000,7 +1016,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                           Url: this.revokeUrl
                         },
                       }
-                      this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                      // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                      this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
                     }
                     await this._triggerPermission(sourceDocumentId);
                     if (this.state.directPublishCheck === true) {
@@ -1030,7 +1047,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
             });
         }
         else {
-          this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary)
+          // this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary)
+          this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName")
             .then(publishdoc => {
               console.log(publishdoc);
               for (let i = 0; i < publishdoc.length; i++) {
@@ -1081,7 +1099,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                         Url: this.revokeUrl
                       }
                     }
-                    this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                    // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                    this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
 
                   }
                   else {
@@ -1098,7 +1117,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                         Url: this.revokeUrl
                       },
                     }
-                    this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                    // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                    this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
                   }
                   await this._triggerPermission(sourceDocumentId);
                   if (this.state.directPublishCheck === true) {
@@ -1244,7 +1264,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
           Url: this.revisionHistoryUrl
         }
       }
-      await this._Service.itemFromLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
+      // await this._Service.itemFromLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
+      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
 
 
     }
@@ -1275,14 +1296,16 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
           Url: this.revisionHistoryUrl
         }
       }
-      await this._Service.itemFromLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
+      // await this._Service.itemFromLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
+      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
 
 
     }
   }
   // Set permission for document
   protected async _triggerPermission(sourceDocumentID) {
-    const laUrl = await this._Service.DocumentPermission(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.DocumentPermission(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPermission-Create Document'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
@@ -1304,7 +1327,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   }
   //trigger sendForRevew
   protected async _triggerSendForReview(sourceDocumentID, documentIndexId) {
-    const laUrl = await this._Service.DocumentSendForReview(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.DocumentSendForReview(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestList, "Title eq 'Send For Review New DMS'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
@@ -1328,7 +1352,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   //Document Published
   protected async _publish() {
     await this._revisionCoding();
-    const laUrl = await this._Service.DocumentPublish(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.DocumentPublish(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPublish'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
@@ -1378,7 +1403,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       Revision: this.state.newRevision,
       ApprovedDate: new Date()
     }
-    await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemToUpdate);
+    await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemToUpdate);
+    // await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemToUpdate);
 
     if (this.state.owner != this.currentId) {
       this._sendMail(this.state.ownerEmail, "DocPublish", this.state.ownerName);
@@ -1407,7 +1433,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let link;
 
     console.log(this.state.criticalDocument);
-    const notificationPreference: any[] = await this._Service.itemFromPrefernce(this.props.siteUrl, this.props.notificationPreference, emailuser);
+    // const notificationPreference: any[] = await this._Service.itemFromPrefernce(this.props.siteUrl, this.props.notificationPreference, emailuser);
+    const notificationPreference: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.notificationPreference, "Preference", "EmailUser/EMail eq '" + emailuser + "'");
     console.log(notificationPreference[0].Preference);
     if (notificationPreference.length > 0) {
       if (notificationPreference[0].Preference === "Send all emails") {

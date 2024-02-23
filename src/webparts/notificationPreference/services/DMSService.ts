@@ -12,42 +12,62 @@ export class DMSService extends BaseService {
         this.currentContext = context;
         this._spfi = getSP(this.currentContext);
     }
-    /* public getItems(siteUrl: string, listname: string,): Promise<any> {
-        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items();
-    } */
+
     public getCurrentUser(): Promise<any> {
         return this._spfi.web.currentUser();
     }
+    public createNewItem(siteUrl: string, listname: string, metadata: any): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
+        .add(metadata);
+    }
+    public updateItemById(siteUrl: string, listname: string, itemid: number, dataitem: any): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
+        .getById(itemid)
+        .update(dataitem);
+    }
+
+    public getSelectOrderByFilter(siteUrl: string, listname: string, select:string, order: string, filter:string): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
+            .select(select)
+            .orderBy(order)
+            .filter(filter)();
+    }
+    public getSelectExpandFilter(siteUrl: string, listname: string, select: string, expand: string, filter: string): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
+            .select(select)
+            .expand(expand)
+            .filter(filter)();
+    }
+
+    /* public getItems(siteUrl: string, listname: string,): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items();
+    } */    
     /* public getUserIdByEmail(email: string): Promise<any> {
         return this._spfi.web.siteUsers.getByEmail(email)();
     } */
-    public createNewItem(siteUrl: string, listname: string, metadata: any): Promise<any> {
-        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.add(metadata);
-    }
+    
     /* public getItemsFromUserMsgSettings(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,Message").filter("PageName eq 'DocumentIndex'")();
     } */
-    public getItemsFromUserMsgSettingsNP(siteUrl: string, listname: string): Promise<any> {
+    /* public getItemsFromUserMsgSettingsNP(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .select("Title,Message")
             .orderBy("ID")
             .filter("PageName eq 'NotificationPreference'")();
-    }
+    } */
     /* public getItemsByID(siteUrl: string, listname: string, id: number): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(id)();
     } */
     /* public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver")();
     } */
-    public updateItemById(siteUrl: string, listname: string, itemid: number, dataitem: any): Promise<any> {
-        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid).update(dataitem);
-    }
-    public getNotificationPref(siteUrl: string, listname: string, mail: string): Promise<any> {
+    
+    /* public getNotificationPref(siteUrl: string, listname: string, mail: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .select("ID,Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail")
             .expand("EmailUser")
             .filter("EmailUser/EMail eq '" + mail + "'")();
-    }
+    } */
 
 
 

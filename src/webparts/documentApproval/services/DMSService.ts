@@ -65,9 +65,12 @@ export class DMSService extends BaseService {
     /* public getUserMessageForReview(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,Message").filter("PageName eq 'Review'")();
     } */
-    public getApproverData(siteUrl: string, listname: string, headerid: number): Promise<any> {
-        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(headerid).select("Approver/ID,Approver/EMail,DocumentIndexID").expand("Approver")()
-    }
+    /* public getApproverData(siteUrl: string, listname: string, headerid: number): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
+        .getById(headerid)
+        .select("Approver/ID,Approver/EMail,DocumentIndexID")
+        .expand("Approver")()
+    } */
     public getSelectFilter(siteUrl: string, listname: string, select: string, filter: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname)
             .items
@@ -109,6 +112,7 @@ export class DMSService extends BaseService {
                     .post(emailPostBody);
             });
     }
+    
     public getGroupMembers(groupId: string): Promise<any> {
         return this.currentContext.msGraphClientFactory
             .getClient("3")
