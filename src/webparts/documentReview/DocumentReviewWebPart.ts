@@ -24,7 +24,7 @@ export default class DocumentReviewWebPart extends BaseClientSideWebPart<IDocume
       {
         description: this.properties.description,
         webPartName: this.properties.webPartName,
-        project: this.properties.project,
+        // project: this.properties.project,
         redirectUrl: this.properties.redirectUrl,
         siteUrl: this.context.pageContext.web.serverRelativeUrl,
         workflowHeaderListName: this.properties.workflowHeaderListName,
@@ -125,11 +125,11 @@ export default class DocumentReviewWebPart extends BaseClientSideWebPart<IDocume
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneToggle('project', {
-                  label: 'Project',
-                  onText: 'On',
-                  offText: 'Off'
-                }),
+                // PropertyPaneToggle('project', {
+                //   label: 'Project',
+                //   onText: 'On',
+                //   offText: 'Off'
+                // }),
                 PropertyPaneTextField('webPartName', {
                   label: "WebPart Name"
                 }),

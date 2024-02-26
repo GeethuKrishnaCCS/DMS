@@ -164,11 +164,13 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
 
     if (this.valid == "ok") {
       //Get Access
-      if (this.props.project) {
-        await this._checkCurrentUser();
-        // this._checkPermission('Project_SendApprovalWF');
-      }
-      else {
+      // if (this.props.project) 
+      // {
+      //   await this._checkCurrentUser();
+      //   // this._checkPermission('Project_SendApprovalWF');
+      // }
+      // else
+      {
         await this._accessGroups();
         // await this._checkCurrentUser();
       }
@@ -292,16 +294,17 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
   private async _accessGroups() {
     let AccessGroup: any[] = [];
     let ok = "No";
-    if (this.props.project) {
-      AccessGroup = await this._Service.getSelectFilter(
-        this.props.siteUrl,
-        this.props.PermissionMatrixSettings,
-        "AccessGroups,AccessFields",
-        "Title eq 'Project_SendApprovalWF'"
-      )
-      //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.PermissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendApprovalWF'").get();
-    }
-    else {
+    // if (this.props.project) {
+    //   AccessGroup = await this._Service.getSelectFilter(
+    //     this.props.siteUrl,
+    //     this.props.PermissionMatrixSettings,
+    //     "AccessGroups,AccessFields",
+    //     "Title eq 'Project_SendApprovalWF'"
+    //   )
+    //   //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.PermissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendApprovalWF'").get();
+    // }
+    // else 
+    {
       AccessGroup = await this._Service.getSelectFilter(
         this.props.siteUrl,
         this.props.PermissionMatrixSettings,
@@ -441,15 +444,16 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
   }
   //Check Current User is approver
   public async _checkCurrentUser() {
-    if (this.currentEmail == this.approverEmail) {
-      this.setState({ access: "", accessDeniedMsgBar: "none", loaderDisplay: "none" });
-      if (this.props.project) {
-        this.setState({ hideProject: false });
-        await this._project();
-      }
-      await this._bindApprovalForm();
-    }
-    else {
+    // if (this.currentEmail == this.approverEmail) {
+    //   this.setState({ access: "", accessDeniedMsgBar: "none", loaderDisplay: "none" });
+    //   if (this.props.project) {
+    //     this.setState({ hideProject: false });
+    //     await this._project();
+    //   }
+    //   await this._bindApprovalForm();
+    // }
+    // else 
+    {
       this.setState({
         loaderDisplay: "none",
         access: "none",
@@ -937,13 +941,14 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     else {
       intrev = this.state.revision;
     }
-    if (this.props.project) {
-      let revision = parseInt(intrev);
-      let rev = revision + 1;
-      this.currentrevision = rev.toString();
-      this.setState({ newRevision: this.currentrevision });
-    }
-    else {
+    // if (this.props.project) {
+    //   let revision = parseInt(intrev);
+    //   let rev = revision + 1;
+    //   this.currentrevision = rev.toString();
+    //   this.setState({ newRevision: this.currentrevision });
+    // }
+    // else 
+    {
       let revision = parseInt(intrev);
       let rev = revision + 1;
       this.currentrevision = rev.toString();
@@ -952,18 +957,19 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
   }
   //Document Published
   protected async _publish() {
-    if (this.props.project) {
-      if (this.state.sameRevision == "Yes") {
-        this.setState({ newRevision: this.state.revision });
-      }
-      else if (this.state.revisionItemID == null) {
-        this._revisionCoding();
-      }
-      else {
-        await this._generateNewRevision();
-      }
-    }
-    else {
+    // if (this.props.project) {
+    //   if (this.state.sameRevision == "Yes") {
+    //     this.setState({ newRevision: this.state.revision });
+    //   }
+    //   else if (this.state.revisionItemID == null) {
+    //     this._revisionCoding();
+    //   }
+    //   else {
+    //     await this._generateNewRevision();
+    //   }
+    // }
+    // else 
+    {
       this._revisionCoding();
     }
     const laUrl = await this._Service.getItemFilter(
@@ -1165,13 +1171,13 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       this._sendMail(this.state.ownerEmail, "DocPublish", this.state.ownerName);
       this._sendMail(this.state.requesterEmail, "DocPublish", this.state.requesterName);
     }
-    if (this.props.project) {
-      if (this.state.ownerEmail == this.state.dccEmail) { }
-      else if (this.state.requesterEmail == this.state.dccEmail) { }
-      else {
-        this._sendMail(this.state.dccEmail, "DocPublish", this.state.dccName);
-      }
-    }
+    // if (this.props.project) {
+    //   if (this.state.ownerEmail == this.state.dccEmail) { }
+    //   else if (this.state.requesterEmail == this.state.dccEmail) { }
+    //   else {
+    //     this._sendMail(this.state.dccEmail, "DocPublish", this.state.dccName);
+    //   }
+    // }
     let a = await this._Service.updateItemById(
       this.props.siteUrl,
       this.props.documentRevisionLogList,
@@ -1199,52 +1205,53 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
   public async _returnDoc() {
     let message;
     let logstatus;
-    if (this.props.project) {
-      await this._Service.updateItemById(
-        this.props.siteUrl,
-        this.props.documentIndexList,
-        this.documentIndexID,
-        {
-          WorkflowStatus: this.state.status,
-          AcceptanceCodeId: parseInt(this.state.acceptanceCode)
-        }
-      )
-      /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
-        WorkflowStatus: this.state.status,
-        AcceptanceCodeId: parseInt(this.state.acceptanceCode)
-      }); */
+    // if (this.props.project) {
+    //   await this._Service.updateItemById(
+    //     this.props.siteUrl,
+    //     this.props.documentIndexList,
+    //     this.documentIndexID,
+    //     {
+    //       WorkflowStatus: this.state.status,
+    //       AcceptanceCodeId: parseInt(this.state.acceptanceCode)
+    //     }
+    //   )
+    //   /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
+    //     WorkflowStatus: this.state.status,
+    //     AcceptanceCodeId: parseInt(this.state.acceptanceCode)
+    //   }); */
 
-      await this._Service.updateItemById(
-        this.props.siteUrl,
-        this.props.workflowHeaderList,
-        this.workflowHeaderID,
-        {
-          ApprovedDate: this.today,
-          WorkflowStatus: this.state.status,
-          AcceptanceCodeId: parseInt(this.state.acceptanceCode)
-        }
-      )
-      /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.workflowHeaderID).update({
-        ApprovedDate: this.today,
-        WorkflowStatus: this.state.status,
-        AcceptanceCodeId: parseInt(this.state.acceptanceCode)
-      }); */
+    //   await this._Service.updateItemById(
+    //     this.props.siteUrl,
+    //     this.props.workflowHeaderList,
+    //     this.workflowHeaderID,
+    //     {
+    //       ApprovedDate: this.today,
+    //       WorkflowStatus: this.state.status,
+    //       AcceptanceCodeId: parseInt(this.state.acceptanceCode)
+    //     }
+    //   )
+    //   /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.workflowHeaderID).update({
+    //     ApprovedDate: this.today,
+    //     WorkflowStatus: this.state.status,
+    //     AcceptanceCodeId: parseInt(this.state.acceptanceCode)
+    //   }); */
 
-      await this._Service.updateItemById(
-        this.props.siteUrl,
-        this.props.sourceDocument,
-        this.sourceDocumentID,
-        {
-          WorkflowStatus: this.state.status,
-          AcceptanceCodeId: parseInt(this.state.acceptanceCode)
-        }
-      )
-      /* await sp.web.getList(this.props.siteUrl + "/" + this.props.sourceDocument).items.getById(this.sourceDocumentID).update({
-        WorkflowStatus: this.state.status,
-        AcceptanceCodeId: parseInt(this.state.acceptanceCode)
-      }); */
-    }
-    else {
+    //   await this._Service.updateItemById(
+    //     this.props.siteUrl,
+    //     this.props.sourceDocument,
+    //     this.sourceDocumentID,
+    //     {
+    //       WorkflowStatus: this.state.status,
+    //       AcceptanceCodeId: parseInt(this.state.acceptanceCode)
+    //     }
+    //   )
+    //   /* await sp.web.getList(this.props.siteUrl + "/" + this.props.sourceDocument).items.getById(this.sourceDocumentID).update({
+    //     WorkflowStatus: this.state.status,
+    //     AcceptanceCodeId: parseInt(this.state.acceptanceCode)
+    //   }); */
+    // }
+    // else 
+    {
       await this._Service.updateItemById(
         this.props.siteUrl,
         this.props.documentIndexList,

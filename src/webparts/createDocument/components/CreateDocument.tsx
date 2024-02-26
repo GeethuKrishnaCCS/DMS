@@ -176,7 +176,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     this.setState({ approvalDate: this.today });
     this.setState({ loaderDisplay: "none" });
     this._bindData();
-    this._checkdirectPublish('QDMS_DirectPublish');
+    // this._checkdirectPublish('QDMS_DirectPublish');
 
   }
   //Bind dropdown in create
@@ -201,7 +201,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     sorted_BusinessUnit = _.orderBy(businessUnitArray, 'text', ['asc']);
     //Get Department
     const department: any[] = await this._Service.getItems(this.props.siteUrl, this.props.department);
-    if (this.props.siteUrl === "/sites/Quality" || "/sites/PropertyManagement") {
+    if (this.props.siteUrl === "/sites/DMS") {
       for (let i = 0; i < department.length; i++) {
         let departmentdata: any = {
           key: department[i].ID,
@@ -210,35 +210,35 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         departmentArray.push(departmentdata);
       }
     }
-    else {
-      for (let i = 0; i < department.length; i++) {
-        if (this.props.siteUrl === "/sites/" + department[i].Title) {
-          this.setState({
-            departmentId: department[i].ID,
-          });
-          let departmentdata = {
-            key: department[i].ID,
-            text: department[i].Department,
-          };
-          departmentArray.push(departmentdata);
-          this._departmentChange(departmentdata);
-        }
-      }
+    // else {
+    //   for (let i = 0; i < department.length; i++) {
+    //     if (this.props.siteUrl === "/sites/" + department[i].Title) {
+    //       this.setState({
+    //         departmentId: department[i].ID,
+    //       });
+    //       let departmentdata = {
+    //         key: department[i].ID,
+    //         text: department[i].Department,
+    //       };
+    //       departmentArray.push(departmentdata);
+    //       this._departmentChange(departmentdata);
+    //     }
+    //   }
 
-    }
+    // }
 
     sorted_Department = _.orderBy(departmentArray, 'text', ['asc']);
     //Get Category
     const category: any[] = await this._Service.getItems(this.props.siteUrl, this.props.category);
     let categorydata;
     for (let i = 0; i < category.length; i++) {
-      if (category[i].QDMS == true) {
+      // if (category[i].QDMS == true) {
         categorydata = {
           key: category[i].ID,
           text: category[i].Category,
         };
         categoryArray.push(categorydata);
-      }
+      // }
     }
     sorted_Category = _.orderBy(categoryArray, 'text', ['asc']);
     //Get Legal Entity
@@ -905,7 +905,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                 // await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
                 await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
               }
-              await this._triggerPermission(sourceDocumentId);
+              // await this._triggerPermission(sourceDocumentId);
               if (this.state.directPublishCheck === true) {
                 this.setState({ hideLoading: false, hideCreateLoading: "none" });
                 await this._publish();
@@ -1265,7 +1265,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         }
       }
       // await this._Service.itemFromLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
-      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
+      await this._Service.getByIdLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
 
 
     }
@@ -1297,7 +1297,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         }
       }
       // await this._Service.itemFromLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
-      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
+      await this._Service.getByIdLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId, sourceUpdate);
 
 
     }
@@ -1716,7 +1716,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
 
           <div className={styles.divrow}>
             <div className={styles.divColumn1}>
-              <Dropdown id="t3" label="Category"
+              <Dropdown id="t3" label="Department"
                 selectedKey={this.state.departmentId}
                 placeholder="Select an option"
                 defaultSelectedKey={this.state.departmentId}
@@ -1737,7 +1737,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
               <div style={{ color: "#dc3545" }}>
                 {this.validator.message("category", this.state.categoryId, "required")}{" "}</div>
             </div>
-            <div className={styles.divColumn2}>
+          {/* SubCategory   */}
+          <div className={styles.divColumn2}>
               <Dropdown id="t2" required={true} label="Doc Type"
                 placeholder="Select an option"
                 selectedKey={this.state.subCategoryId}

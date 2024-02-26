@@ -10,7 +10,6 @@ import * as _ from 'lodash';
 import replaceString from 'replace-string';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { cdmsEditService } from '../services';
-//import Iframe from 'react-iframe';
 
 const back: IIconProps = { iconName: 'ChromeBack' };
 
@@ -42,7 +41,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       hideProject: "none",
       hideDoc: "",
       hidePublish: "none",
-      hideExpiry: "none",
+      hideExpiry: "",
       projectEditDocumentView: "none",
       createDocumentProject: "none",
       createDocumentView: "",
@@ -63,7 +62,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       businessUnitID: null,
       departmentId: null,
       categoryId: null,
-
+      dateValid: "none",
       uploadOrTemplateRadioBtn: "",
       subCategoryKey: "",
       legalEntityId: null,
@@ -189,7 +188,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     this._onUpdateClick = this._onUpdateClick.bind(this);
     this._updateWithoutDocument = this._updateWithoutDocument.bind(this);
     this._add = this._add.bind(this);
-    this._checkRename = this._checkRename.bind(this);
+    // this._checkRename = this._checkRename.bind(this);
     this._onReplaceDocumentChecked = this._onReplaceDocumentChecked.bind(this);
     this._onSendForReview = this._onSendForReview.bind(this);
     this.onConfirmReview = this.onConfirmReview.bind(this);
@@ -216,12 +215,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     //Get Today
     this.today = new Date();
     this.setState({ approvalDate: this.today });
-    //for getting  sourcedoument library ID
-    this._Service.libraryByTitle(this.props.sourceDocumentViewLibrary).then(results => {
-      console.log(results.Id);
-      this.sourceDocumentLibraryId = results.Id;
-    });
-    console.log(this.sourceDocumentLibraryId);
+    // //for getting  sourcedoument library ID
+    // this._Service.libraryByTitle(this.props.sourceDocumentViewLibrary).then(results => {
+    //   console.log(results.Id);
+    //   this.sourceDocumentLibraryId = results.Id;
+    // });
+    // console.log(this.sourceDocumentLibraryId);
 
 
     this._queryParamGetting();
@@ -284,7 +283,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   // Bind data in qdms
   public async _bindDataEditQdms(documentindexid) {
-    this._checkRename('QDMS_RenameDocument');
+    // this._checkRename('QDMS_RenameDocument');
     const indexItems = await this._Service.getItemsByID(this.props.siteUrl, this.props.documentIndexList, Number(documentindexid));
 
     console.log("dataForEdit", indexItems);
@@ -365,48 +364,48 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
   }
   // Check permission to rename
-  public async _checkRename(type) {
-    this.setState({ checkrename: "" });
-    const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
-    console.log("Posturl", laUrl[0].PostUrl);
-    this.permissionpostUrl = laUrl[0].PostUrl;
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
-    const postURL = this.permissionpostUrl;
+  // public async _checkRename(type) {
+  //   this.setState({ checkrename: "" });
+  //   const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
+  //   console.log("Posturl", laUrl[0].PostUrl);
+  //   this.permissionpostUrl = laUrl[0].PostUrl;
+  //   let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+  //   const postURL = this.permissionpostUrl;
 
-    const requestHeaders: Headers = new Headers();
-    requestHeaders.append("Content-type", "application/json");
-    const body: string = JSON.stringify({
-      'PermissionTitle': type,
-      'SiteUrl': siteUrl,
-      'CurrentUserEmail': this.currentEmail
+  //   const requestHeaders: Headers = new Headers();
+  //   requestHeaders.append("Content-type", "application/json");
+  //   const body: string = JSON.stringify({
+  //     'PermissionTitle': type,
+  //     'SiteUrl': siteUrl,
+  //     'CurrentUserEmail': this.currentEmail
 
-    });
-    const postOptions: IHttpClientOptions = {
-      headers: requestHeaders,
-      body: body
-    };
+  //   });
+  //   const postOptions: IHttpClientOptions = {
+  //     headers: requestHeaders,
+  //     body: body
+  //   };
 
-    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-    let responseJSON = await response.json();
-    console.log(responseJSON);
-    if (response.ok) {
-      console.log(responseJSON['Status']);
-      if (responseJSON['Status'] == "Valid") {
-        this.setState({
-          titleReadonly: false,
-          checkrename: "none"
-        });
-      }
-      else {
-        this.setState({
-          titleReadonly: true,
-          checkrename: "none"
-        });
-      }
-    }
+  //   let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+  //   let responseJSON = await response.json();
+  //   console.log(responseJSON);
+  //   if (response.ok) {
+  //     console.log(responseJSON['Status']);
+  //     if (responseJSON['Status'] == "Valid") {
+  //       this.setState({
+  //         titleReadonly: false,
+  //         checkrename: "none"
+  //       });
+  //     }
+  //     else {
+  //       this.setState({
+  //         titleReadonly: true,
+  //         checkrename: "none"
+  //       });
+  //     }
+  //   }
 
-    else { }
-  }
+  //   else { }
+  // }
   //Messages
   private async _userMessageSettings() {
     const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
@@ -456,15 +455,15 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let approverEmail;
     let approverName;
     let getSelectedApprover: any[] = [];
-    if (this.props.project) {
-      for (let item in items) {
-        approverEmail = items[item].secondaryText,
-          approverName = items[item].text,
-          getSelectedApprover.push(items[item].id);
-      }
-      this.setState({ approver: getSelectedApprover[0], approverEmail: approverEmail, approverName: approverName, saveDisable: false });
-    }
-    else {
+    // if (this.props.project) {
+    //   for (let item in items) {
+    //     approverEmail = items[item].secondaryText,
+    //       approverName = items[item].text,
+    //       getSelectedApprover.push(items[item].id);
+    //   }
+    //   this.setState({ approver: getSelectedApprover[0], approverEmail: approverEmail, approverName: approverName, saveDisable: false });
+    // }
+    {
       this.setState({ validApprover: "", approver: null, approverEmail: "", approverName: "", });
 
       const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
@@ -535,12 +534,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
         hideupload: "none",
         replaceDocumentCheckbox: false,
       });
-      if (this.props.project) {
-        upload = "#editproject";
-      }
-      else {
-        upload = "#editqdms";
-      }
+      // if (this.props.project) {
+      //   upload = "#editproject";
+      // }
+      // else {
+      upload = "#editqdms";
+      //}
       // @ts-ignore
       (document.querySelector(upload) as HTMLInputElement).value = null;
     }
@@ -562,7 +561,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     if (isChecked) {
       console.log("site :" + this.siteUrl);
       console.log("qdms :" + qdms);
-      if (!this.props.project) {
+      //if (!this.props.project)
+      // {
         if (this.siteUrl == qdms) {
           this.setState({ hidesource: "none" })
         }
@@ -583,10 +583,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
         }
         sorted_PublishedDocument = _.orderBy(publishedDocumentArray, 'text', ['asc']);
         this.setState({ templateDocuments: sorted_PublishedDocument });
-      }
-      else {
-        this.setState({ template: true, hidesource: "", upload: false, hideupload: "none", hidetemplate: "" });
-      }
+      // }
+      // else
+      // {
+
+      //   this.setState({ template: true, hidesource: "", upload: false, hideupload: "none", hidetemplate: "" });
+      // }
 
     }
     else if (!isChecked) {
@@ -601,12 +603,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let type;
     let doctype;
     this.isDocument = "Yes";
-    if (this.props.project) {
-      //  upload = "#editproject";
-    }
-    else {
-      // upload = "#editqdms";
-    }
+    // if (this.props.project) {
+    //   //  upload = "#editproject";
+    // }
+    // else {
+    //   // upload = "#editqdms";
+    // }
     let myfile = e.target.files[0];
     console.log(myfile);
     this.isDocument = "Yes";
@@ -744,11 +746,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   //Direct Publish change
   private _onDirectPublishChecked = (ev: React.FormEvent<HTMLInputElement>, isChecked?: boolean) => {
     if (isChecked) {
-      if (this.props.project) {
-        this.setState({ checkdirect: "", });
-        this._checkdirectPublish('Project_DirectPublish');
-      }
-      else {
+      // if (this.props.project) {
+      //   this.setState({ checkdirect: "", });
+      //   this._checkdirectPublish('Project_DirectPublish');
+      // }
+      // else
+      {
         this.setState({ checkdirect: "", });
         this._checkdirectPublish('QDMS_DirectPublish');
       }
@@ -769,8 +772,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   //Expiry Change
   public _onExpiryDateChecked = (ev: React.FormEvent<HTMLInputElement>, isChecked?: boolean) => {
-    if (isChecked) { this.setState({ hideExpiry: "", expiryCheck: true }); }
-    else if (!isChecked) { this.setState({ hideExpiry: "none", expiryCheck: false, expiryDate: null, expiryLeadPeriod: "" }); }
+    if (isChecked) { this.setState({ hideExpiry: "", expiryCheck: true,dateValid: ""  }); }
+    else if (!isChecked) { this.setState({ hideExpiry: "", expiryCheck: false, expiryDate: null, expiryLeadPeriod: "" }); }
   }
   //Expiry Date Change
   public _onExpDatePickerChange = (date?: Date): void => {
@@ -818,13 +821,13 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
         //Validation without direct publish
         if (this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver') && this.validator.fieldValid('expiryDate') && this.validator.fieldValid('ExpiryLeadPeriod')) {
-          this.setState({ updateDisable: true, hidebutton: "none" });
+          this.setState({ updateDisable: true, saveDisable: false });
           await this._updateDocument();
           this.validator.hideMessages();
         }
         //Validation with direct publish
         else if ((this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver') && this.validator.fieldValid('expiryDate') && this.validator.fieldValid('ExpiryLeadPeriod')) {
-          this.setState({ updateDisable: true, hideloader: false, hidebutton: "none" });
+          this.setState({ updateDisable: true, hideloader: false, saveDisable: false });
           await this._updateDocument();
           this.validator.hideMessages();
         }
@@ -838,13 +841,13 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
         //Validation without direct publish
         if (this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver')) {
-          this.setState({ updateDisable: true, hidebutton: "none", });
+          this.setState({ updateDisable: true, saveDisable: false, });
           await this._updateDocument();
           this.validator.hideMessages();
         }
         //Validation with direct publish
         else if ((this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver')) {
-          this.setState({ updateDisable: true, hideloader: false, hidebutton: "none" });
+          this.setState({ updateDisable: true, hideloader: false, saveDisable: false });
           await this._updateDocument();
           this.validator.hideMessages();
         }
@@ -1060,12 +1063,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 await this._updateSourceDocument();
               }).then(async updateDocumentIndex => {
                 let revision;
-                if (this.props.project) {
-                  revision = "-";
-                }
-                else {
-                  revision = "0";
-                }
+                // if (this.props.project) {
+                //   revision = "-";
+                // }
+                // else {
+                revision = "0";
+                //}
                 this._updatePublishDocument();
                 let logItems = {
                   Title: this.state.documentid,
@@ -1904,97 +1907,116 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                       </div>
                     </div>
                   </div>
+                  <div className={styles.divrow}>
+            <div style={{ width: "77%" }}>
+              <PeoplePicker
+                context={this.props.context as any}
+                titleText="Owner"
+                personSelectionLimit={1}
+                groupName={""} // Leave this blank in case you want to filter from all users    
+                showtooltip={true}
+                required={true}
+                disabled={false}
+                ensureUser={true}
+                onChange={this._selectedOwner}
+                defaultSelectedUsers={[this.props.context.pageContext.user.email]}
+                showHiddenInUI={false}
+                principalTypes={[PrincipalType.User]}
+                resolveDelay={1000} />
 
+            </div>
+            <div style={{ width: "75%", marginLeft: "10px" }}>
+              <PeoplePicker
+                context={this.props.context as any}
+                titleText="Reviewer(s)"
+                personSelectionLimit={10}
+                groupName={""} // Leave this blank in case you want to filter from all users
+                showtooltip={true}
+                required={false}
+                disabled={false}
+                ensureUser={true}
+                showHiddenInUI={false}
+                onChange={(items) => this._selectedReviewers(items)}
+                defaultSelectedUsers={this.state.reviewersName}
+                principalTypes={[PrincipalType.User]}
+                resolveDelay={1000}
+                peoplePickerCntrlclassName={"testClass"}
+              />
+
+            </div>
+            <div className={styles.divApprover}>
+              <PeoplePicker
+                context={this.props.context as any}
+                titleText="Approver"
+                personSelectionLimit={1}
+                groupName={""} // Leave this blank in case you want to filter from all users    
+                showtooltip={true}
+                required={true}
+                disabled={false}
+                ensureUser={true}
+                onChange={this._selectedApprover}
+                showHiddenInUI={false}
+                defaultSelectedUsers={[this.state.approverName]}
+                principalTypes={[PrincipalType.User]}
+                resolveDelay={1000} />
+
+            </div>
+          </div>
                   <div className={styles.divrow}>
-                    <div style={{ width: "99%", marginTop: "11px" }} >
-                      <PeoplePicker
-                        context={this.props.context as any}
-                        titleText="Owner"
-                        personSelectionLimit={1}
-                        groupName={""} // Leave this blank in case you want to filter from all users    
-                        showtooltip={true}
-                        required={false}
-                        disabled={false}
-                        ensureUser={true}
-                        onChange={this._selectedOwner}
-                        defaultSelectedUsers={[this.state.ownerName]}
-                        showHiddenInUI={false}
-                        principalTypes={[PrincipalType.User]}
-                        resolveDelay={1000} />
-                      <div style={{ color: "#dc3545" }}>
-                        {this.validator.message("Owner", this.state.owner, "required")}{" "}
-                      </div>
-                    </div>
-                    <div className={styles.wdthmid}>
-                      <div style={{ marginLeft: "12px", width: "100%" }}>
-                        <PeoplePicker
-                          context={this.props.context as any}
-                          titleText="Reviewer(s)"
-                          personSelectionLimit={20}
-                          groupName={""} // Leave this blank in case you want to filter from all users
-                          showtooltip={true}
-                          required={false}
-                          disabled={false}
-                          ensureUser={true}
-                          showHiddenInUI={false}
-                          onChange={(items) => this._selectedReviewers(items)}
-                          defaultSelectedUsers={this.state.reviewersName}
-                          principalTypes={[PrincipalType.User]}
-                          resolveDelay={1000} />
-                      </div>
-                    </div>
-                    <div className={styles.wdthlst} style={{ marginLeft: "12px" }}>
-                      <div style={{ marginLeft: "12px", }}>
-                        <PeoplePicker
-                          context={this.props.context as any}
-                          titleText="Approver"
-                          personSelectionLimit={1}
-                          groupName={""} // Leave this blank in case you want to filter from all users    
-                          showtooltip={true}
-                          required={true}
-                          disabled={false}
-                          ensureUser={true}
-                          onChange={this._selectedApprover}
-                          showHiddenInUI={false}
-                          defaultSelectedUsers={[this.state.approverName]}
-                          principalTypes={[PrincipalType.User]}
-                          resolveDelay={1000} />
-                      </div>
-                      <div style={{ display: this.state.validApprover, color: "#dc3545" }}>Not able to change approver</div>
-                      <div style={{ color: "#dc3545" }}>
-                        {this.validator.message("Approver", this.state.approver, "required")}{" "}
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.divrow}>
-                    <div>
-                      <DatePicker label="Expiry Date"
-                        style={{ width: '14rem' }}
-                        value={this.state.expiryDate}
-                        onSelectDate={this._onExpDatePickerChange}
-                        placeholder="Select a date..."
-                        ariaLabel="Select a date" minDate={new Date()}
-                        formatDate={this._onFormatDate} />
-                      <div style={{ color: "#dc3545" }}>
-                        {this.validator.message("expiryDate", this.state.expiryDate, "required")}{""}</div>
-                    </div>
-                    <div style={{ marginLeft: "8px", width: "19.5%" }}>
-                      <TextField id="Expiry Reminder" name="Expiry Reminder (Days)"
-                        label="Expiry Reminder(Days)" onChange={this._expLeadPeriodChange}
-                        value={this.state.expiryLeadPeriod} />
-                      <div style={{ color: "#dc3545" }}>
-                        {this.validator.message("ExpiryLeadPeriod", this.state.expiryLeadPeriod, "required")}{""}</div>
-                      <div style={{ color: "#dc3545", display: this.state.leadmsg }}>
-                        Enter only numbers less than 101
-                      </div></div>
-                    <div className={styles.wdthfrst} style={{ marginTop: "35px", marginLeft: "16px" }}> <TooltipHost
-                      content="Do you want to make this as a template?"
-                      //id={tooltipId}
-                      calloutProps={calloutProps}
-                      styles={hostStyles}>
-                      <Checkbox label="Save as template" boxSide="start" onChange={this._onTemplateChecked} checked={this.state.templateDocument} />
-                    </TooltipHost></div>
-                  </div>
+            <div className={styles.divDate} style={{ display: this.state.hideExpiry }}>
+              <DatePicker label="Expiry Date"
+                value={this.state.expiryDate}
+                onSelectDate={this._onExpDatePickerChange}
+                placeholder="Select a date..."
+                ariaLabel="Select a date"
+                minDate={new Date()}
+                formatDate={this._onFormatDate} />
+              <div style={{ display: this.state.dateValid }}>
+                <div style={{ color: "#dc3545" }}>
+                  {this.validator.message("expiryDate", this.state.expiryDate, "required")}{""}
+                </div></div>
+            </div>
+            <div className={styles.wdthmid} style={{ display: this.state.hideExpiry, width: "14.5%", }}>
+              <TextField id="Expiry Reminder" name="Expiry Reminder (Days)"
+                label="Expiry Reminder(Days)" onChange={this._expLeadPeriodChange}
+                value={this.state.expiryLeadPeriod}>
+              </TextField>
+              <div style={{ display: this.state.dateValid }}>
+                <div style={{ color: "#dc3545" }}>
+                  {this.validator.message("ExpiryLeadPeriod", this.state.expiryLeadPeriod, "required")}{""}
+                </div></div>
+              <div style={{ color: "#dc3545", display: this.state.leadmsg }}>
+                Enter only numbers less than 100
+              </div>
+            </div>
+            <div style={{ marginTop: "35px", marginLeft: "11px" }}> <TooltipHost
+              content="Do you want to make this as a template?"
+              //id={tooltipId}
+              calloutProps={calloutProps}
+              styles={hostStyles}>
+              <Checkbox label="Save as template " boxSide="start" onChange={this._onTemplateChecked} checked={this.state.templateDocument} />
+            </TooltipHost></div>
+
+            <div style={{ display: this.state.hideDirect, marginTop: "36px", marginLeft: "15px" }}>
+              <TooltipHost
+                content="Without review or approval, the document will be published."
+                //id={tooltipId}
+                calloutProps={calloutProps}
+                styles={hostStyles}>
+                <Checkbox label="Direct Publish?" boxSide="start" onChange={this._onDirectPublishChecked} checked={this.state.directPublishCheck} />
+              </TooltipHost></div>
+            <div style={{ marginLeft: "31px", display: this.state.hidePublish }}>
+              <Dropdown id="t2" required={true}
+                label="Publish Option"
+                selectedKey={this.state.publishOption}
+                placeholder="Select an option"
+                options={this.state.isdocx === "" ? publishOptions : publishOption}
+                onChanged={this._publishOptionChange} />
+              <div style={{ color: "#dc3545" }}>
+                {this.validator.message("publish", this.state.publishOption, "required")}{""}</div>
+            </div>
+
+          </div>
 
                   <div style={{ display: this.state.messageBar }}>
                     {/* Show Message bar for Notification*/}
@@ -2018,15 +2040,14 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                     </div>
                   </div>
                   <div className={styles.divrow}>
-                    <div style={{ fontStyle: "italic", fontSize: "12px", position: "absolute" }}><span style={{ color: "red", fontSize: "23px" }}>*</span>fields are mandatory </div>
-                    <div style={{ display: this.state.hidebutton }} >
-                      <div className={styles.rgtalign} >
-                        <PrimaryButton id="b2" className={styles.btn} onClick={this._onSendForReview}>Update and Send for review</PrimaryButton >
-                        <PrimaryButton id="b2" className={styles.btn} onClick={this._onUpdateClick} >Update</PrimaryButton >
-                        <PrimaryButton id="b1" className={styles.btn} onClick={this._onCancel}>Cancel</PrimaryButton >
-                      </div>
-                    </div>
-                  </div>
+            <div style={{ fontStyle: "italic", fontSize: "12px", position: "absolute" }}><span style={{ color: "red", fontSize: "23px" }}>*</span>fields are mandatory </div>
+            <div className={styles.rgtalign} >
+              <PrimaryButton id="b2" className={styles.btn} disabled={this.state.saveDisable} onClick={this._onSendForReview}>Update & Send for review and submit</PrimaryButton >
+              <PrimaryButton id="b2" className={styles.btn} disabled={this.state.saveDisable} onClick={this._onUpdateClick}>Update</PrimaryButton >
+              <PrimaryButton id="b1" className={styles.btn} onClick={this._onCancel}>Cancel</PrimaryButton >
+            </div>
+          </div>
+                  
 
                   {/* {/ {/ Cancel Dialog Box /} /} */}
 

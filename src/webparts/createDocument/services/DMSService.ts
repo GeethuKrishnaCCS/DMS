@@ -46,6 +46,11 @@ export class DMSService extends BaseService {
             .getById(id)
             .update(data);
     }
+    public async getByIdLibraryUpdate(siteUrl: string, listname: string, id: number, data: any): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/" + listname).items
+            .getById(id)
+            .update(data);
+    }
     public getSelectExpand(siteUrl: string, listname: string, select: string, expand: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .select(select)
