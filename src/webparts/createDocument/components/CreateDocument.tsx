@@ -1716,7 +1716,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
 
           <div className={styles.divrow}>
             <div className={styles.divColumn1}>
-              <Dropdown id="t3" label="Category"
+              <Dropdown id="t3" label="Department"
                 selectedKey={this.state.departmentId}
                 placeholder="Select an option"
                 defaultSelectedKey={this.state.departmentId}
@@ -1729,7 +1729,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
               </div>
             </div>
             <div className={styles.divColumn2}>
-              <Dropdown id="t2" required={true} label="Doc Category"
+              <Dropdown id="t2" required={true} label="Category"
                 placeholder="Select an option"
                 selectedKey={this.state.categoryId}
                 options={this.state.categoryOption}
@@ -1738,7 +1738,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                 {this.validator.message("category", this.state.categoryId, "required")}{" "}</div>
             </div>
             <div className={styles.divColumn2}>
-              <Dropdown id="t2" required={true} label="Doc Type"
+              <Dropdown id="t2" required={true} label="Sub Category"
                 placeholder="Select an option"
                 selectedKey={this.state.subCategoryId}
                 options={this.state.subCategoryArray}
