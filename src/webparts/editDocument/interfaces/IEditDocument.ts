@@ -10,11 +10,8 @@ export interface IEditDocumentProps {
     context: WebPartContext;
     siteUrl: string;
     redirectUrl: string;
-    hubUrl: string;
-    hubsite: string;
     userMessageSettings: string;
     documentIndexList: string;
-    project: string;
     notificationPreference: string;
     emailNotification: string;
     businessUnit: string;
@@ -29,16 +26,10 @@ export interface IEditDocumentProps {
     siteAddress: string;
     sourceDocumentViewLibrary: string;
     documentRevisionLogList: string;
-    revisionLevelList: string;
-    revisionSettingsList: string;
-    projectInformationListName: string;
     backUrl: string;
-    transmittalHistory: string;
     revokePage: string;
     legalEntity: string;
-    permissionMatrix: string;
     departmentList: string;
-    accessGroupDetailsList: string;
     businessUnitList: string;
     requestList: string;
     webpartHeader: string;
@@ -60,7 +51,7 @@ export interface IEditDocumentState {
     templateDocument: boolean;
     templateDocuments: any;
     approvalDate: any;
-
+    dateValid: string;
     uploadOrTemplateRadioBtn: any;
     publishOptionKey: any;
     hideDoc: string;
@@ -180,7 +171,6 @@ export interface IEditDocumentWebPartProps {
     hubsite: string;
     userMessageSettings: string;
     documentIndexList: string;
-    project: string;
     notificationPreference: string;
     emailNotification: string;
     businessUnit: string;

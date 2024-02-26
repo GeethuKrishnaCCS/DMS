@@ -16,7 +16,7 @@ export interface IRevisionHistoryProps {
   sourceDocuments: string;
   documentIndexListName: string;
   taskDelegationListName: string;
-  project: string;
+  // project: string;
   statusColor: string;
   documentReviewSitePage: string;
   documentApprovalDateColor: string;
@@ -118,7 +118,7 @@ export interface IRevisionHistoryWebPartProps {
   sourceDocuments: string;
   documentIndexListName: string;
   taskDelegationListName: string;
-  project: string;
+  //project: string;
   statusColor: string;
   documentReviewSitePage: string;
   documentApprovalDateColor: string;

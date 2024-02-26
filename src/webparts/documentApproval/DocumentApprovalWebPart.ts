@@ -24,7 +24,7 @@ export default class DocumentApprovalWebPart extends BaseClientSideWebPart<IDocu
       {
         context: this.context,
         description: this.properties.description,
-        project: this.properties.project,
+        //project: this.properties.project,
         siteUrl: this.context.pageContext.web.serverRelativeUrl,
         hubUrl: this.properties.hubUrl,
         notificationPreference: this.properties.notificationPreference,
@@ -207,11 +207,11 @@ export default class DocumentApprovalWebPart extends BaseClientSideWebPart<IDocu
               groupName: "Project",
               groupFields: [
 
-                PropertyPaneToggle('project', {
-                  label: 'Project',
-                  onText: 'On',
-                  offText: 'Off'
-                }),
+                // PropertyPaneToggle('project', {
+                //   label: 'Project',
+                //   onText: 'On',
+                //   offText: 'Off'
+                // }),
                 PropertyPaneTextField('transmittalCodeSettingsList', {
                   label: 'Transmittal Code Settings List'
                 }),
