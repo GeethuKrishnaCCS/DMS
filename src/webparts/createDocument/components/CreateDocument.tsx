@@ -935,215 +935,104 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         let extension;
         let newDocumentName;
         // Get template
-        if (this.state.sourceId === "Quality") {
-          // this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary)
-          this._Service.getSelectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,FileLeafRef,DocumentName")
-            .then(publishdoc => {
-              console.log(publishdoc);
-              for (let i = 0; i < publishdoc.length; i++) {
-                if (publishdoc[i].Id === this.state.templateId) {
-                  publishName = publishdoc[i].DocumentName;
-                }
+
+        // this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary)
+        this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName")
+          .then(publishdoc => {
+            console.log(publishdoc);
+            for (let i = 0; i < publishdoc.length; i++) {
+              if (publishdoc[i].Id === this.state.templateId) {
+                publishName = publishdoc[i].LinkFilename;
               }
-              var split = publishName.split(".", 2);
-              extension = split[1];
-            }).then(cpysrc => {
-              // Add template document to source document
-              newDocumentName = this.state.documentName + "." + extension;
-              this.documentNameExtension = newDocumentName;
-              docinsertname = this.state.documentid + '.' + extension;
-              let filePath: string;
-              this._Service.getPathOfSelectedTemplate(publishName, "SourceDocuments").then((items) => {
-                if (items.length > 0) {
-                  // Get the first item (assuming the file names are unique)
-                  const fileItem = items[0];
-
-                  // Access the server-relative URL of the file
-                  filePath = fileItem.FileDirRef + '/' + publishName;
-                  console.log(filePath)
+            }
+            var split = publishName.split(".", 2);
+            extension = split[1];
+          }).then(cpysrc => {
+            // Add template document to source document
+            newDocumentName = this.state.documentName + "." + extension;
+            this.documentNameExtension = newDocumentName;
+            docinsertname = this.state.documentid + '.' + extension;
+            let siteUrl = this.props.siteUrl + "/" + this.props.publisheddocumentLibrary + "/" + this.state.category + "/" + publishName;
+            this._Service.getBuffer(siteUrl).then(templateData => {
+              return this._Service.uploadDocument(docinsertname, templateData, this.props.sourceDocumentLibrary);
+            }).then(fileUploaded => {
+              const filePath = window.location.protocol + "//" + window.location.host + fileUploaded.data.ServerRelativeUrl;
+              console.log("File Uploaded");
+              fileUploaded.file.getItem().then(async item => {
+                console.log(item);
+                sourceDocumentId = item["ID"];
+                this.setState({ sourceDocumentId: sourceDocumentId });
+                await this._addSourceDocument();
+              }).then(async updateDocumentIndex => {
+                let revision;
+                revision = "0";
+                let logItems = {
+                  Title: this.state.documentid,
+                  Status: "Document Created",
+                  LogDate: this.today,
+                  Revision: revision,
+                  DocumentIndexId: parseInt(this.state.newDocumentId),
                 }
-              }).then(afterPath => {
-                this._Service.getBuffer(filePath).then(templateData => {
-                  return this._Service.uploadDocument(docinsertname, templateData, this.props.sourceDocumentLibrary);
-                }).then(fileUploaded => {
-                  const filePath = window.location.protocol + "//" + window.location.host + fileUploaded.data.ServerRelativeUrl;
-                  console.log("File Uploaded");
-                  fileUploaded.file.getItem().then(async item => {
-                    console.log(item);
-                    sourceDocumentId = item["ID"];
-                    this.setState({ sourceDocumentId: sourceDocumentId });
-                    await this._addSourceDocument();
-                  }).then(async updateDocumentIndex => {
-                    let revision;
-                    revision = "0";
-                    let logItems = {
-                      Title: this.state.documentid,
-                      Status: "Document Created",
-                      LogDate: this.today,
-                      Revision: revision,
-                      DocumentIndexId: parseInt(this.state.newDocumentId),
-                    }
-                    await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
-                    if (this.state.directPublishCheck === false) {
-                      let indexUpdateItems = {
-                        SourceDocumentID: parseInt(this.state.sourceDocumentId),
-                        DocumentName: this.documentNameExtension,
+                await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
+                if (this.state.directPublishCheck === false) {
+                  let indexUpdateItems = {
+                    SourceDocumentID: parseInt(this.state.sourceDocumentId),
+                    DocumentName: this.documentNameExtension,
 
-                        SourceDocument: {
-                          Description: this.documentNameExtension,
-                          Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
-                        },
-                        RevokeExpiry: {
-                          Description: "Revoke",
-                          Url: this.revokeUrl
-                        }
-                      }
-                      // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                      this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-
+                    SourceDocument: {
+                      Description: this.documentNameExtension,
+                      Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
+                    },
+                    RevokeExpiry: {
+                      Description: "Revoke",
+                      Url: this.revokeUrl
                     }
-                    else {
-                      let indexUpdateItems = {
-                        SourceDocumentID: parseInt(this.state.sourceDocumentId),
-                        DocumentName: this.documentNameExtension,
-                        ApprovedDate: this.state.approvalDate,
-                        SourceDocument: {
-                          Description: this.documentNameExtension,
-                          Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
-                        },
-                        RevokeExpiry: {
-                          Description: "Revoke",
-                          Url: this.revokeUrl
-                        },
-                      }
-                      // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                      this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                    }
-                    await this._triggerPermission(sourceDocumentId);
-                    if (this.state.directPublishCheck === true) {
-                      this.setState({ hideLoading: false, hideCreateLoading: "none" });
-                      await this._publish();
-                    }
-                    else {
-                      if (this.state.sendForReview === true) {
-                        this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
-                        this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
-                        setTimeout(() => {
-                          window.location.replace(this.siteUrl);
-                        }, 5000);
-                      }
-                      else {
-                        this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
-                        setTimeout(() => {
-                          window.location.replace(this.siteUrl);
-                        }, 5000);
-                      }
-                    }
-                  });
-                });
-              })
-              // let siteUrl = this.props.QDMSUrl + "/" + this.props.publisheddocumentLibrary + "/" + publishName;
-
-            });
-        }
-        else {
-          // this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary)
-          this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName")
-            .then(publishdoc => {
-              console.log(publishdoc);
-              for (let i = 0; i < publishdoc.length; i++) {
-                if (publishdoc[i].Id === this.state.templateId) {
-                  publishName = publishdoc[i].LinkFilename;
-                }
-              }
-              var split = publishName.split(".", 2);
-              extension = split[1];
-            }).then(cpysrc => {
-              // Add template document to source document
-              newDocumentName = this.state.documentName + "." + extension;
-              this.documentNameExtension = newDocumentName;
-              docinsertname = this.state.documentid + '.' + extension;
-              let siteUrl = this.props.siteUrl + "/" + this.props.publisheddocumentLibrary + "/" + this.state.category + "/" + publishName;
-              this._Service.getBuffer(siteUrl).then(templateData => {
-                return this._Service.uploadDocument(docinsertname, templateData, this.props.sourceDocumentLibrary);
-              }).then(fileUploaded => {
-                const filePath = window.location.protocol + "//" + window.location.host + fileUploaded.data.ServerRelativeUrl;
-                console.log("File Uploaded");
-                fileUploaded.file.getItem().then(async item => {
-                  console.log(item);
-                  sourceDocumentId = item["ID"];
-                  this.setState({ sourceDocumentId: sourceDocumentId });
-                  await this._addSourceDocument();
-                }).then(async updateDocumentIndex => {
-                  let revision;
-                  revision = "0";
-                  let logItems = {
-                    Title: this.state.documentid,
-                    Status: "Document Created",
-                    LogDate: this.today,
-                    Revision: revision,
-                    DocumentIndexId: parseInt(this.state.newDocumentId),
                   }
-                  await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
-                  if (this.state.directPublishCheck === false) {
-                    let indexUpdateItems = {
-                      SourceDocumentID: parseInt(this.state.sourceDocumentId),
-                      DocumentName: this.documentNameExtension,
+                  // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                  this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
 
-                      SourceDocument: {
-                        Description: this.documentNameExtension,
-                        Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
-                      },
-                      RevokeExpiry: {
-                        Description: "Revoke",
-                        Url: this.revokeUrl
-                      }
-                    }
-                    // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                    this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-
+                }
+                else {
+                  let indexUpdateItems = {
+                    SourceDocumentID: parseInt(this.state.sourceDocumentId),
+                    DocumentName: this.documentNameExtension,
+                    ApprovedDate: this.state.approvalDate,
+                    SourceDocument: {
+                      Description: this.documentNameExtension,
+                      Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
+                    },
+                    RevokeExpiry: {
+                      Description: "Revoke",
+                      Url: this.revokeUrl
+                    },
+                  }
+                  // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                  this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                }
+                await this._triggerPermission(sourceDocumentId);
+                if (this.state.directPublishCheck === true) {
+                  this.setState({ hideLoading: false, hideCreateLoading: "none" });
+                  await this._publish();
+                }
+                else {
+                  if (this.state.sendForReview === true) {
+                    this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
+                    this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
+                    setTimeout(() => {
+                      window.location.replace(this.siteUrl);
+                    }, 5000);
                   }
                   else {
-                    let indexUpdateItems = {
-                      SourceDocumentID: parseInt(this.state.sourceDocumentId),
-                      DocumentName: this.documentNameExtension,
-                      ApprovedDate: this.state.approvalDate,
-                      SourceDocument: {
-                        Description: this.documentNameExtension,
-                        Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
-                      },
-                      RevokeExpiry: {
-                        Description: "Revoke",
-                        Url: this.revokeUrl
-                      },
-                    }
-                    // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                    this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                    this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
+                    setTimeout(() => {
+                      window.location.replace(this.siteUrl);
+                    }, 5000);
                   }
-                  await this._triggerPermission(sourceDocumentId);
-                  if (this.state.directPublishCheck === true) {
-                    this.setState({ hideLoading: false, hideCreateLoading: "none" });
-                    await this._publish();
-                  }
-                  else {
-                    if (this.state.sendForReview === true) {
-                      this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
-                      this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
-                      setTimeout(() => {
-                        window.location.replace(this.siteUrl);
-                      }, 5000);
-                    }
-                    else {
-                      this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
-                      setTimeout(() => {
-                        window.location.replace(this.siteUrl);
-                      }, 5000);
-                    }
-                  }
-                });
+                }
               });
             });
-        }
+          });
+
 
       }
       else { }
