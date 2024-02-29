@@ -122,7 +122,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     this._LaUrlGettingAdaptive = this._LaUrlGettingAdaptive.bind(this);
   }
 
-  public componentWillMount = () => {
+  public UNSAFE_componentWillMount = () => {
     this.validator = new SimpleReactValidator({
       messages: {
         required: "This field is mandatory"
@@ -143,11 +143,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     //Get Parameter from URL
     this._queryParamGetting();
 
-    if (this.props.project) {
-      this.setState({ hideProject: false });
-    }
+    // if (this.props.project) {
+    //   this.setState({ hideProject: false });
+    // }
 
-    let currentUserReviewer: any[] = [];
+    const currentUserReviewer: any[] = [];
     currentUserReviewer.push(this.currentId);
     //Get Today
     this.today = new Date();
@@ -164,44 +164,44 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     // const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
 
     for (var i in userMessageSettings) {
-      if (userMessageSettings[i].Title == "InvalidSendRequestUser") {
+      if (userMessageSettings[i].Title === "InvalidSendRequestUser") {
         this.invalidUser = userMessageSettings[i].Message;
       }
-      if (userMessageSettings[i].Title == "InvalidSendRequestLink") {
+      if (userMessageSettings[i].Title === "InvalidSendRequestLink") {
         this.invalidSendRequestLink = userMessageSettings[i].Message;
       }
-      if (userMessageSettings[i].Title == "NoDocument") {
+      if (userMessageSettings[i].Title === "NoDocument") {
         this.noDocument = userMessageSettings[i].Message;
       }
-      if (userMessageSettings[i].Title == "WorkflowStatusError") {
+      if (userMessageSettings[i].Title === "WorkflowStatusError") {
         this.workflowStatus = userMessageSettings[i].Message;
       }
-      if (userMessageSettings[i].Title == "DccReview") {
+      if (userMessageSettings[i].Title === "DccReview") {
         var DccReview = userMessageSettings[i].Message;
         this.dccReview = replaceString(DccReview, '[DocumentName]', this.state.documentName);
 
       }
-      if (userMessageSettings[i].Title == "UnderApproval") {
+      if (userMessageSettings[i].Title === "UnderApproval") {
         var UnderApproval = userMessageSettings[i].Message;
         this.underApproval = replaceString(UnderApproval, '[DocumentName]', this.state.documentName);
 
       }
-      if (userMessageSettings[i].Title == "UnderReview") {
+      if (userMessageSettings[i].Title === "UnderReview") {
         var UnderReview = userMessageSettings[i].Message;
         this.underReview = replaceString(UnderReview, '[DocumentName]', this.state.documentName);
 
       }
-      if (userMessageSettings[i].Title == "TaskDelegateDccReview") {
+      if (userMessageSettings[i].Title === "TaskDelegateDccReview") {
         var TaskDelegateDccReview = userMessageSettings[i].Message;
         this.taskDelegateDccReview = replaceString(TaskDelegateDccReview, '[DocumentName]', this.state.documentName);
 
       }
-      if (userMessageSettings[i].Title == "TaskDelegateUnderApproval") {
+      if (userMessageSettings[i].Title === "TaskDelegateUnderApproval") {
         var TaskDelegateUnderApproval = userMessageSettings[i].Message;
         this.taskDelegateUnderApproval = replaceString(TaskDelegateUnderApproval, '[DocumentName]', this.state.documentName);
 
       }
-      if (userMessageSettings[i].Title == "TaskDelegateUnderReview") {
+      if (userMessageSettings[i].Title === "TaskDelegateUnderReview") {
         var TaskDelegateUnderReview = userMessageSettings[i].Message;
         this.taskDelegateUnderReview = replaceString(TaskDelegateUnderReview, '[DocumentName]', this.state.documentName);
 
@@ -212,21 +212,21 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   //Get Parameter from URL
   private async _queryParamGetting() {
     //Query getting...
-    let params = new URLSearchParams(window.location.search);
-    let documentindexid = params.get('did');
+    const params = new URLSearchParams(window.location.search);
+    const documentindexid = params.get('did');
 
-    if (documentindexid != "" && documentindexid != null) {
+    if (documentindexid !== "" && documentindexid !== null) {
       this.documentIndexID = parseInt(documentindexid);
       //Get Access
       this.setState({ access: "none", accessDeniedMsgBar: "none" });
-      if (this.props.project) {
-        await this._checkWorkflowStatus();
+      // if (this.props.project) {
+        // await this._checkWorkflowStatus();
         // this._checkPermission('Project_SendRequest');
-      }
-      else {
+      // }
+      // else {
         // await this._accessGroups();
         await this._checkWorkflowStatus();
-      }
+      // }
     }
     else {
       this.setState({
@@ -243,7 +243,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     const documentIndexItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, "WorkflowStatus,SourceDocument,DocumentStatus");
     // const documentIndexItem: any = await this._Service.getWorkflowStatus(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
     //getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).select("WorkflowStatus,SourceDocument,DocumentStatus").get();
-    if (documentIndexItem.WorkflowStatus == "Under Review" || documentIndexItem.WorkflowStatus == "Under Approval") {
+    if (documentIndexItem.WorkflowStatus === "Under Review" || documentIndexItem.WorkflowStatus === "Under Approval") {
       this.setState({
         loaderDisplay: "none",
         accessDeniedMsgBar: "",
@@ -254,7 +254,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
       }, 10000);
     }
-    else if (documentIndexItem.DocumentStatus != "Active") {
+    else if (documentIndexItem.DocumentStatus !== "Active") {
       this.setState({
         loaderDisplay: "none",
         accessDeniedMsgBar: "",
@@ -265,7 +265,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
       }, 10000);
     }
-    else if (documentIndexItem.SourceDocument == null) {
+    else if (documentIndexItem.SourceDocument === null) {
       this.setState({
         loaderDisplay: "none",
         accessDeniedMsgBar: "",
@@ -288,38 +288,38 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     this._Service.getItemsByID(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID).then(async indexItems => {
       //this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).get().then(async indexItems => {
 
-      let documentID;
-      let documentName;
-      let ownerName;
-      let ownerId;
-      let revision;
-      let linkToDocument;
-      let criticalDocument;
-      let approverName;
-      let approverId;
-      let approverEmail;
-      let temReviewersID: any[] = [];
-      let tempReviewers: any[] = [];
-      let businessUnitID;
-      let departmentId;
+      // let documentID;
+      // let documentName;
+      // let ownerName;
+      // let ownerId;
+      // let revision;
+      // let linkToDocument;
+      // let criticalDocument;
+      // let approverName;
+      // let approverId;
+      // let approverEmail;
+      const  temReviewersID: any[] = [];
+      const tempReviewers: any[] = [];
+      // let businessUnitID;
+      // let departmentId;
       //Get Document Index
       const documentIndexItem: any = await this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, "DocumentID,DocumentName,DepartmentID,BusinessUnitID,Owner/ID,Owner/Title,Owner/EMail,Approver/ID,Approver/Title,Approver/EMail,Revision,SourceDocument,CriticalDocument,SourceDocumentID,Reviewers/ID,Reviewers/Title,Reviewers/EMail", "Owner,Approver,Reviewers");
       // const documentIndexItem: any = await this._Service.getDocumentIndexItem(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
       //const documentIndexItem: any = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).select("DocumentID,DocumentName,DepartmentID,BusinessUnitID,Owner/ID,Owner/Title,Owner/EMail,Approver/ID,Approver/Title,Approver/EMail,Revision,SourceDocument,CriticalDocument,SourceDocumentID,Reviewers/ID,Reviewers/Title,Reviewers/EMail").expand("Owner,Approver,Reviewers").get();
 
-      documentID = documentIndexItem.DocumentID;
-      documentName = documentIndexItem.DocumentName;
-      ownerName = documentIndexItem.Owner.Title;
-      ownerId = documentIndexItem.Owner.ID;
-      revision = documentIndexItem.Revision;
-      linkToDocument = documentIndexItem.SourceDocument.Url;
+      const documentID = documentIndexItem.DocumentID;
+      const documentName = documentIndexItem.DocumentName;
+      const ownerName = documentIndexItem.Owner.Title;
+      const ownerId = documentIndexItem.Owner.ID;
+      const revision = documentIndexItem.Revision;
+      const linkToDocument = documentIndexItem.SourceDocument.Url;
       // this.SourceDocumentID = DocumentIndexItem.SourceDocumentID;
-      criticalDocument = documentIndexItem.CriticalDocument;
-      approverName = documentIndexItem.Approver.Title;
-      approverId = documentIndexItem.Approver.ID;
-      approverEmail = documentIndexItem.Approver.EMail;
-      businessUnitID = documentIndexItem.BusinessUnitID;
-      departmentId = documentIndexItem.DepartmentID;
+      const criticalDocument = documentIndexItem.CriticalDocument;
+      const approverName = documentIndexItem.Approver.Title;
+      const approverId = documentIndexItem.Approver.ID;
+      const approverEmail = documentIndexItem.Approver.EMail;
+      const businessUnitID = documentIndexItem.BusinessUnitID;
+      const departmentId = documentIndexItem.DepartmentID;
       for (var k in documentIndexItem.Reviewers) {
         temReviewersID.push(documentIndexItem.Reviewers[k].ID);
         this.setState({
@@ -327,7 +327,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         });
         tempReviewers.push(documentIndexItem.Reviewers[k].Title);
       }
-      if (indexItems.ApproverId != null) {
+      if (indexItems.ApproverId !== null) {
         this.setState({
           approver: documentIndexItem.Approver.ID,
           approverName: documentIndexItem.Approver.Title,
@@ -371,7 +371,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     let dccreviewerEmail;
     let dccreviewerName;
 
-    let getSelecteddccreviewer: any[] = [];
+    const getSelecteddccreviewer: any[] = [];
     for (let item in items) {
       dccreviewerEmail = items[item].secondaryText,
         dccreviewerName = items[item].text,
@@ -397,23 +397,23 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     this.setState({ saveDisable: "" });
     let approverEmail;
     let approverName;
-    let getSelectedApprover: any[] = [];
-    if (this.props.project) {
-      for (let item in items) {
-        approverEmail = items[item].secondaryText,
-          approverName = items[item].text,
-          getSelectedApprover.push(items[item].id);
-      }
-      this.setState({ approver: getSelectedApprover[0], approverEmail: approverEmail, approverName: approverName });
-    }
-    else {
+    const getSelectedApprover: any[] = [];
+    // if (this.props.project) {
+    //   for (let item in items) {
+    //     approverEmail = items[item].secondaryText,
+    //       approverName = items[item].text,
+    //       getSelectedApprover.push(items[item].id);
+    //   }
+    //   this.setState({ approver: getSelectedApprover[0], approverEmail: approverEmail, approverName: approverName });
+    // }
+    // else {
       this.setState({ validApprover: "", approver: null, approverEmail: "", approverName: "", });
-      if (this.state.businessUnitID != null) {
+      if (this.state.businessUnitID !== null) {
         const businessUnit = await this._Service.getSelectExpand(this.props.siteUrl, this.props.businessUnitList, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
         // const businessUnit = await this._Service.getBusinessUnit(this.props.siteUrl, this.props.businessUnitList);
         //const businessUnit = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.businessUnitList).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver").get();
         for (let i = 0; i < businessUnit.length; i++) {
-          if (businessUnit[i].ID == this.state.businessUnitID) {
+          if (businessUnit[i].ID === this.state.businessUnitID) {
             const approve = await this._Service.getUserByEmail(businessUnit[i].Approver.EMail);
             //const approve = await this._Service.siteUsers.getByEmail(businessUnit[i].Approver.EMail).get();
             approverEmail = businessUnit[i].Approver.EMail;
@@ -427,7 +427,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         // const departments = await this._Service.getDepartments(this.props.siteUrl, this.props.departmentList);
         //const departments = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.departmentList).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver").get();
         for (let i = 0; i < departments.length; i++) {
-          if (departments[i].ID == this.state.departmentId) {
+          if (departments[i].ID === this.state.departmentId) {
             const deptapprove = await this._Service.getUserByEmail(departments[i].Approver.EMail);
             //const deptapprove = await this._Service.siteUsers.getByEmail(departments[i].Approver.EMail).get();
             approverEmail = departments[i].Approver.EMail;
@@ -440,7 +440,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       setTimeout(() => {
         this.setState({ validApprover: "none" });
       }, 5000);
-    }
+    // }
   }
   // on expirydate change
   private _onExpDatePickerChange = (date?: Date): void => {
@@ -450,7 +450,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   // on format date
   private _onFormatDate = (date: Date): string => {
     const dat = date;
-    let selectd = moment(date).format("DD/MM/YYYY");
+    const selectd = moment(date).format("DD/MM/YYYY");
     return selectd;
   };
   //Comment Change
@@ -466,12 +466,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     const previousHeaderItems = await this._Service.getSelectFilter(this.props.siteUrl, this.props.workflowHeaderList, "ID", "DocumentIndex eq '" + this.documentIndexID + "' and(WorkflowStatus eq 'Returned with comments')");
     // const previousHeaderItems = await this._Service.getPreviousHeaderItems(this.props.siteUrl, this.props.workflowHeaderList, this.documentIndexID);
     //const previousHeaderItems = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.select("ID").filter("DocumentIndex eq '" + this.documentIndexID + "' and(WorkflowStatus eq 'Returned with comments')").get();
-    if (previousHeaderItems.length != 0) {
+    if (previousHeaderItems.length !== 0) {
       sorted_previousHeaderItems = _.orderBy(previousHeaderItems, 'ID', ['desc']);
       previousHeaderItem = sorted_previousHeaderItems[0].ID;
     }
     if (this.validator.fieldValid("Approver") && this.validator.fieldValid("DueDate")) {
-      if (this.state.reviewers.length == 0) {
+      if (this.state.reviewers.length === 0) {
         this.setState({ saveDisable: "none", hideLoading: false });
         this._underApprove(previousHeaderItem);
       }
@@ -491,8 +491,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   //  qdms request to review
   public async _underReview(previousHeaderItem) {
-    this._LAUrlGettingForUnderReview();
-    this._LaUrlGettingAdaptive();
+    // this._LAUrlGettingForUnderReview();
+    // this._LaUrlGettingAdaptive();
     const itemtobeadded = {
       Title: this.state.documentName,
       DocumentID: this.state.documentID,
@@ -502,7 +502,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       SourceDocumentID: this.sourceDocumentID,
       DocumentIndexId: this.documentIndexID,
       DocumentIndexID: this.documentIndexID,
-      ReviewersId: { results: this.state.reviewers },
+      ReviewersId: this.state.reviewers,
       ApproverId: this.state.approver,
       RequesterId: this.currentId,
       RequesterComment: this.state.comments,
@@ -522,7 +522,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       SourceDocumentID: this.sourceDocumentID,
       DocumentIndexId: this.documentIndexID,
       DocumentIndexID: this.documentIndexID,
-      ReviewersId: { results: this.state.reviewers },
+      ReviewersId: this.state.reviewers ,
       ApproverId: this.state.approver,
       RequesterId: this.currentId,
       RequesterComment: this.state.comments,
@@ -596,7 +596,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       delegateForIdInSubSite: DelegatedFor.Id,
                     });
                     //detail list adding an item for reviewers
-                    let index = this.state.reviewers.indexOf(DelegatedFor.Id);
+                    const index = this.state.reviewers.indexOf(DelegatedFor.Id);
 
                     this.state.reviewers[index] = DelegatedTo.Id;
 
@@ -604,12 +604,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       HeaderIDId: Number(this.newheaderid),
                       Workflow: "Review",
                       Title: this.state.documentName,
-                      ResponsibleId: (this.state.delegatedToId != "" ? DelegatedTo.Id : user.Id),
+                      ResponsibleId: (this.state.delegatedToId !== "" ? DelegatedTo.Id : user.Id),
                       DueDate: this.state.dueDate,
-                      DelegatedFromId: (this.state.delegatedToId != "" ? DelegatedFor.Id : parseInt("")),
+                      DelegatedFromId: (this.state.delegatedToId !== "" ? DelegatedFor.Id : parseInt("")),
                       ResponseStatus: "Under Review",
                       SourceDocument: {
-                        "__metadata": { type: "SP.FieldUrlValue" },
                         Description: this.state.documentName,
                         Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                       },
@@ -621,12 +620,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       HeaderIDId: Number(this.newheaderid),
                       Workflow: "Review",
                       Title: this.state.documentName,
-                      ResponsibleId: (this.state.delegatedToId != "" ? DelegatedTo.Id : user.Id),
+                      ResponsibleId: (this.state.delegatedToId !== "" ? DelegatedTo.Id : user.Id),
                       DueDate: this.state.dueDate,
-                      DelegatedFromId: (this.state.delegatedToId != "" ? DelegatedFor.Id : parseInt("")),
+                      DelegatedFromId: (this.state.delegatedToId !== "" ? DelegatedFor.Id : parseInt("")),
                       ResponseStatus: "Under Review",
                       SourceDocument: {
-                        "__metadata": { type: "SP.FieldUrlValue" },
                         Description: this.state.documentName,
                         Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                       },
@@ -637,7 +635,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       this.newDetailItemID = detail.data.ID;
                       const updateitem = {
                         Link: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
                           Description: this.state.documentName + "-Review",
                           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                         },
@@ -646,7 +643,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, updateitem)
                       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
                         Link: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
                           Description: this.state.documentName + "-Review",
                           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                         },
@@ -658,14 +654,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                         Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
                         DueDate: this.state.dueDate,
                         StartDate: this.today,
-                        AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : hubsieUser.Id),
-                        Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                        AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : hubsieUser.Id),
+                        Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                         DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
-                        Source: (this.props.project ? "Project" : "QDMS"),
-                        DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : parseInt("")),
+                        // Source: (this.props.project ? "Project" : "QDMS"),
+                        Source: "QDMS",
+                        DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : parseInt("")),
                         Workflow: "Review",
                         Link: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
                           Description: this.state.documentName + "-Review",
                           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                         },
@@ -677,14 +673,13 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                         Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
                         DueDate: this.state.dueDate,
                         StartDate: this.today,
-                        AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : hubsieUser.Id),
-                        Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                        AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : hubsieUser.Id),
+                        Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                         DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
                         Source: (this.props.project ? "Project" : "QDMS"),
-                        DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : parseInt("")),
+                        DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : parseInt("")),
                         Workflow: "Review",
                         Link: {
-                          "__metadata": { type: "SP.FieldUrlValue" },
                           Description: this.state.documentName + "-Review",
                           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                         },
@@ -717,7 +712,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   DueDate: this.state.dueDate,
                   ResponseStatus: "Under Review",
                   SourceDocument: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
                     Description: this.state.documentName,
                     Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                   },
@@ -733,7 +727,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   DueDate: this.state.dueDate,
                   ResponseStatus: "Under Review",
                   SourceDocument: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
                     Description: this.state.documentName,
                     Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                   },
@@ -744,7 +737,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   this.newDetailItemID = details.data.ID;
                   const dataitem = {
                     Link: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
                       Description: this.state.documentName + "-Review",
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                     },
@@ -753,7 +745,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   const updatedetail = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
                   /* const updatedetail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update({
                     Link: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
                       Description: this.state.documentName + "-Review",
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                     },
@@ -765,11 +756,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     DueDate: this.state.dueDate,
                     StartDate: this.today,
                     AssignedToId: hubsieUser.Id,
-                    Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                    Source: (this.props.project ? "Project" : "QDMS"),
+                    Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+                    // Source: (this.props.project ? "Project" : "QDMS"),
+                    Source: "QDMS",
                     Workflow: "Review",
                     Link: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
                       Description: this.state.documentName + "-Review",
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                     },
@@ -782,11 +773,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     DueDate: this.state.dueDate,
                     StartDate: this.today,
                     AssignedToId: hubsieUser.Id,
-                    Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                    Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                     Source: (this.props.project ? "Project" : "QDMS"),
                     Workflow: "Review",
                     Link: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
                       Description: this.state.documentName + "-Review",
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                     },
@@ -802,8 +792,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                         TaskID: task.data.ID,
                       }); */
                     if (updatetask) {
-                      await this._sendmail(user.Email, "DocReview", user.Title);
-                      await this._adaptiveCard("Review", user.Email, user.Title, "General");
+                      // await this._sendmail(user.Email, "DocReview", user.Title);
+                      // await this._adaptiveCard("Review", user.Email, user.Title, "General");
                     }
                   }//taskId
                 }//r
@@ -822,7 +812,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 DueDate: this.state.dueDate,
                 ResponseStatus: "Under Review",
                 SourceDocument: {
-                  "__metadata": { type: "SP.FieldUrlValue" },
                   Description: this.state.documentName,
                   Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                 },
@@ -838,7 +827,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 DueDate: this.state.dueDate,
                 ResponseStatus: "Under Review",
                 SourceDocument: {
-                  "__metadata": { type: "SP.FieldUrlValue" },
                   Description: this.state.documentName,
                   Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                 },
@@ -849,7 +837,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 this.newDetailItemID = details.data.ID;
                 const detailsdata = {
                   Link: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
                     Description: this.state.documentName + "-Review",
                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                   },
@@ -858,7 +845,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 // const updatedetail = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailsdata)
                 /* const updatedetail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update({
                   Link: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
                     Description: this.state.documentName + "-Review",
                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                   },
@@ -870,11 +856,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   DueDate: this.state.dueDate,
                   StartDate: this.today,
                   AssignedToId: hubsieUser.Id,
-                  Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                  Source: (this.props.project ? "Project" : "QDMS"),
+                  Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+                  // Source: (this.props.project ? "Project" : "QDMS"),
+                  Source: "QDMS",
                   Workflow: "Review",
                   Link: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
                     Description: this.state.documentName + "-Review",
                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                   },
@@ -887,11 +873,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   DueDate: this.state.dueDate,
                   StartDate: this.today,
                   AssignedToId: hubsieUser.Id,
-                  Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                  Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                   Source: (this.props.project ? "Project" : "QDMS"),
                   Workflow: "Review",
                   Link: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
                     Description: this.state.documentName + "-Review",
                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                   },
@@ -908,8 +893,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       TaskID: task.data.ID,
                     }); */
                   if (updatetask) {
-                    await this._sendmail(user.Email, "DocReview", user.Title);
-                    await this._adaptiveCard("Review", user.Email, user.Title, "General");
+                    // await this._sendmail(user.Email, "DocReview", user.Title);
+                    // await this._adaptiveCard("Review", user.Email, user.Title, "General");
                   }
                 }//taskId
               }//r
@@ -921,7 +906,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         WorkflowStatus: "Under Review",
         Workflow: "Review",
         ApproverId: this.state.approver,
-        ReviewersId: { results: this.state.reviewers },
+        ReviewersId: this.state.reviewers,
         WorkflowDueDate: this.state.dueDate
       }
       // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, indexitem);
@@ -930,14 +915,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         WorkflowStatus: "Under Review",
         Workflow: "Review",
         ApproverId: this.state.approver,
-        ReviewersId: { results: this.state.reviewers },
+        ReviewersId: this.state.reviewers ,
         WorkflowDueDate: this.state.dueDate
       }); */
       const sourceitem = {
         WorkflowStatus: "Under Review",
         Workflow: "Review",
         ApproverId: this.state.approver,
-        ReviewersId: { results: this.state.reviewers },
+        ReviewersId: this.state.reviewers,
       }
       // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
       await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
@@ -945,17 +930,17 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         WorkflowStatus: "Under Review",
         Workflow: "Review",
         ApproverId: this.state.approver,
-        ReviewersId: { results: this.state.reviewers },
+        ReviewersId: this.state.reviewers,
       }); */
       const headeritem = {
-        ReviewersId: { results: this.state.reviewers }
+        ReviewersId: this.state.reviewers
       }
       // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, parseInt(this.newheaderid), headeritem);
       await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, parseInt(this.newheaderid), headeritem);
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(parseInt(this.newheaderid)).update({
-        ReviewersId: { results: this.state.reviewers }
+        ReviewersId: this.state.reviewers
       }); */
-      await this._triggerDocumentUnderReview(this.sourceDocumentID, "Review");
+      // await this._triggerDocumentUnderReview(this.sourceDocumentID, "Review");
       const logitem = {
         Title: this.state.documentID,
         Status: "Under Review",
@@ -1008,7 +993,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
 
   // set permission for reviewer
   protected async _triggerDocumentUnderReview(sourceDocumentID, type) {
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     // alert("In function");
     // alert(transmittalID);
     const postURL = this.postUrlForUnderReview;
@@ -1041,7 +1026,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       DocumentIndexId: this.documentIndexID,
       DocumentIndexID: this.documentIndexID,
       ApproverId: this.state.approver,
-      ReviewersId: { results: this.state.currentUserReviewer },
+      ReviewersId: this.state.currentUserReviewer,
       RequesterId: this.currentId,
       RequesterComment: this.state.comments,
       RequestedDate: this.today,
@@ -1062,7 +1047,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       DocumentIndexId: this.documentIndexID,
       DocumentIndexID: this.documentIndexID,
       ApproverId: this.state.approver,
-      ReviewersId: { results: this.state.currentUserReviewer },
+      ReviewersId: this.state.currentUserReviewer,
       RequesterId: this.currentId,
       RequesterComment: this.state.comments,
       RequestedDate: this.today,
@@ -1104,7 +1089,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         ResponseStatus: "Reviewed",
         ResponseDate: this.today,
         SourceDocument: {
-          "__metadata": { type: "SP.FieldUrlValue" },
           Description: this.state.documentName,
           Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
         },
@@ -1121,7 +1105,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         ResponseStatus: "Reviewed",
         ResponseDate: this.today,
         SourceDocument: {
-          "__metadata": { type: "SP.FieldUrlValue" },
           Description: this.state.documentName,
           Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
         },
@@ -1132,8 +1115,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         this.newDetailItemID = detailadd.data.ID;
         const detailitem = {
           Link: {
-            "__metadata": { type: "SP.FieldUrlValue" },
-            Description: this.state.documentName + "-Review",
+             Description: this.state.documentName + "-Review",
             Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailadd.data.ID + ""
           },
         }
@@ -1141,7 +1123,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailadd.data.ID, detailitem);
         /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailadd.data.ID).update({
           Link: {
-            "__metadata": { type: "SP.FieldUrlValue" },
             Description: this.state.documentName + "-Review",
             Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailadd.data.ID + ""
           },
@@ -1196,12 +1177,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   HeaderIDId: Number(this.newheaderid),
                   Workflow: "Approval",
                   Title: this.state.documentName,
-                  ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approver),
+                  ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
                   DueDate: this.state.dueDate,
-                  DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+                  DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
                   ResponseStatus: "Under Approval",
                   SourceDocument: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
                     Description: this.state.documentName,
                     Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                   },
@@ -1214,12 +1194,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     HeaderIDId: Number(this.newheaderid),
                     Workflow: "Approval",
                     Title: this.state.documentName,
-                    ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approver),
+                    ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
                     DueDate: this.state.dueDate,
-                    DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+                    DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
                     ResponseStatus: "Under Approval",
                     SourceDocument: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
                       Description: this.state.documentName,
                       Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                     },
@@ -1230,7 +1209,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   this.newDetailItemID = detailsAdd.data.ID;
                   const itemtoupdate = {
                     Link: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
                       Description: this.state.documentName + "-Approve",
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
                     },
@@ -1239,7 +1217,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, itemtoupdate)
                   /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailsAdd.data.ID).update({
                     Link: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
                       Description: this.state.documentName + "-Approve",
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
                     },
@@ -1276,12 +1253,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     StartDate: this.today,
                     AssignedToId: (this.state.delegatedToId),
                     Workflow: "Approval",
-                    // Priority:(this.state.criticalDocument == true ? "Critical" :""),
+                    // Priority:(this.state.criticalDocument === true ? "Critical" :""),
                     DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
-                    Source: (this.props.project ? "Project" : "QDMS"),
-                    DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
+                    // Source: (this.props.project ? "Project" : "QDMS"),
+                    Source: "QDMS",
+                    DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
                     Link: {
-                      "__metadata": { type: "SP.FieldUrlValue" },
                       Description: this.state.documentName + "-Approve",
                       Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
                     },
@@ -1297,12 +1274,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       StartDate: this.today,
                       AssignedToId: (this.state.delegatedToId),
                       Workflow: "Approval",
-                      // Priority:(this.state.criticalDocument == true ? "Critical" :""),
+                      // Priority:(this.state.criticalDocument === true ? "Critical" :""),
                       DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
                       Source: (this.props.project ? "Project" : "QDMS"),
-                      DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
+                      DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
                       Link: {
-                        "__metadata": { type: "SP.FieldUrlValue" },
                         Description: this.state.documentName + "-Approve",
                         Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
                       },
@@ -1337,7 +1313,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               DueDate: this.state.dueDate,
               ResponseStatus: "Under Approval",
               SourceDocument: {
-                "__metadata": { type: "SP.FieldUrlValue" },
                 Description: this.state.documentName,
                 Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
               },
@@ -1354,7 +1329,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 DueDate: this.state.dueDate,
                 ResponseStatus: "Under Approval",
                 SourceDocument: {
-                  "__metadata": { type: "SP.FieldUrlValue" },
                   Description: this.state.documentName,
                   Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                 },
@@ -1365,7 +1339,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               this.newDetailItemID = detail.data.ID;
               const detailitem = {
                 Link: {
-                  "__metadata": { type: "SP.FieldUrlValue" },
                   Description: this.state.documentName + "-Approve",
                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                 },
@@ -1374,7 +1347,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
               /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
                 Link: {
-                  "__metadata": { type: "SP.FieldUrlValue" },
                   Description: this.state.documentName + "-Approve",
                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                 },
@@ -1413,10 +1385,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 StartDate: this.today,
                 AssignedToId: user.Id,
                 Workflow: "Approval",
-                Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-                Source: (this.props.project ? "Project" : "QDMS"),
+                Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+                // Source: (this.props.project ? "Project" : "QDMS"),
+                Source: "QDMS",
                 Link: {
-                  "__metadata": { type: "SP.FieldUrlValue" },
                   Description: this.state.documentName + "-Approve",
                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                 },
@@ -1431,10 +1403,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   StartDate: this.today,
                   AssignedToId: user.Id,
                   Workflow: "Approval",
-                  Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                  Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                   Source: (this.props.project ? "Project" : "QDMS"),
                   Link: {
-                    "__metadata": { type: "SP.FieldUrlValue" },
                     Description: this.state.documentName + "-Approve",
                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                   },
@@ -1469,7 +1440,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             DueDate: this.state.dueDate,
             ResponseStatus: "Under Approval",
             SourceDocument: {
-              "__metadata": { type: "SP.FieldUrlValue" },
               Description: this.state.documentName,
               Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
             },
@@ -1486,7 +1456,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               DueDate: this.state.dueDate,
               ResponseStatus: "Under Approval",
               SourceDocument: {
-                "__metadata": { type: "SP.FieldUrlValue" },
                 Description: this.state.documentName,
                 Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
               },
@@ -1497,7 +1466,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             this.newDetailItemID = detail.data.ID;
             const detaildata = {
               Link: {
-                "__metadata": { type: "SP.FieldUrlValue" },
                 Description: this.state.documentName + "-Approve",
                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
               },
@@ -1506,7 +1474,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detaildata)
             /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
               Link: {
-                "__metadata": { type: "SP.FieldUrlValue" },
                 Description: this.state.documentName + "-Approve",
                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
               },
@@ -1544,10 +1511,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
               StartDate: this.today,
               AssignedToId: user.Id,
               Workflow: "Approval",
-              Priority: (this.state.criticalDocument == true ? "Critical" : ""),
-              Source: (this.props.project ? "Project" : "QDMS"),
+              Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+              // Source: (this.props.project ? "Project" : "QDMS"),
+              Source: "QDMS",
               Link: {
-                "__metadata": { type: "SP.FieldUrlValue" },
                 Description: this.state.documentName + "-Approve",
                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
               },
@@ -1563,10 +1530,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 StartDate: this.today,
                 AssignedToId: user.Id,
                 Workflow: "Approval",
-                Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                 Source: (this.props.project ? "Project" : "QDMS"),
                 Link: {
-                  "__metadata": { type: "SP.FieldUrlValue" },
                   Description: this.state.documentName + "-Approve",
                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
                 },
@@ -1594,7 +1560,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       const inddata = {
         WorkflowStatus: "Under Approval",
         Workflow: "Approval",
-        ReviewersId: { results: this.state.currentUserReviewer },
+        ReviewersId: this.state.currentUserReviewer,
         WorkflowDueDate: this.state.dueDate
       }
       // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inddata)
@@ -1602,20 +1568,20 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
         WorkflowStatus: "Under Approval",
         Workflow: "Approval",
-        ReviewersId: { results: this.state.currentUserReviewer },
+        ReviewersId: this.state.currentUserReviewer,
         WorkflowDueDate: this.state.dueDate
       }); */
       const sourcedata = {
         WorkflowStatus: "Under Approval",
         Workflow: "Approval",
-        ReviewersId: { results: this.state.currentUserReviewer },
+        ReviewersId: this.state.currentUserReviewer,
       }
       await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
       // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
       /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
         WorkflowStatus: "Under Approval",
         Workflow: "Approval",
-        ReviewersId: { results: this.state.currentUserReviewer },
+        ReviewersId: this.state.currentUserReviewer,
       }); */
       const datarevision = {
         Title: this.state.documentID,
@@ -1647,7 +1613,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         approverName: "",
         approver: "",
       });
-      if (this.taskDelegate == "Yes") {
+      if (this.taskDelegate === "Yes") {
         this.setState({
           hideLoading: true,
           statusMessage: { isShowMessage: true, message: this.taskDelegateUnderApproval, messageType: 4 },
@@ -1678,7 +1644,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   // set permission for approver
   protected async _triggerPermission(sourceDocumentID) {
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrl;
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
@@ -1691,8 +1657,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       headers: requestHeaders,
       body: body
     };
-    let responseText: string = "";
-    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+    const responseText: string = "";
+    const response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
 
 
   }
@@ -1701,13 +1667,13 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     //const laUrl: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.requestList).items.get();
 
     for (let i = 0; i < laUrl.length; i++) {
-      if (laUrl[i].Title == "Adaptive _Card") {
+      if (laUrl[i].Title === "Adaptive _Card") {
         this.postUrlForAdaptive = laUrl[i].PostUrl;
       }
     }
   }
   public _adaptiveCard = async (Workflow, Email, Name, Type) => {
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrlForAdaptive;
     var splitted = this.state.documentName.split(".");
     let ext = splitted[splitted.length - 1];
@@ -1745,10 +1711,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     //const notificationPreference: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPreference).items.filter("EmailUser/EMail eq '" + emailuser + "'").select("Preference").get();
 
     if (notificationPreference.length > 0) {
-      if (notificationPreference[0].Preference == "Send all emails") {
+      if (notificationPreference[0].Preference === "Send all emails") {
         mailSend = "Yes";
       }
-      else if (notificationPreference[0].Preference == "Send mail for critical document" && this.state.criticalDocument == true) {
+      else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
         mailSend = "Yes";
 
       }
@@ -1756,22 +1722,22 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         mailSend = "No";
       }
     }
-    else if (this.state.criticalDocument == true) {
+    else if (this.state.criticalDocument === true) {
       mailSend = "Yes";
     }
 
-    if (mailSend == "Yes") {
+    if (mailSend === "Yes") {
       const emailNotification: any[] = await this._Service.getFilter(this.props.siteUrl, this.props.emailNotification, "Title eq '" + type + "'")
       // const emailNotification: any[] = await this._Service.getEmailNotification(this.props.siteUrl, this.props.emailNotification, type)
       //const emailNotification: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.emailNotification).items.filter("Title eq '" + type + "'").get();
 
       Subject = emailNotification[0].Subject;
       Body = emailNotification[0].Body;
-      if (type == "DocApproval") {
+      if (type === "DocApproval") {
         link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + this.newDetailItemID}>Link</a>`;
 
       }
-      else if (type == "DocDCCReview") {
+      else if (type === "DocDCCReview") {
         link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + this.newDetailItemID + "&wf=dcc"} >Link</a>`;
       }
       else {
@@ -1779,24 +1745,24 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       }
 
       //Replacing the email body with current values
-      let dueDateformail = moment(this.state.dueDate).format("DD/MM/YYYY");
+      const dueDateformail = moment(this.state.dueDate).format("DD/MM/YYYY");
 
-      let replacedSubject = replaceString(Subject, '[DocumentName]', this.state.documentName);
+      const replacedSubject = replaceString(Subject, '[DocumentName]', this.state.documentName);
 
-      let replacedSubjectWithDueDate = replaceString(replacedSubject, '[DueDate]', dueDateformail);
+      const replacedSubjectWithDueDate = replaceString(replacedSubject, '[DueDate]', dueDateformail);
 
-      let replaceRequester = replaceString(Body, '[Sir/Madam],', name);
+      const replaceRequester = replaceString(Body, '[Sir/Madam],', name);
 
-      let replaceBody = replaceString(replaceRequester, '[DocumentName]', this.state.documentName);
+      const replaceBody = replaceString(replaceRequester, '[DocumentName]', this.state.documentName);
 
-      let replacelink = replaceString(replaceBody, '[Link]', link);
+      const replacelink = replaceString(replaceBody, '[Link]', link);
 
-      let var1: any[] = replacelink.split('/');
+      const var1: any[] = replacelink.split('/');
 
-      let FinalBody = replacelink;
+      const FinalBody = replacelink;
 
       //Create Body for Email  
-      let emailPostBody: any = {
+      const emailPostBody: any = {
         "message": {
           "subject": replacedSubjectWithDueDate,
           "body": {
@@ -1872,18 +1838,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
 
   public render(): React.ReactElement<ISendRequestProps> {
 
-    const iconClass = mergeStyles({
-      fontSize: 20,
-      height: 50,
-      width: 50,
-      margin: '0 25px',
-    });
-    const classNames = mergeStyleSets({
-      iconClass: [{ color: '#ca5010', fontSize: 20 }]
-    });
-    const calloutProps = { gapSpace: 0 };
-    const hostStyles: Partial<ITooltipHostStyles> = { root: { display: 'inline-block' } };
-
+   
     return (
       <section className={`${styles.sendRequest}`}>
         <div>
@@ -1924,8 +1879,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 </div>
               </div>
 
-              <div className={styles.flex}>
-                <div style={{ marginRight: '15px', width: "100%" }}>
+              <div className={styles.divrow}>
+            <div style={{ width: "30%" }}>
                   <PeoplePicker
                     context={this.props.context as any}
                     titleText="Reviewer(s)"
@@ -1940,7 +1895,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     principalTypes={[PrincipalType.User]}
                     resolveDelay={1000}
                   /></div>
-                <div>
+                <div  style={{ width: "30%", marginLeft: "1em",marginRight:"1em" }}>
                   <PeoplePicker
                     context={this.props.context as any}
                     titleText="Approver *"
@@ -1959,11 +1914,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   <div style={{ display: this.state.validApprover, color: "#dc3545" }}>Not able to change approver</div>
                   <div style={{ color: "#dc3545" }}>{this.validator.message("Approver", this.state.approver, "required")}{" "}</div>
                 </div>
-                <div style={{ paddingLeft: '15px' }}>
-                  <DatePicker label="Due Date:" id="DueDate"
+                <div style={{ width: "30%" }}>
+                  <DatePicker label="Due Date *:" id="DueDate"
                     onSelectDate={this._onExpDatePickerChange}
                     placeholder="Select a date..."
-                    isRequired={true}
                     value={this.state.dueDate}
                     minDate={new Date()}
                     formatDate={this._onFormatDate}

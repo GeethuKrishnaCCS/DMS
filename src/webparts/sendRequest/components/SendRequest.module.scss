@@ -44,7 +44,11 @@
   .mt {
     margin-top: 10px;
   }
-
+  .divrow {
+    width: 100%;
+    display: flex;
+    margin-top: 1em;
+  }
   div.drpdwn {
     width: 100%;
   }
