@@ -155,9 +155,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       currentUser: user.Title,
       currentUserReviewer: currentUserReviewer
     });
-
-
   }
+  
   //Messages
   private async _userMessageSettings() {
     const userMessageSettings: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'SendRequest'");
@@ -1013,8 +1012,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   //  qdms request to approve
   public async _underApprove(previousHeaderItem) {
-    this._LAUrlGetting();
-    this._LaUrlGettingAdaptive();
+    /* this._LAUrlGetting();
+    this._LaUrlGettingAdaptive(); */
     const headeritem = {
       Title: this.state.documentName,
       DocumentID: this.state.documentID,
@@ -1489,7 +1488,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             const sourcedata = {
               ApproverId: this.state.approver,
             }
-            await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
+            await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
             // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
             /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
               ApproverId: this.state.approver,

@@ -76,6 +76,12 @@ export class DMSService extends BaseService {
             .filter(filter)();
     }
 
+    public getByIdUpdateSourceLibrary(siteUrl: string, listname: string, itemid: number, dataItem: any): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/" + listname).items
+            .getById(itemid)
+            .update(dataItem);
+    }
+
 
     /* public getUserIdByEmail(email: string): Promise<any> {
         return this._spfi.web.siteUsers.getByEmail(email)();
