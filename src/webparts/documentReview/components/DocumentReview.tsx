@@ -118,6 +118,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this.triggerDocumentReview = this.triggerDocumentReview.bind(this);
     this._LAUrlGettingForPermission = this._LAUrlGettingForPermission.bind(this);
     this.triggerProjectPermissionFlow = this.triggerProjectPermissionFlow.bind(this);
+    this._openRevisionHistory = this._openRevisionHistory.bind(this);
   }
   private headerId;
   private documentIndexId;
@@ -130,7 +131,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   private taskID;
   private newDetailItemID;
   private revisionLogID;
-  private RevisionHistoryUrl;
+  // private RevisionHistoryUrl;
   private RedirectUrl;
   private valid = "ok";
   private noAccess;
@@ -720,9 +721,15 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
           linkToDoc: documentIndexItems.SourceDocument.Url,
         });
       });
-    this.RevisionHistoryUrl = this.props.siteUrl + "/SitePages/RevisionHistory.aspx?did=" + this.documentIndexId + "";
-    console.log(this.RevisionHistoryUrl);
+    // this.RevisionHistoryUrl = this.props.siteUrl + "/SitePages/RevisionHistory.aspx?did=" + this.documentIndexId + "";
+    // console.log(this.RevisionHistoryUrl);
   }
+
+  private _openRevisionHistory = () => {
+    window.open(this.props.siteUrl + "/SitePages/RevisionHistory.aspx?did=" + this.documentIndexId + "");
+  }
+
+
   public _projectInformation = async () => {
     const projectInformation = await this._Service.getItems(this.props.siteUrl, this.props.projectInformationListName)
     //const projectInformation = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.projectInformationListName).items.get();
@@ -3825,7 +3832,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
             <div className={styles.header}>
               <div className={styles.divMetadataCol1}>
                 <h3 >Document Details</h3>
-                <Link onClick={this.RevisionHistoryUrl} target="_blank" underline style={{ marginLeft: "70%" }}>Revision History</Link>
+                <Link onClick={this._openRevisionHistory} target="_blank" underline style={{ marginLeft: "70%" }}>Revision History</Link>
+                {/* <Link onClick={this.RevisionHistoryUrl} target="_blank" underline style={{ marginLeft: "70%" }}>Revision History</Link> */}
               </div>
             </div>
             <div className={styles.divMetadata}>
