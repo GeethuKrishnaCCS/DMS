@@ -26,6 +26,7 @@ export class DMSService extends BaseService {
     public async uploadDocument(filename: string, filedata: any, libraryname: string): Promise<any> {
         const file = await this._spfi.web.getFolderByServerRelativePath(libraryname)
             .files.addUsingPath(filename, filedata, { Overwrite: true });
+            console.log('file: ', file);
         return file;
     }
     public getSelectLibraryItems(url: string, listname: string, select: string): Promise<any> {

@@ -31,7 +31,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       statusKey: "",
       comments: "",
       reviewerItems: [],
-      access: "none",
+      access: "",
       accessDeniedMsgBar: "none",
       documentIndexItems: [],
       documentID: "",
@@ -85,9 +85,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       hideproject: true,
       reviewers: [],
       dccReviewItems: [],
-      currentReviewComment: "none",
+      currentReviewComment: "",
       currentReviewItems: [],
-      loaderDisplay: "",
+      loaderDisplay: "none",
       documentControllerName: ""
     };
     this._Service = new DMSService(this.props.context);
@@ -108,7 +108,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this._documentIndexListBind = this._documentIndexListBind.bind(this);
     //this._docDCCReviewSubmit = this._docDCCReviewSubmit.bind(this);
     this._revisionLogChecking = this._revisionLogChecking.bind(this);
-    this._accessGroups = this._accessGroups.bind(this);
+    /* this._accessGroups = this._accessGroups.bind(this); */
     this._projectInformation = this._projectInformation.bind(this);
     this._checkingCurrent = this._checkingCurrent.bind(this);
     this.GetGroupMembers = this.GetGroupMembers.bind(this);
@@ -118,6 +118,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this.triggerDocumentReview = this.triggerDocumentReview.bind(this);
     this._LAUrlGettingForPermission = this._LAUrlGettingForPermission.bind(this);
     this.triggerProjectPermissionFlow = this.triggerProjectPermissionFlow.bind(this);
+    this._openRevisionHistory = this._openRevisionHistory.bind(this);
   }
   private headerId;
   private documentIndexId;
@@ -130,7 +131,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   private taskID;
   private newDetailItemID;
   private revisionLogID;
-  private RevisionHistoryUrl;
+  // private RevisionHistoryUrl;
   private RedirectUrl;
   private valid = "ok";
   private noAccess;
@@ -152,8 +153,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //Page Load
   public async componentDidMount() {
     console.log(window.location.protocol + "//" + window.location.hostname + "/sites/" + this.props.hubsite);
-    this._userMessageSettings();
-    this._currentUser();
+    // this._userMessageSettings();
+     this._currentUser();
     this._queryParamGetting();
     //Get Approver
     const headerItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.workflowHeaderListName, this.headerId, "DocumentIndexID")
@@ -163,9 +164,10 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //Permission handiling 
     await this._accessGroups();
     // await this._LAUrlGettingForPermission();
-    this._LAUrlGetting();
-    this._LAUrlGettingForUnderReview();
-
+    /* this._LAUrlGetting();
+    this._LAUrlGettingForUnderReview(); */
+    // console.log('this.state.currentReviewItems: ', this.state.currentReviewItems);
+    // this._checkingReviewStatus();
   }
   //user message settings..
   private async _userMessageSettings() {
@@ -250,7 +252,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //else 
     {
 
-      if (id != "" && id != null && detailid != "" && detailid != null && this.workFlow !== "dcc") {
+      // if (id != "" && id != null && detailid != "" && detailid != null && this.workFlow !== "dcc") {
+        if (id != "" && id != null && detailid != "" && detailid != null ) {
+      
         this.headerId = parseInt(id);
         this.valid = "ok";
         this.detailID = parseInt(detailid);
@@ -258,6 +262,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
           divForReview: "",
           ifDccComment: "none",
         });
+        this._onPageLoadDataBind();
+        this._checkingReviewStatus();
       }
       else {
         this.setState({ accessDeniedMsgBar: "", loaderDisplay: "none", invalidMessage: this.state.invalidQueryParam });
@@ -344,6 +350,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
 
 
   }
+
+
   private async _gettingGroupID(AccessGroupItems) {
     let AG;
     for (let a = 0; a < AccessGroupItems.length; a++) {
@@ -421,7 +429,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   }
 
   //checking current user  is a reviewer
-  private async _checkingReviewStatus() {
+  private _checkingReviewStatus() {
     this._Service.getItemSelectExpandFilter(
       this.props.siteUrl,
       this.props.workFlowDetail,
@@ -713,9 +721,15 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
           linkToDoc: documentIndexItems.SourceDocument.Url,
         });
       });
-    this.RevisionHistoryUrl = this.props.siteUrl + "/SitePages/RevisionHistory.aspx?did=" + this.documentIndexId + "";
-    console.log(this.RevisionHistoryUrl);
+    // this.RevisionHistoryUrl = this.props.siteUrl + "/SitePages/RevisionHistory.aspx?did=" + this.documentIndexId + "";
+    // console.log(this.RevisionHistoryUrl);
   }
+
+  private _openRevisionHistory = () => {
+    window.open(this.props.siteUrl + "/SitePages/RevisionHistory.aspx?did=" + this.documentIndexId + "");
+  }
+
+
   public _projectInformation = async () => {
     const projectInformation = await this._Service.getItems(this.props.siteUrl, this.props.projectInformationListName)
     //const projectInformation = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.projectInformationListName).items.get();
@@ -1056,7 +1070,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                       DelegatedFromId: this.state.approverId,
                                       ResponseStatus: "Under Approval",
                                       SourceDocument: {
-                                        "__metadata": { type: "SP.FieldUrlValue" },
+                                        // "__metadata": { type: "SP.FieldUrlValue" },
                                         Description: this.state.documentName,
                                         Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                                       },
@@ -1084,7 +1098,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                         this.newDetailItemID = r.data.ID;
                                         const detailitem = {
                                           Link: {
-                                            "__metadata": { type: "SP.FieldUrlValue" },
+                                            // "__metadata": { type: "SP.FieldUrlValue" },
                                             Description: this.state.documentName + "-- Approve",
                                             Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                           },
@@ -1134,7 +1148,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                           Source: "QDMS",
                                           DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
                                           Link: {
-                                            "__metadata": { type: "SP.FieldUrlValue" },
+                                            // "__metadata": { type: "SP.FieldUrlValue" },
                                             Description: this.state.documentName + "-- Approve",
                                             Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                           },
@@ -1215,7 +1229,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                               DueDate: this.state.DueDate,
                               ResponseStatus: "Under Approval",
                               SourceDocument: {
-                                "__metadata": { type: "SP.FieldUrlValue" },
+                                // "__metadata": { type: "SP.FieldUrlValue" },
                                 Description: this.state.documentName,
                                 Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                               },
@@ -1241,7 +1255,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                 this.newDetailItemID = r.data.ID;
                                 const detitem = {
                                   Link: {
-                                    "__metadata": { type: "SP.FieldUrlValue" },
+                                    // "__metadata": { type: "SP.FieldUrlValue" },
                                     Description: this.state.documentName + "-- Approve",
                                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                   },
@@ -1266,7 +1280,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                   Priority: (this.state.criticalDocument == true ? "Critical" : ""),
                                   Source: "QDMS",
                                   Link: {
-                                    "__metadata": { type: "SP.FieldUrlValue" },
+                                    // "__metadata": { type: "SP.FieldUrlValue" },
                                     Description: this.state.documentName + "-- Approve",
                                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                   },
@@ -1343,7 +1357,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                             OwnerId: Number(this.state.ownerID),
                             ResponseStatus: "Under Approval",
                             SourceDocument: {
-                              "__metadata": { type: "SP.FieldUrlValue" },
+                              // "__metadata": { type: "SP.FieldUrlValue" },
                               Description: this.state.documentName,
                               Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                             },
@@ -1369,7 +1383,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                               this.newDetailItemID = r.data.ID;
                               const detaildata = {
                                 Link: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
+                                  // "__metadata": { type: "SP.FieldUrlValue" },
                                   Description: this.state.documentName + "-- Approve",
                                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                 },
@@ -1394,7 +1408,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                 Priority: (this.state.criticalDocument == true ? "Critical" : ""),
                                 Source: "QDMS",
                                 Link: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
+                                  // "__metadata": { type: "SP.FieldUrlValue" },
                                   Description: this.state.documentName + "-- Approve",
                                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                 },
@@ -1733,7 +1747,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                       DelegatedFromId: this.state.approverId,
                                       ResponseStatus: "Under Approval",
                                       SourceDocument: {
-                                        "__metadata": { type: "SP.FieldUrlValue" },
+                                        // "__metadata": { type: "SP.FieldUrlValue" },
                                         Description: this.state.documentName,
                                         Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                                       },
@@ -1761,7 +1775,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                         this.newDetailItemID = r.data.ID;
                                         const detaitem = {
                                           Link: {
-                                            "__metadata": { type: "SP.FieldUrlValue" },
+                                            // "__metadata": { type: "SP.FieldUrlValue" },
                                             Description: this.state.documentName + "-- Approve",
                                             Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                           },
@@ -1812,7 +1826,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                           Source: "QDMS",
                                           DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
                                           Link: {
-                                            "__metadata": { type: "SP.FieldUrlValue" },
+                                            // "__metadata": { type: "SP.FieldUrlValue" },
                                             Description: this.state.documentName + "-- Approve",
                                             Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                           },
@@ -1858,6 +1872,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                                 //Email pending  emailbody to approver                 
                                                 this.validator.hideMessages();
                                                 this.setState({
+                                                  // statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
                                                   comments: "",
                                                   statusKey: "",
                                                   approverEmail: "",
@@ -1892,7 +1907,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                               DueDate: this.state.DueDate,
                               ResponseStatus: "Under Approval",
                               SourceDocument: {
-                                "__metadata": { type: "SP.FieldUrlValue" },
+                                // "__metadata": { type: "SP.FieldUrlValue" },
                                 Description: this.state.documentName,
                                 Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                               },
@@ -1918,7 +1933,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                 this.newDetailItemID = r.data.ID;
                                 const detitem = {
                                   Link: {
-                                    "__metadata": { type: "SP.FieldUrlValue" },
+                                    // "__metadata": { type: "SP.FieldUrlValue" },
                                     Description: this.state.documentName + "-- Approve",
                                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                   },
@@ -1943,7 +1958,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                   Priority: (this.state.criticalDocument == true ? "Critical" : ""),
                                   Source: "QDMS",
                                   Link: {
-                                    "__metadata": { type: "SP.FieldUrlValue" },
+                                    // "__metadata": { type: "SP.FieldUrlValue" },
                                     Description: this.state.documentName + "-- Approve",
                                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                   },
@@ -2021,7 +2036,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                             OwnerId: Number(this.state.ownerID),
                             ResponseStatus: "Under Approval",
                             SourceDocument: {
-                              "__metadata": { type: "SP.FieldUrlValue" },
+                              // "__metadata": { type: "SP.FieldUrlValue" },
                               Description: this.state.documentName,
                               Url: this.props.siteUrl + "/SourceDocuments/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexId) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
                             },
@@ -2047,7 +2062,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                               this.newDetailItemID = r.data.ID;
                               const detitem = {
                                 Link: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
+                                  // "__metadata": { type: "SP.FieldUrlValue" },
                                   Description: this.state.documentName + "-- Approve",
                                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                 },
@@ -2073,7 +2088,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                 Priority: (this.state.criticalDocument == true ? "Critical" : ""),
                                 Source: "QDMS",
                                 Link: {
-                                  "__metadata": { type: "SP.FieldUrlValue" },
+                                  // "__metadata": { type: "SP.FieldUrlValue" },
                                   Description: this.state.documentName + "-- Approve",
                                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + r.data.ID + ""
                                 },
@@ -2147,6 +2162,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                   else if (reviewStatus == "Returned with comments" && this.state.reviewPending == "No") {
                     this.setState({
                       buttonHidden: "none",
+                      statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
                     });
                     const headitem = {
                       WorkflowStatus: "Returned with comments",
@@ -3816,7 +3832,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
             <div className={styles.header}>
               <div className={styles.divMetadataCol1}>
                 <h3 >Document Details</h3>
-                <Link onClick={this.RevisionHistoryUrl} target="_blank" underline style={{ marginLeft: "70%" }}>Revision History</Link>
+                <Link onClick={this._openRevisionHistory} target="_blank" underline style={{ marginLeft: "70%" }}>Revision History</Link>
+                {/* <Link onClick={this.RevisionHistoryUrl} target="_blank" underline style={{ marginLeft: "70%" }}>Revision History</Link> */}
               </div>
             </div>
             <div className={styles.divMetadata}>

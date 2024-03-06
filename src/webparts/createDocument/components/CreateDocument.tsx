@@ -233,11 +233,11 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let categorydata;
     for (let i = 0; i < category.length; i++) {
       // if (category[i].QDMS == true) {
-        categorydata = {
-          key: category[i].ID,
-          text: category[i].Category,
-        };
-        categoryArray.push(categorydata);
+      categorydata = {
+        key: category[i].ID,
+        text: category[i].Category,
+      };
+      categoryArray.push(categorydata);
       // }
     }
     sorted_Category = _.orderBy(categoryArray, 'text', ['asc']);
@@ -422,7 +422,76 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     }
 
   }
+
   private onUploadOrTemplateRadioBtnChange = async (ev: React.FormEvent<HTMLElement | HTMLInputElement>, option: IChoiceGroupOption) => {
+    this.setState({
+      uploadOrTemplateRadioBtn: option.key,
+      createDocument: true
+    });
+    if (option.key === "Upload") {
+      this.setState({ upload: true, hideupload: "", template: false, hidetemplate: "none" });
+    }
+    if (option.key === "Template") {
+      let publishedDocumentArray: any[] = [];
+      let sorted_PublishedDocument: any[];
+      this.setState({ template: true, upload: false, hideupload: "none", hidetemplate: "" });
+      let publishedDocument: any[] = await this._Service.getItemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      for (let i = 0; i < publishedDocument.length; i++) {
+        if (publishedDocument[i].Template === true) {
+          let publishedDocumentdata = {
+            key: publishedDocument[i].ID,
+            text: publishedDocument[i].DocumentName,
+          };
+          publishedDocumentArray.push(publishedDocumentdata);
+        }
+      }
+      sorted_PublishedDocument = _.orderBy(publishedDocumentArray, 'text', ['asc']);
+      this.setState({ templateDocuments: sorted_PublishedDocument });
+      console.log('templateDocuments upload change: ', this.state.templateDocuments);
+    }
+  }
+
+  // Template change
+  public async _templatechange(option: { key: any; text: any }) {
+    this.setState({ insertdocument: "none" });
+    this.setState({ templateId: option.key, templateKey: option.text });
+    let type: any;
+    let publishName: any;
+    this.isDocument = "Yes";
+    let publishedDocumentArray: any[] = [];
+    let sorted_PublishedDocument: any[];
+    let publishedDocument: any[] = await this._Service.getItemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+    for (let i = 0; i < publishedDocument.length; i++) {
+      if (publishedDocument[i].Template === true) {
+        let publishedDocumentdata = {
+          key: publishedDocument[i].ID,
+          text: publishedDocument[i].DocumentName,
+        };
+        publishedDocumentArray.push(publishedDocumentdata);
+      }
+    }
+    sorted_PublishedDocument = _.orderBy(publishedDocumentArray, 'text', ['asc']);
+    this.setState({ templateDocuments: sorted_PublishedDocument });
+    console.log('templateDocuments template change: ', this.state.templateDocuments);
+
+    for (let i = 0; i < publishedDocument.length; i++) {
+      if (publishedDocument[i].Id === this.state.templateId) {
+        // publishName = publishedDocument[i].LinkFilename;
+        publishName = publishedDocument[i].DocumentName;
+
+      }
+    }
+    var split = publishName.split(".", 2);
+    type = split[1];
+    if (type === "docx") {
+      this.setState({ isdocx: "", nodocx: "none" });
+    } else {
+      this.setState({ isdocx: "none", nodocx: "" });
+    }
+  }
+
+
+  /* private onUploadOrTemplateRadioBtnChange = async (ev: React.FormEvent<HTMLElement | HTMLInputElement>, option: IChoiceGroupOption) => {
 
     this.setState({
       uploadOrTemplateRadioBtn: option.key,
@@ -449,7 +518,9 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       sorted_PublishedDocument = _.orderBy(publishedDocumentArray, 'text', ['asc']);
       this.setState({ templateDocuments: sorted_PublishedDocument });
     }
-  }
+  } */
+
+
   private _onUploadCheck = (ev: React.FormEvent<HTMLInputElement>, isChecked?: boolean) => {
     if (isChecked) {
       this.setState({ upload: true, hideupload: "", template: false, hidesource: "none", hidetemplate: "none" });
@@ -521,6 +592,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       }
       sorted_PublishedDocument = _.orderBy(publishedDocumentArray, 'text', ['asc']);
       this.setState({ templateDocuments: sorted_PublishedDocument, sourceId: option.key });
+      console.log('templateDocuments1: ', this.state.templateDocuments);
     }
     else {
       // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
@@ -537,10 +609,11 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       sorted_PublishedDocument = _.orderBy(publishedDocumentArray, 'text', ['asc']);
 
       this.setState({ templateDocuments: sorted_PublishedDocument, sourceId: option.key });
+      console.log('templateDocuments2: ', this.state.templateDocuments);
     }
   }
   //Template change
-  public async _templatechange(option: { key: any; text: any }) {
+  /* public async _templatechange(option: { key: any; text: any }) {
     this.setState({ insertdocument: "none" });
     this.setState({ templateId: option.key, templateKey: option.text });
     let type: any;
@@ -585,7 +658,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         }
       });
     }
-  }
+  } */
+
   //Direct Publish change
   private _onDirectPublishChecked = (ev: React.FormEvent<HTMLInputElement>, isChecked?: boolean) => {
     if (isChecked) {
@@ -827,7 +901,9 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     this.setState({
       incrementSequenceNumber: incrementSequenceNumber,
     });
-  }// Create item with id
+  }
+
+  // Create item with id
   public async _documentCreation() {
     await this._userMessageSettings();
     let documentNameExtension;
@@ -935,215 +1011,106 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         let extension;
         let newDocumentName;
         // Get template
-        if (this.state.sourceId === "Quality") {
-          // this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary)
-          this._Service.getSelectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,FileLeafRef,DocumentName")
-            .then(publishdoc => {
-              console.log(publishdoc);
-              for (let i = 0; i < publishdoc.length; i++) {
-                if (publishdoc[i].Id === this.state.templateId) {
-                  publishName = publishdoc[i].DocumentName;
-                }
+
+        // this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary)
+        this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName")
+          .then(publishdoc => {
+            console.log(publishdoc);
+            for (let i = 0; i < publishdoc.length; i++) {
+              if (publishdoc[i].Id === this.state.templateId) {
+                publishName = publishdoc[i].LinkFilename;
               }
-              var split = publishName.split(".", 2);
-              extension = split[1];
-            }).then(cpysrc => {
-              // Add template document to source document
-              newDocumentName = this.state.documentName + "." + extension;
-              this.documentNameExtension = newDocumentName;
-              docinsertname = this.state.documentid + '.' + extension;
-              let filePath: string;
-              this._Service.getPathOfSelectedTemplate(publishName, "SourceDocuments").then((items) => {
-                if (items.length > 0) {
-                  // Get the first item (assuming the file names are unique)
-                  const fileItem = items[0];
-
-                  // Access the server-relative URL of the file
-                  filePath = fileItem.FileDirRef + '/' + publishName;
-                  console.log(filePath)
+            }
+            var split = publishName.split(".", 2);
+            extension = split[1];
+          }).then(cpysrc => {
+            // Add template document to source document
+            newDocumentName = this.state.documentName + "." + extension;
+            this.documentNameExtension = newDocumentName;
+            docinsertname = this.state.documentid + '.' + extension;
+            // let siteUrl = this.props.siteUrl + "/" + this.props.publisheddocumentLibrary + "/" + this.state.category + "/" + publishName;
+            let siteUrl = this.props.siteUrl + "/" + this.props.publisheddocumentLibrary + "/" + publishName;
+            this._Service.getBuffer(siteUrl).then(templateData => {
+              console.log('templateData: ', templateData);
+              return this._Service.uploadDocument(docinsertname, templateData, this.props.sourceDocumentLibrary);
+            }).then(fileUploaded => {
+              const filePath = window.location.protocol + "//" + window.location.host + fileUploaded.data.ServerRelativeUrl;
+              console.log("File Uploaded");
+              fileUploaded.file.getItem().then(async item => {
+                console.log(item);
+                sourceDocumentId = item["ID"];
+                this.setState({ sourceDocumentId: sourceDocumentId });
+                await this._addSourceDocument();
+              }).then(async updateDocumentIndex => {
+                let revision;
+                revision = "0";
+                let logItems = {
+                  Title: this.state.documentid,
+                  Status: "Document Created",
+                  LogDate: this.today,
+                  Revision: revision,
+                  DocumentIndexId: parseInt(this.state.newDocumentId),
                 }
-              }).then(afterPath => {
-                this._Service.getBuffer(filePath).then(templateData => {
-                  return this._Service.uploadDocument(docinsertname, templateData, this.props.sourceDocumentLibrary);
-                }).then(fileUploaded => {
-                  const filePath = window.location.protocol + "//" + window.location.host + fileUploaded.data.ServerRelativeUrl;
-                  console.log("File Uploaded");
-                  fileUploaded.file.getItem().then(async item => {
-                    console.log(item);
-                    sourceDocumentId = item["ID"];
-                    this.setState({ sourceDocumentId: sourceDocumentId });
-                    await this._addSourceDocument();
-                  }).then(async updateDocumentIndex => {
-                    let revision;
-                    revision = "0";
-                    let logItems = {
-                      Title: this.state.documentid,
-                      Status: "Document Created",
-                      LogDate: this.today,
-                      Revision: revision,
-                      DocumentIndexId: parseInt(this.state.newDocumentId),
-                    }
-                    await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
-                    if (this.state.directPublishCheck === false) {
-                      let indexUpdateItems = {
-                        SourceDocumentID: parseInt(this.state.sourceDocumentId),
-                        DocumentName: this.documentNameExtension,
+                await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
+                if (this.state.directPublishCheck === false) {
+                  let indexUpdateItems = {
+                    SourceDocumentID: parseInt(this.state.sourceDocumentId),
+                    DocumentName: this.documentNameExtension,
 
-                        SourceDocument: {
-                          Description: this.documentNameExtension,
-                          Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
-                        },
-                        RevokeExpiry: {
-                          Description: "Revoke",
-                          Url: this.revokeUrl
-                        }
-                      }
-                      // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                      this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-
+                    SourceDocument: {
+                      Description: this.documentNameExtension,
+                      Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
+                    },
+                    RevokeExpiry: {
+                      Description: "Revoke",
+                      Url: this.revokeUrl
                     }
-                    else {
-                      let indexUpdateItems = {
-                        SourceDocumentID: parseInt(this.state.sourceDocumentId),
-                        DocumentName: this.documentNameExtension,
-                        ApprovedDate: this.state.approvalDate,
-                        SourceDocument: {
-                          Description: this.documentNameExtension,
-                          Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
-                        },
-                        RevokeExpiry: {
-                          Description: "Revoke",
-                          Url: this.revokeUrl
-                        },
-                      }
-                      // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                      this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                    }
-                    await this._triggerPermission(sourceDocumentId);
-                    if (this.state.directPublishCheck === true) {
-                      this.setState({ hideLoading: false, hideCreateLoading: "none" });
-                      await this._publish();
-                    }
-                    else {
-                      if (this.state.sendForReview === true) {
-                        this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
-                        this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
-                        setTimeout(() => {
-                          window.location.replace(this.siteUrl);
-                        }, 5000);
-                      }
-                      else {
-                        this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
-                        setTimeout(() => {
-                          window.location.replace(this.siteUrl);
-                        }, 5000);
-                      }
-                    }
-                  });
-                });
-              })
-              // let siteUrl = this.props.QDMSUrl + "/" + this.props.publisheddocumentLibrary + "/" + publishName;
-
-            });
-        }
-        else {
-          // this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary)
-          this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName")
-            .then(publishdoc => {
-              console.log(publishdoc);
-              for (let i = 0; i < publishdoc.length; i++) {
-                if (publishdoc[i].Id === this.state.templateId) {
-                  publishName = publishdoc[i].LinkFilename;
-                }
-              }
-              var split = publishName.split(".", 2);
-              extension = split[1];
-            }).then(cpysrc => {
-              // Add template document to source document
-              newDocumentName = this.state.documentName + "." + extension;
-              this.documentNameExtension = newDocumentName;
-              docinsertname = this.state.documentid + '.' + extension;
-              let siteUrl = this.props.siteUrl + "/" + this.props.publisheddocumentLibrary + "/" + this.state.category + "/" + publishName;
-              this._Service.getBuffer(siteUrl).then(templateData => {
-                return this._Service.uploadDocument(docinsertname, templateData, this.props.sourceDocumentLibrary);
-              }).then(fileUploaded => {
-                const filePath = window.location.protocol + "//" + window.location.host + fileUploaded.data.ServerRelativeUrl;
-                console.log("File Uploaded");
-                fileUploaded.file.getItem().then(async item => {
-                  console.log(item);
-                  sourceDocumentId = item["ID"];
-                  this.setState({ sourceDocumentId: sourceDocumentId });
-                  await this._addSourceDocument();
-                }).then(async updateDocumentIndex => {
-                  let revision;
-                  revision = "0";
-                  let logItems = {
-                    Title: this.state.documentid,
-                    Status: "Document Created",
-                    LogDate: this.today,
-                    Revision: revision,
-                    DocumentIndexId: parseInt(this.state.newDocumentId),
                   }
-                  await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
-                  if (this.state.directPublishCheck === false) {
-                    let indexUpdateItems = {
-                      SourceDocumentID: parseInt(this.state.sourceDocumentId),
-                      DocumentName: this.documentNameExtension,
+                  // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                  this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
 
-                      SourceDocument: {
-                        Description: this.documentNameExtension,
-                        Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
-                      },
-                      RevokeExpiry: {
-                        Description: "Revoke",
-                        Url: this.revokeUrl
-                      }
-                    }
-                    // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                    this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-
+                }
+                else {
+                  let indexUpdateItems = {
+                    SourceDocumentID: parseInt(this.state.sourceDocumentId),
+                    DocumentName: this.documentNameExtension,
+                    ApprovedDate: this.state.approvalDate,
+                    SourceDocument: {
+                      Description: this.documentNameExtension,
+                      Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
+                    },
+                    RevokeExpiry: {
+                      Description: "Revoke",
+                      Url: this.revokeUrl
+                    },
+                  }
+                  // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                  this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                }
+                // await this._triggerPermission(sourceDocumentId);
+                if (this.state.directPublishCheck === true) {
+                  this.setState({ hideLoading: false, hideCreateLoading: "none" });
+                  await this._publish();
+                }
+                else {
+                  if (this.state.sendForReview === true) {
+                    this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
+                    this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
+                    setTimeout(() => {
+                      window.location.replace(this.siteUrl);
+                    }, 5000);
                   }
                   else {
-                    let indexUpdateItems = {
-                      SourceDocumentID: parseInt(this.state.sourceDocumentId),
-                      DocumentName: this.documentNameExtension,
-                      ApprovedDate: this.state.approvalDate,
-                      SourceDocument: {
-                        Description: this.documentNameExtension,
-                        Url: (fileUploaded.data.LinkingUrl !== "") ? fileUploaded.data.LinkingUrl : filePath,
-                      },
-                      RevokeExpiry: {
-                        Description: "Revoke",
-                        Url: this.revokeUrl
-                      },
-                    }
-                    // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
-                    this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
+                    this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
+                    setTimeout(() => {
+                      window.location.replace(this.siteUrl);
+                    }, 5000);
                   }
-                  await this._triggerPermission(sourceDocumentId);
-                  if (this.state.directPublishCheck === true) {
-                    this.setState({ hideLoading: false, hideCreateLoading: "none" });
-                    await this._publish();
-                  }
-                  else {
-                    if (this.state.sendForReview === true) {
-                      this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
-                      this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
-                      setTimeout(() => {
-                        window.location.replace(this.siteUrl);
-                      }, 5000);
-                    }
-                    else {
-                      this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
-                      setTimeout(() => {
-                        window.location.replace(this.siteUrl);
-                      }, 5000);
-                    }
-                  }
-                });
+                }
               });
             });
-        }
+          });
+
 
       }
       else { }
@@ -1322,9 +1289,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     };
 
     await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-
-
   }
+
   //trigger sendForRevew
   protected async _triggerSendForReview(sourceDocumentID, documentIndexId) {
     // const laUrl = await this._Service.DocumentSendForReview(this.props.siteUrl, this.props.requestList);
@@ -1662,10 +1628,10 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       { key: 'Native', text: 'Native' },
     ];
 
-    const Source: IDropdownOption[] = [
-      { key: 'Quality', text: 'Quality' },
-      { key: 'Current Site', text: 'Current Site' }
-    ];
+    // const Source: IDropdownOption[] = [
+    //   { key: 'Quality', text: 'Quality' },
+    //   { key: 'Current Site', text: 'Current Site' }
+    // ];
 
     const calloutProps = { gapSpace: 0 };
     const hostStyles: Partial<ITooltipHostStyles> = { root: { display: 'inline-block' } };
@@ -1729,17 +1695,17 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
               </div>
             </div>
             <div className={styles.divColumn2}>
-              <Dropdown id="t2" required={true} label="Doc Category"
+              <Dropdown id="t2" required={true} label="Category"
                 placeholder="Select an option"
                 selectedKey={this.state.categoryId}
                 options={this.state.categoryOption}
                 onChanged={this._categoryChange} />
               <div style={{ color: "#dc3545" }}>
-                {this.validator.message("category", this.state.categoryId, "required")}{" "}</div>
+                {this.validator.message("category", this.state.categoryId, "required")}{" "}
+              </div>
             </div>
-          {/* SubCategory   */}
-          <div className={styles.divColumn2}>
-              <Dropdown id="t2" required={true} label="Doc Type"
+            <div className={styles.divColumn2}>
+              <Dropdown id="t2" required={true} label="Sub Category"
                 placeholder="Select an option"
                 selectedKey={this.state.subCategoryId}
                 options={this.state.subCategoryArray}
@@ -1749,20 +1715,20 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
             </div>
           </div>
 
-          <div className={styles.documentMainDiv}>
-            <div className={styles.radioDiv} style={{ display: this.state.hideDoc }}>
+          {/* <div className={styles.documentMainDiv}> */}
+          {/* <div className={styles.radioDiv} style={{ display: this.state.hideDoc }}>
               <ChoiceGroup selectedKey={this.state.uploadOrTemplateRadioBtn}
                 onChange={this.onUploadOrTemplateRadioBtnChange}
                 options={uploadOrTemplateRadioBtnOptions} styles={choiceGroupStyles}
               />
-            </div>
-            <div className={styles.uploadDiv} style={{ display: this.state.hideupload }}>
+            </div> */}
+          {/* <div className={styles.uploadDiv} style={{ display: this.state.hideupload }}>
               <div ><input type="file" name="myFile" id="addqdms" onChange={this._add}></input></div>
               <div style={{ display: this.state.insertdocument, color: "#dc3545" }}>Please select  document </div>
-            </div>
-            <div className={styles.templateDiv} style={{ display: this.state.hidetemplate }}>
-              <div className={styles.divColumn2} style={{ display: "flex" }}>
-                {this.props.siteUrl !== "/sites/Quality" &&
+            </div> */}
+          {/* <div className={styles.templateDiv} style={{ display: this.state.hidetemplate }}> */}
+          {/* <div className={styles.divColumn2} style={{ display: "flex" }}> */}
+          {/* {this.props.siteUrl !== "/sites/Quality" &&
                   <div className={styles.divColumn2}>
                     <Dropdown id="t7"
                       label="Source"
@@ -1771,18 +1737,54 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                       options={Source}
                       onChanged={this._sourcechange} />
                   </div>
-                }
-                <div className={styles.divColumn2} style={{ maxWidth: (this.props.siteUrl === "/sites/Quality") ? "26.8rem" : "163.8rem" }}>
+                } */}
+          {/* <div className={styles.divColumn2} > style={{ maxWidth: (this.props.siteUrl === "/sites/Quality") ? "26.8rem" : "163.8rem" }}
                   <Dropdown id="t7"
                     label="Select a Template"
                     placeholder="Select an option"
                     selectedKey={this.state.templateId}
                     options={this.state.templateDocuments}
-                    onChanged={this._templatechange} style={{ width: "150%", }} />
-                </div>
+                    onChanged={this._templatechange} style={{ width: "125%", }} />
+                </div> */}
+          {/* </div> */}
+          {/* </div> */}
+          {/* </div> */}
+
+
+
+
+          <div className={styles.documentMainDiv}>
+            <div className={styles.radioDiv}>
+              <ChoiceGroup
+                selectedKey={this.state.uploadOrTemplateRadioBtn}
+                onChange={this.onUploadOrTemplateRadioBtnChange}
+                options={uploadOrTemplateRadioBtnOptions}
+                styles={choiceGroupStyles}
+              />
+            </div>
+            <div className={styles.uploadDiv} style={{ display: this.state.hideupload }}>
+              <div>
+                <input type="file" name="myFile" id="addqdms" onChange={this._add}></input>
+              </div>
+              <div style={{ display: this.state.insertdocument, color: "#dc3545" }}>Please select a document</div>
+            </div>
+            <div className={styles.templateDiv} style={{ display: this.state.hidetemplate }}>
+              <div className={styles.divColumn2}>
+                <Dropdown
+                  id="t7"
+                  label="Select a Template"
+                  placeholder="Select an option"
+                  selectedKey={this.state.templateId}
+                  options={this.state.templateDocuments}
+                  onChanged={this._templatechange}
+                  style={{ width: "125%" }}
+                />
               </div>
             </div>
           </div>
+
+
+
           <div className={styles.divrow}>
             <div style={{ width: "77%" }}>
               <PeoplePicker

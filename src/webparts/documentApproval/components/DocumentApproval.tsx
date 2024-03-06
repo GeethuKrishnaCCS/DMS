@@ -66,7 +66,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       requestedDate: "",
       requesterComment: "",
       reviewerData: [],
-      access: "none",
+      access: "",
       accessDeniedMsgBar: "none",
       hidepublish: true,
       statusMessage: {
@@ -139,7 +139,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
   }
   //Page Load
   public async componentDidMount() {
-    this.setState({ loaderDisplay: "" });
+    this.setState({ loaderDisplay: "none" });
     //Redirect url getting dynamically
     this.siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     this.redirectUrlSuccess = this.siteUrl;
@@ -176,7 +176,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       }
       // await this._checkCurrentUser();
     }
-    this._LAUrlGetting();
+    // this._LAUrlGetting();
   }
   //Get Parameter from URL
   private async _queryParamGetting() {
@@ -191,6 +191,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       this.workflowDetailID = parseInt(detailid);
       this.valid = "ok";
 
+      this._bindApprovalForm();
     }
     else {
       this.setState({
@@ -313,7 +314,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       )
       //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.PermissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendApprovalWF'").get();
     }
-
+    console.log('AccessGroup: ', AccessGroup);
     let AccessGroupItems: any[] = AccessGroup[0].AccessGroups.split(',');
     console.log("AccessGroupItems", AccessGroupItems);
     const DocumentIndexItem: any = await this._Service.getByIdSelect(
@@ -814,6 +815,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     )
       //await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.filter("WorkflowID eq '" + this.workflowHeaderID + "' and (Workflow eq 'Approval')").get()
       .then(ifyes => {
+        console.log('ifyes: ', ifyes);
         this.revisionLogId = ifyes[0].ID;
       });
 

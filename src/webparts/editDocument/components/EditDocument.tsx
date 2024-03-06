@@ -233,7 +233,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let documentindexid = params.get('did');
     this.documentIndexID = documentindexid;
     if (documentindexid != "" && documentindexid != null) {
-      this._Service.itemsFromIndex(this.props.siteUrl, this.props.documentIndexList, Number(documentindexid)).then(DocumentStatus => {
+      // this._Service.itemsFromIndex(this.props.siteUrl, this.props.documentIndexList, Number(documentindexid)).then(DocumentStatus => {
+      this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndexList, Number(documentindexid), "DocumentStatus,SourceDocumentID,WorkflowStatus").then(DocumentStatus => {
         this.sourceDocumentID = DocumentStatus.SourceDocumentID;
         if ((DocumentStatus.WorkflowStatus != "Under Review" && DocumentStatus.WorkflowStatus != "Under Approval")) {
           if (DocumentStatus.DocumentStatus == "Active") {
@@ -291,7 +292,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let temReviewersID: any[] = [];
     if (documentindexid != "" && documentindexid != null) {
 
-      this._Service.itemsFromIndexExpanded(this.props.siteUrl, this.props.documentIndexList, documentindexid).then(async dataForEdit => {
+      // this._Service.itemsFromIndexExpanded(this.props.siteUrl, this.props.documentIndexList, documentindexid).then(async dataForEdit => {
+      this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, documentindexid, "Title,Owner/Title,Owner/ID,Owner/EMail,SubCategoryID,WorkflowStatus,SourceDocument,SubCategory,Approver/Title,Approver/ID,ApprovedDate,BusinessUnit,BusinessUnitID,Category,CategoryID,DepartmentName,DepartmentID,DocumentID,DocumentName,ExpiryDate,Reviewers/ID,Reviewers/Title,ExpiryLeadPeriod,CategoryID,CriticalDocument,Template,PublishFormat,ApprovedDate,DirectPublish,CreateDocument,LegalEntity", "Owner,Approver,Reviewers").then(async dataForEdit => {
         console.log("dataForEdit", dataForEdit);
         this.setState({
           title: dataForEdit.Title,
@@ -364,51 +366,53 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
   }
   // Check permission to rename
-  // public async _checkRename(type) {
-  //   this.setState({ checkrename: "" });
-  //   const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
-  //   console.log("Posturl", laUrl[0].PostUrl);
-  //   this.permissionpostUrl = laUrl[0].PostUrl;
-  //   let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
-  //   const postURL = this.permissionpostUrl;
+  public async _checkRename(type) {
+    this.setState({ checkrename: "" });
+    // const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_PermissionWebpart'");
+    console.log("Posturl", laUrl[0].PostUrl);
+    this.permissionpostUrl = laUrl[0].PostUrl;
+    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const postURL = this.permissionpostUrl;
 
-  //   const requestHeaders: Headers = new Headers();
-  //   requestHeaders.append("Content-type", "application/json");
-  //   const body: string = JSON.stringify({
-  //     'PermissionTitle': type,
-  //     'SiteUrl': siteUrl,
-  //     'CurrentUserEmail': this.currentEmail
+    const requestHeaders: Headers = new Headers();
+    requestHeaders.append("Content-type", "application/json");
+    const body: string = JSON.stringify({
+      'PermissionTitle': type,
+      'SiteUrl': siteUrl,
+      'CurrentUserEmail': this.currentEmail
 
-  //   });
-  //   const postOptions: IHttpClientOptions = {
-  //     headers: requestHeaders,
-  //     body: body
-  //   };
+    });
+    const postOptions: IHttpClientOptions = {
+      headers: requestHeaders,
+      body: body
+    };
 
-  //   let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-  //   let responseJSON = await response.json();
-  //   console.log(responseJSON);
-  //   if (response.ok) {
-  //     console.log(responseJSON['Status']);
-  //     if (responseJSON['Status'] == "Valid") {
-  //       this.setState({
-  //         titleReadonly: false,
-  //         checkrename: "none"
-  //       });
-  //     }
-  //     else {
-  //       this.setState({
-  //         titleReadonly: true,
-  //         checkrename: "none"
-  //       });
-  //     }
-  //   }
+    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+    let responseJSON = await response.json();
+    console.log(responseJSON);
+    if (response.ok) {
+      console.log(responseJSON['Status']);
+      if (responseJSON['Status'] == "Valid") {
+        this.setState({
+          titleReadonly: false,
+          checkrename: "none"
+        });
+      }
+      else {
+        this.setState({
+          titleReadonly: true,
+          checkrename: "none"
+        });
+      }
+    }
 
-  //   else { }
-  // }
+    else { }
+  }
   //Messages
   private async _userMessageSettings() {
-    const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
+    // const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
+    const userMessageSettings: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'DocumentIndex'");
     console.log(userMessageSettings);
     for (var i in userMessageSettings) {
       if (userMessageSettings[i].Title == "DirectPublishSuccess") {
@@ -466,7 +470,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     {
       this.setState({ validApprover: "", approver: null, approverEmail: "", approverName: "", });
 
-      const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
+      // const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
+      const departments = await this._Service.getSelectExpand(this.props.siteUrl, this.props.department, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
       for (let i = 0; i < departments.length; i++) {
         if (departments[i].ID == this.state.departmentId) {
           const deptapprove = await this._Service.getUserIdByEmail(departments[i].Approver.EMail);
@@ -488,7 +493,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let publishedDocumentArray: any[] = [];
     let sorted_PublishedDocument: any[];
     if (isChecked) {
-      let publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      // let publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      let publishedDocument: any[] = await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category");
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template == true) {
           let publishedDocumentdata = {
@@ -571,7 +577,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           this.setState({ hidesource: "" })
         }
         this.setState({ template: true, upload: false, hideupload: "none", hidetemplate: "" });
-        let publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
+        // let publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
+        let publishedDocument: any[] = await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category");
         for (let i = 0; i < publishedDocument.length; i++) {
           if (publishedDocument[i].Template === true && publishedDocument[i].Category === this.state.category) {
             let publishedDocumentdata = {
@@ -635,7 +642,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let publishedDocumentArray: any[] = [];
     let sorted_PublishedDocument: any[];
     if (option.key == "Quality") {
-      let publishedDocument: any[] = await this._Service.getqdmsLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
+      // let publishedDocument: any[] = await this._Service.getqdmsLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
+      let publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template == true) {
           let publishedDocumentdata = {
@@ -649,7 +657,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       this.setState({ templateDocuments: sorted_PublishedDocument, sourceId: option.key });
     }
     else {
-      let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      let publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template == true) {
           let publishedDocumentdata = {
@@ -672,7 +681,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let publishName: any;
     this.isDocument = "Yes";
     if (this.state.sourceId == "Quality") {
-      await this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
+      // await this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
+      await this._Service.getSelectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID").then((publishdoc: any) => {
         console.log(publishdoc);
         for (let i = 0; i < publishdoc.length; i++) {
           if (publishdoc[i].Id == this.state.templateId) {
@@ -691,7 +701,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       });
     }
     else {
-      await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
+      // await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
+      await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category").then((publishdoc: any) => {
         console.log(publishdoc);
         for (let i = 0; i < publishdoc.length; i++) {
           if (publishdoc[i].Id == this.state.templateId) {
@@ -711,7 +722,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   // On direct publih checked
   public async _checkdirectPublish(type) {
-    const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_PermissionWebpart'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.permissionpostUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
@@ -864,7 +876,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   //trigger sendForRevew
   protected async _triggerSendForReview(sourceDocumentID, documentIndexId) {
-    const laUrl = await this._Service.DocumentSendForReview(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.DocumentSendForReview(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'Send For Review New DMS'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
@@ -1234,7 +1247,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   // Update Publish Document
   public async _updatePublishDocument() {
-    const publishDocumentID: any[] = await this._Service.itemIDFromPublish(this.props.siteUrl, this.props.publisheddocumentLibrary, this.documentIndexID);
+    // const publishDocumentID: any[] = await this._Service.itemIDFromPublish(this.props.siteUrl, this.props.publisheddocumentLibrary, this.documentIndexID);
+    const publishDocumentID: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.publisheddocumentLibrary, "ID", "DocumentIndex/ID eq '" + this.documentIndexID + "'");
     console.log("publishDocumentID", publishDocumentID);
     if (publishDocumentID.length > 0) {
       // Without Expiry date
@@ -1282,7 +1296,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   public async _updateWithoutDocument() {
     let sourceUrl;
     let extensionSplit;
-    const sourceLink: any = await this._Service.getSourceLink(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
+    // const sourceLink: any = await this._Service.getSourceLink(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
+    const sourceLink: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, "SourceDocument");
     console.log(sourceLink);
     sourceUrl = sourceLink.SourceDocument.Url;
     var split = sourceLink.SourceDocument.Description.split(".", 2);
@@ -1308,7 +1323,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       }
       const results = await this._Service.itemFromLibraryUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, libraryUpdate);
       if (results) {
-        const publishDocumentID: any[] = await this._Service.itemIDFromPublish(this.props.siteUrl, this.props.publisheddocumentLibrary, this.documentIndexID);
+        // const publishDocumentID: any[] = await this._Service.itemIDFromPublish(this.props.siteUrl, this.props.publisheddocumentLibrary, this.documentIndexID);
+        const publishDocumentID: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.publisheddocumentLibrary, "ID", "DocumentIndex/ID eq '" + this.documentIndexID + "'");
         console.log("publishDocumentID", publishDocumentID);
         for (var k in publishDocumentID) {
           let libraryUpdate = {
@@ -1351,7 +1367,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   // Document permission
   protected async _triggerPermission(sourceDocumentID) {
-    const laUrl = await this._Service.DocumentPermission(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.DocumentPermission(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPermission-Create Document'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
@@ -1374,7 +1391,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   protected async _publish() {
 
     await this._revisionCoding();
-    const laUrl = await this._Service.DocumentPublish(this.props.siteUrl, this.props.requestList);
+    // const laUrl = await this._Service.DocumentPublish(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPublish'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
@@ -1450,7 +1468,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let Subject;
     let Body;
     console.log(this.state.criticalDocument);
-    const notificationPreference: any[] = await this._Service.itemFromPrefernce(this.props.siteUrl, this.props.notificationPreference, emailuser);
+    // const notificationPreference: any[] = await this._Service.itemFromPrefernce(this.props.siteUrl, this.props.notificationPreference, emailuser);
+    const notificationPreference: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.notificationPreference, "Preference", "EmailUser/EMail eq '" + emailuser + "'");
     console.log(notificationPreference[0].Preference);
     if (notificationPreference.length > 0) {
       if (notificationPreference[0].Preference == "Send all emails") {
@@ -1559,7 +1578,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       let publishedDocumentArray: any[] = [];
       let sorted_PublishedDocument: any[];
       this.setState({ template: true, upload: false, hideupload: "none", hidetemplate: "" });
-      let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      let publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true) {
           let publishedDocumentdata = {
