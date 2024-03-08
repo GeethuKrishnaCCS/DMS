@@ -88,6 +88,8 @@ export interface ISendRequestState {
     businessUnitID: any;
     departmentId: any;
     validApprover: string;
+    hideCreateLoading: string;
+    
 }
 
 export interface ISendRequestWebPartProps {

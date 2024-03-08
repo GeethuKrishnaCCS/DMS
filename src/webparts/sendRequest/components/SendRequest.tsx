@@ -14,6 +14,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
 
   private _Service: DMSService;
   private validator: SimpleReactValidator;
+  private siteUrl;
   private documentIndexID;
   private invalidUser;
   private currentEmail;
@@ -102,7 +103,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       loaderDisplay: "",
       businessUnitID: null,
       departmentId: null,
-      validApprover: "none"
+      validApprover: "none",
+      hideCreateLoading: "none",
+      
+
     };
     this._Service = new DMSService(this.props.context);
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -155,6 +159,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       currentUser: user.Title,
       currentUserReviewer: currentUserReviewer
     });
+    this.siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl
   }
   
   //Messages
@@ -473,6 +478,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       if (this.state.reviewers.length === 0) {
         this.setState({ saveDisable: "none", hideLoading: false });
         this._underApprove(previousHeaderItem);
+        
       }
       else {
         this.setState({ saveDisable: "none", hideLoading: false });
@@ -480,7 +486,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       }
       this.validator.hideMessages();
       this.setState({ requestSend: "" });
-      setTimeout(() => this.setState({ requestSend: 'none', saveDisable: "none", }), 3000);
+      setTimeout(() => this.setState({ requestSend: 'none', saveDisable: "none" }), 3000);
     }
     else {
       this.validator.showMessages();
@@ -897,6 +903,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   }
                 }//taskId
               }//r
+              this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
+              setTimeout(() => {
+                window.location.replace(this.siteUrl);
+              }, 3000);
+
+
             }//else
           }//hubsiteuser
         }//user
@@ -976,9 +988,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
           statusMessage: { isShowMessage: true, message: this.underReview, messageType: 4 },
         });
       }
-      setTimeout(() => {
-        window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
-      }, 10000);
+      // setTimeout(() => {
+      //   window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
+      // }, 10000);
+
+      this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underReview, messageType: 4 } });
+                    setTimeout(() => {
+                      window.location.replace(this.siteUrl);
+                    }, 3000);
     }
   }
   // la for under review permission
@@ -1127,6 +1144,13 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
           },
         }); */
       }
+
+      this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
+                    setTimeout(() => {
+                      window.location.replace(this.siteUrl);
+                    }, 3000);
+
+
       //Task delegation getting user id from hubsite
       const user = await this._Service.getUserByEmail(this.state.approverEmail);
       //const user = await this._Service.siteUsers.getByEmail(this.state.approverEmail).get();
@@ -1593,6 +1617,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         DueDate: this.state.dueDate,
       }
       await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
+
+
+      this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
+                    setTimeout(() => {
+                      window.location.replace(this.siteUrl);
+                    }, 3000);
+
+
       // await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
@@ -1626,9 +1658,13 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         });
       }
 
-      setTimeout(() => {
-        window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
-      }, 10000);
+      // setTimeout(() => {
+      //   window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
+      // }, 10000);
+
+      
+
+
       //msg
     }//newheaderid
   }

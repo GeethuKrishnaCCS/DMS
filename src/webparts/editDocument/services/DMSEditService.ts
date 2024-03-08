@@ -71,7 +71,7 @@ export class cdmsEditService extends BaseService {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .select(select)
             .expand(expand)();
-    }     
+    }
 
 
 
@@ -100,6 +100,11 @@ export class cdmsEditService extends BaseService {
     }
 
 
+    public getSelectFilterList(siteUrl: string, listname: string, select: string, filter: string): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
+            .select(select)
+            .filter(filter)();
+    }
 
 
 
@@ -107,12 +112,13 @@ export class cdmsEditService extends BaseService {
 
 
 
-    
+
+
     /* public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .select("ID,Title,Approver/Title,Approver/ID,Approver/EMail")
             .expand("Approver")();
-    }    */   
+    }    */
 
     /* public async itemFromTemplate(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/" + listname).items.select("LinkFilename,ID").getAll();
@@ -122,7 +128,7 @@ export class cdmsEditService extends BaseService {
         return this._spfi.web.getFileById(uniqueId)
     } */
 
-    
+
     //MS Graph service
     /* public sendMail(emailPostBody: any): Promise<any> {
         return this.currentContext.msGraphClientFactory
