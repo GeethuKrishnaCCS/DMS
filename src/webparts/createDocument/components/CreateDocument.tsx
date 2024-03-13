@@ -981,7 +981,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                 // await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
                 await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexItems);
               }
-              // await this._triggerPermission(sourceDocumentId);
+              await this._triggerPermission(sourceDocumentId);
               if (this.state.directPublishCheck === true) {
                 this.setState({ hideLoading: false, hideCreateLoading: "none" });
                 await this._publish();
@@ -1087,7 +1087,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                   // this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
                   this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.state.newDocumentId, indexUpdateItems);
                 }
-                // await this._triggerPermission(sourceDocumentId);
+                await this._triggerPermission(sourceDocumentId);
                 if (this.state.directPublishCheck === true) {
                   this.setState({ hideLoading: false, hideCreateLoading: "none" });
                   await this._publish();
@@ -1272,7 +1272,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   // Set permission for document
   protected async _triggerPermission(sourceDocumentID) {
     // const laUrl = await this._Service.DocumentPermission(this.props.siteUrl, this.props.requestList);
-    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPermission-Create Document'");
+    const laUrl = await this._Service.getItemsFilter(this.props.siteUrl, this.props.requestList, "Title eq 'DMS-Create Document Permission'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
