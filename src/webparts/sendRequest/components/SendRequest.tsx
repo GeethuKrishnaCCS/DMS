@@ -162,7 +162,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     const userMessageSettings: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'SendRequest'");
     // const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
 
-    for (var i in userMessageSettings) {
+    for (let i in userMessageSettings) {
       if (userMessageSettings[i].Title === "InvalidSendRequestUser") {
         this.invalidUser = userMessageSettings[i].Message;
       }
@@ -176,32 +176,32 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         this.workflowStatus = userMessageSettings[i].Message;
       }
       if (userMessageSettings[i].Title === "DccReview") {
-        var DccReview = userMessageSettings[i].Message;
+        let DccReview = userMessageSettings[i].Message;
         this.dccReview = replaceString(DccReview, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "UnderApproval") {
-        var UnderApproval = userMessageSettings[i].Message;
+        let UnderApproval = userMessageSettings[i].Message;
         this.underApproval = replaceString(UnderApproval, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "UnderReview") {
-        var UnderReview = userMessageSettings[i].Message;
+        let UnderReview = userMessageSettings[i].Message;
         this.underReview = replaceString(UnderReview, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "TaskDelegateDccReview") {
-        var TaskDelegateDccReview = userMessageSettings[i].Message;
+        let TaskDelegateDccReview = userMessageSettings[i].Message;
         this.taskDelegateDccReview = replaceString(TaskDelegateDccReview, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "TaskDelegateUnderApproval") {
-        var TaskDelegateUnderApproval = userMessageSettings[i].Message;
+        let TaskDelegateUnderApproval = userMessageSettings[i].Message;
         this.taskDelegateUnderApproval = replaceString(TaskDelegateUnderApproval, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "TaskDelegateUnderReview") {
-        var TaskDelegateUnderReview = userMessageSettings[i].Message;
+        let TaskDelegateUnderReview = userMessageSettings[i].Message;
         this.taskDelegateUnderReview = replaceString(TaskDelegateUnderReview, '[DocumentName]', this.state.documentName);
 
       }
@@ -314,12 +314,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       const linkToDocument = documentIndexItem.SourceDocument.Url;
       // this.SourceDocumentID = DocumentIndexItem.SourceDocumentID;
       const criticalDocument = documentIndexItem.CriticalDocument;
-      const approverName = documentIndexItem.Approver.Title;
-      const approverId = documentIndexItem.Approver.ID;
-      const approverEmail = documentIndexItem.Approver.EMail;
+      // const approverName = documentIndexItem.Approver.Title;
+      // const approverId = documentIndexItem.Approver.ID;
+      // const approverEmail = documentIndexItem.Approver.EMail;
       const businessUnitID = documentIndexItem.BusinessUnitID;
       const departmentId = documentIndexItem.DepartmentID;
-      for (var k in documentIndexItem.Reviewers) {
+      for (let k in documentIndexItem.Reviewers) {
         temReviewersID.push(documentIndexItem.Reviewers[k].ID);
         this.setState({
           reviewers: temReviewersID,
@@ -341,14 +341,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         revision: revision,
         linkToDoc: linkToDocument,
         criticalDocument: criticalDocument,
-        approver: approverId,
-        approverName: approverName,
+        // approver: approverId,
+        // approverName: approverName,
         reviewersName: tempReviewers,
         businessUnitID: businessUnitID,
         departmentId: departmentId
       });
       // const sourceDocumentItem: any = await this._Service.getSourceDocumentItem(this.props.siteUrl, this.props.sourceDocumentLibrary, this.documentIndexID);
-      const sourceDocumentItem: any = await this._Service.getFilter(this.props.siteUrl, this.props.sourceDocumentLibrary, 'DocumentIndexId eq ' + this.documentIndexID);
+      const sourceDocumentItem: any = await this._Service.getLibraryFilter(this.props.siteUrl, this.props.sourceDocumentLibrary, 'DocumentIndexId eq ' + this.documentIndexID);
       //const sourceDocumentItem: any = await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.filter('DocumentIndexId eq ' + this.documentIndexID).get();
 
       this.sourceDocumentID = sourceDocumentItem[0].ID;
@@ -490,7 +490,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   //  qdms request to review
   public async _underReview(previousHeaderItem) {
-    // this._LAUrlGettingForUnderReview();
+    await this._LAUrlGettingForUnderReview();
     // this._LaUrlGettingAdaptive();
     const itemtobeadded = {
       Title: this.state.documentName,
@@ -503,11 +503,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       DocumentIndexID: this.documentIndexID,
       ReviewersId: this.state.reviewers,
       ApproverId: this.state.approver,
+      OwnerId: this.state.ownerId,
       RequesterId: this.currentId,
       RequesterComment: this.state.comments,
       RequestedDate: this.today,
       Workflow: "Review",
-      OwnerId: this.state.ownerId,
+      
       PreviousReviewHeader: previousHeaderItem.toString()
     }
     // const header = await this._Service.addToWorkflowHeaderList(this.props.siteUrl, this.props.workflowHeaderList, itemtobeadded);
@@ -553,7 +554,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         DueDate: this.state.dueDate,
       }); */
       //for reviewers if exist
-      for (var k = 0; k < this.state.reviewers.length; k++) {
+      for (let k = 0; k < this.state.reviewers.length; k++) {
         const user = await this._Service.getSiteUserById(this.state.reviewers[k]);
         //const user = await this._Service.siteUsers.getById(this.state.reviewers[k]).get();
         if (user) {
@@ -904,8 +905,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       const indexitem = {
         WorkflowStatus: "Under Review",
         Workflow: "Review",
-        ApproverId: this.state.approver,
         ReviewersId: this.state.reviewers,
+      ApproverId: this.state.approver,
+      OwnerId: this.state.ownerId,
         WorkflowDueDate: this.state.dueDate
       }
       // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, indexitem);
@@ -920,11 +922,12 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       const sourceitem = {
         WorkflowStatus: "Under Review",
         Workflow: "Review",
-        ApproverId: this.state.approver,
         ReviewersId: this.state.reviewers,
+        ApproverId: this.state.approver,
+        OwnerId: this.state.ownerId,
       }
       // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
-      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
+      await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
       /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
         WorkflowStatus: "Under Review",
         Workflow: "Review",
@@ -939,7 +942,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(parseInt(this.newheaderid)).update({
         ReviewersId: this.state.reviewers
       }); */
-      // await this._triggerDocumentUnderReview(this.sourceDocumentID, "Review");
+      await this._triggerDocumentUnderReview(this.sourceDocumentID, "Review");
       const logitem = {
         Title: this.state.documentID,
         Status: "Under Review",
@@ -993,8 +996,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   // set permission for reviewer
   protected async _triggerDocumentUnderReview(sourceDocumentID, type) {
     const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
-    // alert("In function");
-    // alert(transmittalID);
     const postURL = this.postUrlForUnderReview;
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
@@ -1231,7 +1232,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   const sourceitem = {
                     ApproverId: this.state.delegateToIdInSubSite,
                   }
-                  await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
+                  await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
                   // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
                   /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
                     ApproverId: this.state.delegateToIdInSubSite,
@@ -1359,9 +1360,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 ApproverId: this.state.approver,
               }); */
               const sourceitem = {
-                ApproverId: this.state.approver,
+      ApproverId: this.state.approver
               }
-              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
+              await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
               // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
               /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
                 ApproverId: this.state.approver,
@@ -1674,7 +1675,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   public _adaptiveCard = async (Workflow, Email, Name, Type) => {
     const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrlForAdaptive;
-    var splitted = this.state.documentName.split(".");
+    let splitted = this.state.documentName.split(".");
     let ext = splitted[splitted.length - 1];
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
