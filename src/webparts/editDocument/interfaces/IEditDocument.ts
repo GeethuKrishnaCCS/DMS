@@ -34,6 +34,7 @@ export interface IEditDocumentProps {
     requestList: string;
     webpartHeader: string;
     QDMSUrl: string;
+    
 }
 
 export interface IEditDocumentState {
@@ -156,6 +157,8 @@ export interface IEditDocumentState {
     sendForReview: boolean,
     dueDateMadatory: string;
     comments: string;
+    mydoc: File | null;
+    
 }
 
 export interface IEditDocumentWebPartProps {
