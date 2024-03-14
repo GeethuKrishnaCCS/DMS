@@ -163,9 +163,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this.documentIndexId = headerItem.DocumentIndexID;
     //Permission handiling 
     await this._accessGroups();
-    // await this._LAUrlGettingForPermission();
-    /* this._LAUrlGetting();
-    this._LAUrlGettingForUnderReview(); */
+    await this._LAUrlGettingForPermission();
+     this._LAUrlGetting();
+    this._LAUrlGettingForUnderReview();
     // console.log('this.state.currentReviewItems: ', this.state.currentReviewItems);
     // this._checkingReviewStatus();
   }
@@ -282,7 +282,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     // if (this.props.project) 
     // {
     //   //  AccessGroup = await this.reqWeb.getList("/sites/" + this.props.hubsite + "/Lists/" + this.props.accessGroups).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendReviewWF'").get();
-    //   // this._LAUrlGettingForPermission();
+     this._LAUrlGettingForPermission();
     //   this.setState({
     //     // access: "",
     //     accessDeniedMsgBar: "none",
@@ -369,9 +369,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     }
   }
   private _LAUrlGettingForPermission = async () => {
-    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.masterListName, "Title eq 'QDMS_PermissionWebpart'")
-    //const laUrl = await this._Service.getItemTitleFilter(this.props.siteUrl, this.props.masterListName, "QDMS_PermissionWebpart")
-    //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.masterListName).items.filter("Title eq 'QDMS_PermissionWebpart'").get();
+    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.requestListName, "Title eq 'QDMS_PermissionWebpart'")
+    //const laUrl = await this._Service.getItemTitleFilter(this.props.siteUrl, this.props.requestListName, "QDMS_PermissionWebpart")
+    //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestListName).items.filter("Title eq 'QDMS_PermissionWebpart'").get();
     console.log("PosturlForPermission", laUrl[0].PostUrl);
     this.postUrlForPermission = laUrl[0].PostUrl;
     this.triggerProjectPermissionFlow(laUrl[0].PostUrl);
@@ -644,23 +644,23 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     }
   }
   private _LAUrlGetting = async () => {
-    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.masterListName, "Title eq 'QDMS_DocumentPermission_UnderApproval'")
-    //const laUrl = await this._Service.getQDMS_DocumentPermission_UnderApproval(this.props.siteUrl, this.props.masterListName)
-    //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.masterListName).items.filter("Title eq 'QDMS_DocumentPermission_UnderApproval'").get();
+    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.requestListName, "Title eq 'QDMS_DocumentPermission_UnderApproval'")
+    //const laUrl = await this._Service.getQDMS_DocumentPermission_UnderApproval(this.props.siteUrl, this.props.requestListName)
+    //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestListName).items.filter("Title eq 'QDMS_DocumentPermission_UnderApproval'").get();
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
   }
   private _LAUrlGettingForUnderReview = async () => {
-    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.masterListName, "Title eq 'QDMS_DocumentPermission_UnderReview'")
-    //const laUrl = await this._Service.getQDMS_DocumentPermission_UnderReview(this.props.siteUrl, this.props.masterListName)
-    //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.masterListName).items.filter("Title eq 'QDMS_DocumentPermission_UnderReview'").get();
+    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.requestListName, "Title eq 'QDMS_DocumentPermission_UnderReview'")
+    //const laUrl = await this._Service.getQDMS_DocumentPermission_UnderReview(this.props.siteUrl, this.props.requestListName)
+    //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestListName).items.filter("Title eq 'QDMS_DocumentPermission_UnderReview'").get();
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrlForUnderReview = laUrl[0].PostUrl;
   }
   //Adaptive Card
   /* private _LaUrlGettingAdaptive = async () => {
 
-    const laUrl: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.masterListName).items.get();
+    const laUrl: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestListName).items.get();
 
     console.log("Posturl" + laUrl);
 

@@ -25,7 +25,7 @@ export interface IDocumentReviewProps {
   accessGroupDetailsList: string;
   projectInformationListName: string;
   bussinessUnitList: string;
-  masterListName: string;
+  requestListName: string;
 }
 
 export interface IMessage {
@@ -127,5 +127,5 @@ export interface IDocumentReviewWebPartProps {
   accessGroupDetailsList: string;
   projectInformationListName: string;
   bussinessUnitList: string;
-  masterListName: string;
+  requestListName: string;
 }
