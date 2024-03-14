@@ -208,7 +208,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     //Query getting...
     let params = new URLSearchParams(window.location.search);
     let documentIndexID = params.get('did');
-    if (documentIndexID != "" && documentIndexID != null) {
+    if (documentIndexID !== "" && documentIndexID !== null) {
       this.documentIndexID = documentIndexID;
       console.log("document index id", this.documentIndexID);
     }
@@ -292,8 +292,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     console.log("DocumentIndexItem", DocumentIndexItem);
     // this._gettingGroupID(AccessGroupItems);
     //cheching if department selected
-    if (DocumentIndexItem.DepartmentID != null) {
-      //this.departmentExist == "Exists";
+    if (DocumentIndexItem.DepartmentID !== null) {
+      //this.departmentExist === "Exists";
       let deptid = parseInt(DocumentIndexItem.DepartmentID);
       const departmentItem: any = await this._Service.getItemById(this.props.siteUrl, this.props.departmentListName, deptid)
       //const departmentItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.departmentListName).items.getById(deptid).get();
@@ -305,7 +305,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       let accessGroupID;
       console.log(accessGroupItem.length);
       for (let a = 0; a < accessGroupItem.length; a++) {
-        if (accessGroupItem[a].Title == accessGroupvar) {
+        if (accessGroupItem[a].Title === accessGroupvar) {
           accessGroupID = accessGroupItem[a].GroupID;
           this.GetGroupMembers(this.props.context, accessGroupID,);
         }
@@ -315,8 +315,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     //if no department
     else {
       //alert("with bussinessUnit");
-      if (DocumentIndexItem.BusinessUnitID != null) {
-        this.departmentExist == "Exists";
+      if (DocumentIndexItem.BusinessUnitID !== null) {
+        this.departmentExist === "Exists";
         let bussinessUnitID = parseInt(DocumentIndexItem.BusinessUnitID);
         const bussinessUnitItem: any = await this._Service.getItemById(this.props.siteUrl, this.props.bussinessUnitList, bussinessUnitID)
         //const bussinessUnitItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.bussinessUnitList).items.getById(bussinessUnitID).get();
@@ -328,7 +328,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         let accessGroupID;
         console.log(accessGroupItem.length);
         for (let a = 0; a < accessGroupItem.length; a++) {
-          if (accessGroupItem[a].Title == accessGroupvar) {
+          if (accessGroupItem[a].Title === accessGroupvar) {
             accessGroupID = accessGroupItem[a].GroupID;
             this.GetGroupMembers(this.props.context, accessGroupID);
           }
@@ -401,16 +401,16 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
   }
   private _checkingCurrent(userEmail) {
     for (var k in userEmail) {
-      if (this.currentUserEmail == userEmail[k].mail) {
-        if (this.statusForRemainder == "Yes") {
+      if (this.currentUserEmail === userEmail[k].mail) {
+        if (this.statusForRemainder === "Yes") {
           // alert("SendRemailder" + this.statusForRemainder);
           this.setState({ divForSendRemainder: false, divForCancel: true, divForDelegation: true });
         }
-        if (this.statusForCancel == "Yes") {
+        if (this.statusForCancel === "Yes") {
           // alert("statusForCancel" + this.statusForRemainder);
           this.setState({ divForCancel: false, });
         }
-        if (this.statusForDelegate == "Yes") {
+        if (this.statusForDelegate === "Yes") {
           // alert("statusForDelegate" + this.statusForRemainder);
           this.setState({ divForDelegation: false, });
         }
@@ -421,14 +421,14 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
   private _checkingCurrentForProject(userEmail, AG) {
     console.log(AG, userEmail);
     for (var k in userEmail) {
-      if (this.currentUserEmail == userEmail[k].mail) {
-        if (AG == "Document Controller") {
+      if (this.currentUserEmail === userEmail[k].mail) {
+        if (AG === "Document Controller") {
           this.setState({ divForSendRemainder: false, divForCancel: true, divForDelegation: true });
         }
-        if (AG == "Project Admin") {
+        if (AG === "Project Admin") {
           this.setState({ divForCancel: false, });
         }
-        if (AG == "Project Admin") {
+        if (AG === "Project Admin") {
           this.setState({ divForDelegation: false, });
         }
 
@@ -683,7 +683,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
               approverName: headerItemsFromList.Approver.Title,
               requestorDate: moment(headerItemsFromList.RequestedDate).format('DD/MM/YYYY, h:mm a'),
               //  reviewers: headerItemsFromList.Reviewers,
-              reviewers: ReviewerIDFromList.ReviewersId == null ? [] : headerItemsFromList.Reviewers,
+              reviewers: ReviewerIDFromList.ReviewersId === null ? [] : headerItemsFromList.Reviewers,
 
             });
           });
@@ -710,7 +710,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       workflowStatus: workflowDetailsItems['ResponseStatus'],
     });
     for (var k in workflowDetailsItems) {
-      if (workflowDetailsItems[k].ResponseStatus == "Cancelled") {
+      if (workflowDetailsItems[k].ResponseStatus === "Cancelled") {
         this.setState({
           cancelledBy: workflowDetailsItems[k].Editor.Title,
         });
@@ -753,7 +753,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       workflowStatus: workflowDetailsItems['ResponseStatus'],
     });
     for (var k in workflowDetailsItems) {
-      if (workflowDetailsItems[k].ResponseStatus == "Cancelled") {
+      if (workflowDetailsItems[k].ResponseStatus === "Cancelled") {
         this.setState({
           cancelledBy: workflowDetailsItems[k].Editor.Title,
         });
@@ -797,7 +797,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       workflowStatus: workflowDetailsItems['ResponseStatus'],
     });
     for (var k in workflowDetailsItems) {
-      if (workflowDetailsItems[k].ResponseStatus == "Cancelled") {
+      if (workflowDetailsItems[k].ResponseStatus === "Cancelled") {
         this.setState({
           cancelledBy: workflowDetailsItems[k].Editor.Title,
         });
@@ -840,7 +840,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
       timelineElement: "Approval",
     });
     for (var k in workflowDetailsItems) {
-      if (workflowDetailsItems[k].ResponseStatus == "Cancelled") {
+      if (workflowDetailsItems[k].ResponseStatus === "Cancelled") {
         this.setState({
           cancelledBy: workflowDetailsItems[k].Editor.Title,
         });
@@ -939,7 +939,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         <p>
 
           <p style={{ fontSize: '12px' }}>
-            <div style={{ display: (item.Status != "Published") ? "none" : "" }}>
+            <div style={{ display: (item.Status !== "Published") ? "none" : "" }}>
               <div style={{ display: 'flex', margin: "0px 0px 0px 0px" }}>
                 Published By&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp; {item.Editor.Title}
               </div>
@@ -1027,7 +1027,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         <h3 style={{ color: '#61b8ff' }}>{item.Status + " " + "DCC Review"}</h3>
         <h4 style={{ color: '#61b8ff' }}>{this.state.documentName}</h4>
         <p>
-          <div style={{ color: '#61b8ff', display: (item.Status != "Under Review") ? "" : "none" }}>
+          <div style={{ color: '#61b8ff', display: (item.Status !== "Under Review") ? "" : "none" }}>
             <p style={{ fontSize: '12px' }}>
               <div style={{ display: 'flex', margin: "0px 0px 0px 0px" }}>
                 Reviewed By &nbsp;&nbsp; : &nbsp;&nbsp;&nbsp; {item.Editor.Title}
@@ -1092,7 +1092,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         <p>
 
           <p style={{ fontSize: '12px' }}>
-            <div style={{ display: (item.Status != "Published") ? "none" : "" }}>
+            <div style={{ display: (item.Status !== "Published") ? "none" : "" }}>
               <div style={{ display: 'flex', margin: "0px 0px 0px 0px" }}>
                 Published By&nbsp;&nbsp; :&nbsp;&nbsp;&nbsp; {item.Editor.Title}
               </div>
@@ -1126,7 +1126,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         <p>
 
           <p style={{ fontSize: '12px' }}>
-            <div style={{ display: (item.Status != "Reviewed") ? "none" : "" }}>
+            <div style={{ display: (item.Status !== "Reviewed") ? "none" : "" }}>
               <div style={{ display: 'flex', margin: "0px 0px 0px 0px" }}>
                 Reviewed By &nbsp;&nbsp; :&nbsp;&nbsp;&nbsp; {item.Editor.Title}
               </div>
@@ -1249,7 +1249,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     let ReturnedWithComments;
     var today = new Date();
     let date = today.toLocaleString();
-    if (this.state.timelineElement == "Review") {
+    if (this.state.timelineElement === "Review") {
       this.loaderforcancel = "";
       const resdata = {
         ResponseStatus: "Cancelled",
@@ -1259,7 +1259,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
           ResponseStatus: "Cancelled",
         }) */
         .then(async taskDelete => {
-          if (item.TaskID != null) {
+          if (item.TaskID !== null) {
             this._Service.deleteItemById(this.props.siteUrl, this.props.workflowTaskListName, item.TaskID)
             /* let list = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName);
             await list.items.getById(item.TaskID).delete(); */
@@ -1274,13 +1274,13 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
           //const reviewersResponseStatus = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsListName).items.select("ResponseStatus").filter("HeaderID eq " + this.headerId + " and (Workflow eq 'Review')").get();
           console.log(reviewersResponseStatus.length);
           for (var k in reviewersResponseStatus) {
-            if (reviewersResponseStatus[k].ResponseStatus == "Reviewed") { ReviewedCount++; }
-            else if (reviewersResponseStatus[k].ResponseStatus == "Under Review") { UnderReview = "Yes"; }
-            else if (reviewersResponseStatus[k].ResponseStatus == "Returned with comments") { ReturnedWithComments = "Yes"; }
-            else if (reviewersResponseStatus[k].ResponseStatus == "Cancelled") { cancelCount++; }
+            if (reviewersResponseStatus[k].ResponseStatus === "Reviewed") { ReviewedCount++; }
+            else if (reviewersResponseStatus[k].ResponseStatus === "Under Review") { UnderReview = "Yes"; }
+            else if (reviewersResponseStatus[k].ResponseStatus === "Returned with comments") { ReturnedWithComments = "Yes"; }
+            else if (reviewersResponseStatus[k].ResponseStatus === "Cancelled") { cancelCount++; }
           }
           //all are reviewed 
-          if (reviewersResponseStatus.length == add(ReviewedCount, cancelCount)) {
+          if (reviewersResponseStatus.length === add(ReviewedCount, cancelCount)) {
             console.log(add(ReviewedCount, cancelCount));
             const headeritem = {
               WorkflowStatus: "Under Approval",//headerlist
@@ -1389,9 +1389,9 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                             HeaderIDId: Number(this.headerId),
                             Workflow: "Approval",
                             Title: this.state.documentName,
-                            ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approver),
+                            ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
                             DueDate: this.dueDateForModel,
-                            DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+                            DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
                             ResponseStatus: "Under Approval",
                             OwnerId: this.state.ownerID,
                             SourceDocument: {
@@ -1407,9 +1407,9 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                                 HeaderIDId: Number(this.headerId),
                                 Workflow: "Approval",
                                 Title: this.state.documentName,
-                                ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approver),
+                                ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
                                 DueDate: this.dueDateForModel,
-                                DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+                                DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
                                 ResponseStatus: "Under Approval",
                                 OwnerId: this.state.ownerID,
                                 SourceDocument: {
@@ -1468,12 +1468,12 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                                 Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
                                 DueDate: this.dueDateForModel,
                                 StartDate: this.currentDate,
-                                AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : user.Id),
+                                AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : user.Id),
                                 Workflow: "Approval",
-                                // Priority:(this.state.criticalDocument == true ? "Critical" :""),
+                                // Priority:(this.state.criticalDocument === true ? "Critical" :""),
                                 DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
                                 Source: "QDMS",
-                                DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
+                                DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
                                 Link: {
                                   "__metadata": { type: "SP.FieldUrlValue" },
                                   Description: "Link to Approve",
@@ -1488,12 +1488,12 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                                     Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
                                     DueDate: this.dueDateForModel,
                                     StartDate: this.currentDate,
-                                    AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : user.Id),
+                                    AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : user.Id),
                                     Workflow: "Approval",
-                                    // Priority:(this.state.criticalDocument == true ? "Critical" :""),
+                                    // Priority:(this.state.criticalDocument === true ? "Critical" :""),
                                     DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
                                     Source: (this.props.project ? "Project" : "QDMS"),
-                                    DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
+                                    DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
                                     Link: {
                                       "__metadata": { type: "SP.FieldUrlValue" },
                                       Description: "Link to Approve",
@@ -1589,7 +1589,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                         StartDate: this.currentDate,
                         AssignedToId: user.Id,
                         Workflow: "Approval",
-                        Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                        Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                         Source: "QDMS",
                         Link: {
                           "__metadata": { type: "SP.FieldUrlValue" },
@@ -1607,7 +1607,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                             StartDate: this.currentDate,
                             AssignedToId: user.Id,
                             Workflow: "Approval",
-                            Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                            Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                             Source: (this.props.project ? "Project" : "QDMS"),
                             Link: {
                               "__metadata": { type: "SP.FieldUrlValue" },
@@ -1647,7 +1647,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
             //if end 
           }
           //if last response status is Return with comments
-          else if (ReturnedWithComments == "Yes" && UnderReview !== "Yes") {
+          else if (ReturnedWithComments === "Yes" && UnderReview !== "Yes") {
             //alert("Returned with Comments  email  to originator");
             const headitem = {
               WorkflowStatus: "Returned with comments",
@@ -1691,7 +1691,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                 this.setState({ delegatingLoader: "none", statusMessage: { isShowMessage: true, message: "Review Cancelled for" + item.Responsible.Title, messageType: 4 }, });
               });
           }
-          else if (ReviewedCount == 0 && UnderReview != "Yes" && ReturnedWithComments != "Yes" && cancelCount == 1) {
+          else if (ReviewedCount === 0 && UnderReview !== "Yes" && ReturnedWithComments !== "Yes" && cancelCount === 1) {
             const wfheaditem = {
               WorkflowStatus: "Under Approval",//headerlist
               Workflow: "Approval",
@@ -1800,9 +1800,9 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                           Workflow: "Approval",
                           ResponseStatus: "Under Approval",
                           Title: this.state.documentName,
-                          ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approver),
+                          ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
                           DueDate: this.state.dueDate,
-                          DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+                          DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
                           OwnerId: this.state.ownerID,
                           SourceDocument: {
                             "__metadata": { type: "SP.FieldUrlValue" },
@@ -1817,9 +1817,9 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                               Workflow: "Approval",
                               ResponseStatus: "Under Approval",
                               Title: this.state.documentName,
-                              ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approver),
+                              ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
                               DueDate: this.state.dueDate,
-                              DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+                              DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
                               OwnerId: this.state.ownerID,
                               SourceDocument: {
                                 "__metadata": { type: "SP.FieldUrlValue" },
@@ -1851,12 +1851,12 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                               Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
                               DueDate: this.state.dueDate,
                               StartDate: date,
-                              AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : this.state.hubSiteUserId),
+                              AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : this.state.hubSiteUserId),
                               Workflow: "Approval",
-                              Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                              Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                               DelegatedOn: (this.state.delegatedToId !== "" ? date : " "),
                               Source: "QDMS",
-                              DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : parseInt("")),
+                              DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : parseInt("")),
                               Link: {
                                 "__metadata": { type: "SP.FieldUrlValue" },
                                 Description: "Link to Approve",
@@ -1871,12 +1871,12 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                                   Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
                                   DueDate: this.state.dueDate,
                                   StartDate: date,
-                                  AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : this.state.hubSiteUserId),
+                                  AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : this.state.hubSiteUserId),
                                   Workflow: "Approval",
-                                  Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                  Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                   DelegatedOn: (this.state.delegatedToId !== "" ? date : " "),
                                   Source: (this.props.project ? "Project" : "QDMS"),
-                                  DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : parseInt("")),
+                                  DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : parseInt("")),
                                   Link: {
                                     "__metadata": { type: "SP.FieldUrlValue" },
                                     Description: "Link to Approve",
@@ -1908,7 +1908,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
           }
         });
     }
-    else if (this.state.timelineElement == "Approval") {
+    else if (this.state.timelineElement === "Approval") {
       //alert("inside");
       this.loaderforcancel = "";
       console.log("Approval part in cancel task");
@@ -1921,7 +1921,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
           ResponseStatus: "Cancelled",
         }) */
         .then(async taskDelete => {
-          if (item.TaskID != null) {
+          if (item.TaskID !== null) {
             let list = await this._Service.deleteItemById(this.props.siteUrl, this.props.workflowTaskListName, item.TaskID)
             /* let list = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName);
             await list.items.getById(item.TaskID).delete(); */
@@ -2002,11 +2002,11 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     //const notificationPreference: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPrefListName).items.select("Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail").expand("EmailUser").filter("EmailUser/EMail eq '" + email + "'").get();
     // console.log(notificationPreference);
     if (notificationPreference.length > 0) {
-      if (notificationPreference[0].Preference == "Send all emails") {
+      if (notificationPreference[0].Preference === "Send all emails") {
         this.status = "Yes";
         //console.log("Send mail for all");                 
       }
-      else if (notificationPreference[0].Preference == "Send mail for critical document" && this.state.criticalDocument == true) {
+      else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
         //console.log("Send mail for critical document");
         this.status = "Yes";
       }
@@ -2014,7 +2014,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         this.status = "No";
       }
     }
-    else if (this.state.criticalDocument == true) {
+    else if (this.state.criticalDocument === true) {
       //console.log("Send mail for critical document");
       this.status = "Yes";
     }
@@ -2026,7 +2026,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     Subject = emailNoficationSettings[0].Subject;
     Body = emailNoficationSettings[0].Body;
 
-    if (type == "DocApproval") {
+    if (type === "DocApproval") {
       link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + detailID}>Link</a>`;
 
     }
@@ -2046,7 +2046,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
 
 
     //mail sending
-    if (this.status == "Yes") {
+    if (this.status === "Yes") {
       //Check if TextField value is empty or not  
       if (email) {
         //Create Body for Email  
@@ -2102,10 +2102,10 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     Body = emailNoficationSettings[0].Body;
     //Replacing the email body with current values
     let replacedSubject = replaceString(Subject, '[DocumentName]', this.state.documentName);
-    let finalsubject = replaceString(replacedSubject, '[Review/Approval]', "<b>" + (this.state.timelineElement == "Review") ? "Review" : "Approval" + "</b>");
+    let finalsubject = replaceString(replacedSubject, '[Review/Approval]', "<b>" + (this.state.timelineElement === "Review") ? "Review" : "Approval" + "</b>");
     let replaceRequester = replaceString(Body, '[Sir/Madam],', item.Responsible.Title);
     let replaceBody = replaceString(replaceRequester, '[DocumentName]', this.state.documentName);
-    let replacereviewApprove = replaceString(replaceBody, '[Review/Approve]', "<B>" + (this.state.timelineElement == "Review") ? "Review" : "Approval" + "</B>");
+    let replacereviewApprove = replaceString(replaceBody, '[Review/Approve]', "<B>" + (this.state.timelineElement === "Review") ? "Review" : "Approval" + "</B>");
     let duedate = moment(this.dueDateForModel).format("DD/MM/YYYY");
     let replacedate = replaceString(replacereviewApprove, '[DueDate]', duedate);
     let FinalBody = replacedate;
@@ -2158,7 +2158,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     });
   }
   public _delegateClick = (item: any, key: any) => {
-    if (item.ResponseStatus == "Under Review" || item.ResponseStatus == "Under Approval") {
+    if (item.ResponseStatus === "Under Review" || item.ResponseStatus === "Under Approval") {
       this.setState({
         delagatePeoplePicker: "",
       });
@@ -2212,7 +2212,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                 DelegatedFromId: responsibleIdInHubsite.Id,
                 StartDate: this.currentDate,
               }); */
-            if (item.ResponseStatus == "Under Approval") {
+            if (item.ResponseStatus === "Under Approval") {
               type = "DocApproval";
               link = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + item.ID;
               this.triggerDocumentDelegate(this.sourceDocumentID, this.state.delegateToEmail, item.Responsible.EMail, link, type, this.headerId, this.documentIndexID).then(afterTrigger => {
@@ -2234,8 +2234,8 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                   }); */
               });
             }
-            else if (item.ResponseStatus == "Under Review") {
-              if (item.Workflow == "DCC Review") {
+            else if (item.ResponseStatus === "Under Review") {
+              if (item.Workflow === "DCC Review") {
                 type = "DCCReview";
                 link = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + item.ID;
                 this.triggerDocumentDelegate(this.sourceDocumentID, this.state.delegateToEmail, item.Responsible.EMail, link, type, this.headerId, this.documentIndexID).
@@ -2281,11 +2281,11 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     //const notificationPreference: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPrefListName).items.select("Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail").expand("EmailUser").filter("EmailUser/EMail eq '" + email + "'").get();
     // console.log(notificationPreference);
     if (notificationPreference.length > 0) {
-      if (notificationPreference[0].Preference == "Send all emails") {
+      if (notificationPreference[0].Preference === "Send all emails") {
         this.status = "Yes";
         //console.log("Send mail for all");                 
       }
-      else if (notificationPreference[0].Preference == "Send mail for critical document" && this.state.criticalDocument == true) {
+      else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
         //console.log("Send mail for critical document");
         this.status = "Yes";
       }
@@ -2293,12 +2293,12 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         this.status = "No";
       }
     }
-    else if (this.state.criticalDocument == true) {
+    else if (this.state.criticalDocument === true) {
       //console.log("Send mail for critical document");
       this.status = "Yes";
     }
     //Email Notification Settings.
-    if (type == "DCCReview") {
+    if (type === "DCCReview") {
       type = "DocReview";
     }
     const emailNoficationSettings: any[] = await this._Service.getItemsFilter(this.props.siteUrl, this.props.emailNoficationSettings, "Title eq '" + type + "'")
@@ -2318,7 +2318,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     // alert(var1[0]);
     let FinalBody = replacelink;
     //mail sending
-    if (this.status == "Yes") {
+    if (this.status === "Yes") {
       //Check if TextField value is empty or not  
       if (email) {
         //Create Body for Email  
@@ -2365,11 +2365,11 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     //const notificationPreference: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPrefListName).items.select("Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail").expand("EmailUser").filter("EmailUser/EMail eq '" + email + "'").get();
     // console.log(notificationPreference);
     if (notificationPreference.length > 0) {
-      if (notificationPreference[0].Preference == "Send all emails") {
+      if (notificationPreference[0].Preference === "Send all emails") {
         this.status = "Yes";
         //console.log("Send mail for all");                 
       }
-      else if (notificationPreference[0].Preference == "Send mail for critical document" && this.state.criticalDocument == true) {
+      else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
         //console.log("Send mail for critical document");
         this.status = "Yes";
       }
@@ -2377,7 +2377,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
         this.status = "No";
       }
     }
-    else if (this.state.criticalDocument == true) {
+    else if (this.state.criticalDocument === true) {
       //console.log("Send mail for critical document");
       this.status = "Yes";
     }
@@ -2398,7 +2398,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
     // alert(var1[0]);
     // let FinalBody = replacelink;
     //mail sending
-    if (this.status == "Yes") {
+    if (this.status === "Yes") {
       //Check if TextField value is empty or not  
       if (email) {
         //Create Body for Email  
@@ -2441,62 +2441,62 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
             <Timeline lineColor={this.props.timeLineColor}>
 
               {this.state.logItems.map((items, key) => {
-                if (items.Status == "Cancelled") {
+                if (items.Status === "Cancelled") {
                   return (
                     this.Cancelled(items)
                   );
                 }
-                else if (items.Status == "Document Expired") {
+                else if (items.Status === "Document Expired") {
                   return (
                     this.documentExpired(items)
                   );
                 }
-                else if (items.Status == "DCC Review - Returned with comments" || items.Status == "DCC - Reviewed" || items.Status == "Under Review" && items.Workflow == "DCC Review") {
+                else if (items.Status === "DCC Review - Returned with comments" || items.Status === "DCC - Reviewed" || items.Status === "Under Review" && items.Workflow === "DCC Review") {
                   return (
                     this.dccReview(items)
                   );
                 }
-                else if (items.Status == "Document Expiry Revoked") {
+                else if (items.Status === "Document Expiry Revoked") {
                   return (
                     this.documentExpiryRevoked(items)
                   );
                 }
-                else if (items.Status == "Document Archived" || items.Status == "Void Under Approval" && items.Workflow == "Void") {
+                else if (items.Status === "Document Archived" || items.Status === "Void Under Approval" && items.Workflow === "Void") {
                   return (
                     this.documentVoided(items)
                   );
                 }
-                else if (items.Status == "Published" && items.Workflow == null) {
+                else if (items.Status === "Published" && items.Workflow === null) {
                   return (
                     this.directPublish(items)
                   );
                 }
-                else if ((items.Status == "Published" || items.Status == "Under Approval" || items.Status == "Returned with comments" || items.Status == "Rejected") && items.Workflow == "Approval") {
+                else if ((items.Status === "Published" || items.Status === "Under Approval" || items.Status === "Returned with comments" || items.Status === "Rejected") && items.Workflow === "Approval") {
                   return (
                     this.approved(items)
                   );
                 }
-                else if ((items.Status == "Reviewed" || items.Status == "Under Review" || items.Status == "Returned with comments") && items.Workflow == "Review") {
+                else if ((items.Status === "Reviewed" || items.Status === "Under Review" || items.Status === "Returned with comments") && items.Workflow === "Review") {
                   return (
                     this.reviewed(items)
                   );
                 }
-                else if (items.Status == "Document Void Initiated") {
+                else if (items.Status === "Document Void Initiated") {
                   return (
                     this.workFlowStartedVoid(items)
                   );
                 }
-                else if (items.Status == "Workflow Initiated" || items.Status == "Document Void Initiated") {
+                else if (items.Status === "Workflow Initiated" || items.Status === "Document Void Initiated") {
                   return (
                     this.workFlowStarted(items)
                   );
                 }
-                else if (items.Status == "Document Created") {
+                else if (items.Status === "Document Created") {
                   return (
                     this.documentCreated(items)
                   );
                 }
-                else if (items.Status == this.props.internalTransittalConFab || items.Status == "Internally transmitted to Construction/Fabrication") {
+                else if (items.Status === this.props.internalTransittalConFab || items.Status === "Internally transmitted to Construction/Fabrication") {
                   return (
                     this.internalTransittalConFab(items)
                   );
@@ -2511,7 +2511,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                 onDismiss={this._closeModal}
                 containerClassName={contentStyles.container}>
                 <div className={contentStyles.header1}>
-                  {(this.state.timelineElement == "Review") ?
+                  {(this.state.timelineElement === "Review") ?
                     <><div style={{ textAlign: "left", width: "50%", fontSize: "20px", fontWeight: "bold" }}>Review Details</div><div style={{ textAlign: "right", width: "50%", fontSize: "14px" }}> DueDate: {moment(this.dueDateForModel).format("DD/MM/YYYY")} </div></> :
                     <><div style={{ textAlign: "left", width: "50%", fontSize: "20px", fontWeight: "bold" }}>Approval Details </div><div style={{ textAlign: "right", width: "50%", fontSize: "14px" }}> DueDate : {moment(this.dueDateForModel).format("DD/MM/YYYY")} </div></>
                   }
@@ -2540,7 +2540,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                   </div>
                   <table className={styles.tableModal}>
                     <tr style={{ background: "#f4f4f4" }}>
-                      {(this.state.timelineElement == "Review") ?
+                      {(this.state.timelineElement === "Review") ?
                         <><th style={{ padding: "5px 10px" }}>Reviewer</th><th style={{ padding: "5px 10px" }}>Reviewed Date</th></> :
                         <><th style={{ padding: "5px 10px" }}>Approver</th><th style={{ padding: "5px 10px" }}>Approved Date</th></>}
                       <th style={{ padding: "5px 10px" }}>Status</th>
@@ -2554,7 +2554,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                       return (
                         <tr style={{ borderBottom: "1px solid #f4f4f4" }}>
                           <td style={{ padding: "5px 10px" }}>{wfItems.Responsible.Title}</td>
-                          <td style={{ padding: "5px 10px" }}>{(wfItems.ResponseDate == null) ? "" : moment(wfItems.ResponseDate).format("DD/MM/YYYY hh:mm")}</td>
+                          <td style={{ padding: "5px 10px" }}>{(wfItems.ResponseDate === null) ? "" : moment(wfItems.ResponseDate).format("DD/MM/YYYY hh:mm")}</td>
                           <td style={{ padding: "5px 10px" }}>{(wfItems.ResponseStatus !== null) ? wfItems.ResponseStatus : "Pending"}</td>
                           <td style={{ padding: "5px 10px" }}>
                             <TooltipHost
@@ -2575,16 +2575,16 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                             calloutProps={calloutProps}
                             styles={hostStyles}
                           >
-                            <IconButton iconProps={ReminderTime} title=" " ariaLabel=" " disabled={(wfItems.ResponseStatus == "Under Review" || wfItems.ResponseStatus == "Under Approval") ? false : true} onClick={() => this.sendRemainder(wfItems, key)} />
+                            <IconButton iconProps={ReminderTime} title=" " ariaLabel=" " disabled={(wfItems.ResponseStatus === "Under Review" || wfItems.ResponseStatus === "Under Approval") ? false : true} onClick={() => this.sendRemainder(wfItems, key)} />
                           </TooltipHost>
                           </td>
-                          <td style={{ padding: "5px 10px", display: (wfItems.ResponseStatus == "Void Under Approval") ? "none" : "" }} hidden={this.state.divForCancel}><TooltipHost
-                            content={(wfItems.ResponseStatus == "Cancelled") ? "Cancelled by : " + wfItems.Editor.Title : "Cancel"}
+                          <td style={{ padding: "5px 10px", display: (wfItems.ResponseStatus === "Void Under Approval") ? "none" : "" }} hidden={this.state.divForCancel}><TooltipHost
+                            content={(wfItems.ResponseStatus === "Cancelled") ? "Cancelled by : " + wfItems.Editor.Title : "Cancel"}
                             // (so an element with this id only exists when the tooltip is shown)                              
                             calloutProps={calloutProps}
                             styles={hostStyles}
                           >
-                            <IconButton iconProps={cancelIcon} title=" " ariaLabel=" " disabled={(wfItems.ResponseStatus == "Under Review" || wfItems.ResponseStatus == "Under Approval") ? false : true} onClick={() => this.cancelTask(wfItems, key)} />
+                            <IconButton iconProps={cancelIcon} title=" " ariaLabel=" " disabled={(wfItems.ResponseStatus === "Under Review" || wfItems.ResponseStatus === "Under Approval") ? false : true} onClick={() => this.cancelTask(wfItems, key)} />
                           </TooltipHost>
                           </td>
                           <td style={{ padding: "5px 10px" }} hidden={this.state.divForDelegation}><TooltipHost
@@ -2594,10 +2594,10 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                             calloutProps={calloutProps}
                             styles={hostStyles}
                           >
-                            <IconButton iconProps={Share} title=" " ariaLabel=" " disabled={(wfItems.ResponseStatus == "Under Review" || wfItems.ResponseStatus == "Under Approval") ? false : true} onClick={() => this._delegateClick(wfItems, key)} />
+                            <IconButton iconProps={Share} title=" " ariaLabel=" " disabled={(wfItems.ResponseStatus === "Under Review" || wfItems.ResponseStatus === "Under Approval") ? false : true} onClick={() => this._delegateClick(wfItems, key)} />
                           </TooltipHost>
                           </td>
-                          <td style={{ padding: "5px 10px" }}> <div style={{ display: (wfItems.ResponseStatus == "Under Review" || wfItems.ResponseStatus == "Under Approval") ? this.state.delagatePeoplePicker : "none" }}>
+                          <td style={{ padding: "5px 10px" }}> <div style={{ display: (wfItems.ResponseStatus === "Under Review" || wfItems.ResponseStatus === "Under Approval") ? this.state.delagatePeoplePicker : "none" }}>
                             <div style={{ display: "flex" }}>
                               <PeoplePicker
                                 context={this.props.context as any}
@@ -2647,7 +2647,7 @@ export default class RevisionHistory extends React.Component<IRevisionHistoryPro
                   <div style={{ width: "100%", marginBottom: "10px" }}>Requestor :{this.state.requestor}</div>
                   <div style={{ width: "100%", marginBottom: "10px" }}>Requested Date :{this.state.requestorDate}</div>
                   <div style={{ width: "100%", marginBottom: "10px" }}>Approver : {this.state.approverName}</div>
-                  <table className={styles.tableModal} style={{ display: this.state.lengthOfReviwers == null ? "none" : "" }}>
+                  <table className={styles.tableModal} style={{ display: this.state.lengthOfReviwers === null ? "none" : "" }}>
                     <tr>
                       <th>Reviewers </th>
                     </tr>
