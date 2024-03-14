@@ -564,250 +564,250 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         const user = await this._Service.getSiteUserById(this.state.reviewers[k]);
         //const user = await this._Service.siteUsers.getById(this.state.reviewers[k]).get();
         if (user) {
-          const hubsieUser = await this._Service.getUserByEmail(user.Email);
+          // const hubsieUser = await this._Service.getUserByEmail(user.Email);
           //const hubsieUser = await this._Service.siteUsers.getByEmail(user.Email).get();
-          if (hubsieUser) {
+          // if (hubsieUser) {
             //Task delegation 
-            const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationSettings, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')")
+            // const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationSettings, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')")
             // const taskDelegation: any[] = await this._Service.getTaskDelegation(this.props.siteUrl, this.props.taskDelegationSettings, hubsieUser.Id)
             //const taskDelegation: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettings).items.select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate").expand("DelegatedFor,DelegatedTo").filter("DelegatedFor/ID eq '" + hubsieUser.Id + "' and(Status eq 'Active')").get();
 
-            if (taskDelegation.length > 0) {
-              let duedate = moment(this.state.dueDate).toDate();
-              let toDate = moment(taskDelegation[0].ToDate).toDate();
-              let fromDate = moment(taskDelegation[0].FromDate).toDate();
-              duedate = new Date(duedate.getFullYear(), duedate.getMonth(), duedate.getDate());
-              toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
-              fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
-              if (moment(duedate).isBetween(fromDate, toDate) || moment(duedate).isSame(fromDate) || moment(duedate).isSame(toDate)) {
-                this.taskDelegate = "Yes";
-                this.setState({
-                  approverEmail: taskDelegation[0].DelegatedTo.EMail,
-                  approverName: taskDelegation[0].DelegatedTo.Title,
-                  delegatedToId: taskDelegation[0].DelegatedTo.ID,
-                  delegatedFromId: taskDelegation[0].DelegatedFor.ID,
-                });
-                //Get Delegated To ID
-                const DelegatedTo = await this._Service.getUserByEmail(taskDelegation[0].DelegatedTo.EMail);
-                //const DelegatedTo = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get();
-                if (DelegatedTo) {
-                  this.setState({
-                    delegateToIdInSubSite: DelegatedTo.Id,
-                  });
-                  //Get Delegated For ID
-                  const DelegatedFor = await this._Service.getUserByEmail(taskDelegation[0].DelegatedFor.EMail);
-                  //const DelegatedFor = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get();
-                  if (DelegatedFor) {
-                    this.setState({
-                      delegateForIdInSubSite: DelegatedFor.Id,
-                    });
-                    //detail list adding an item for reviewers
-                    const index = this.state.reviewers.indexOf(DelegatedFor.Id);
+            // if (taskDelegation.length > 0) {
+            //   let duedate = moment(this.state.dueDate).toDate();
+            //   let toDate = moment(taskDelegation[0].ToDate).toDate();
+            //   let fromDate = moment(taskDelegation[0].FromDate).toDate();
+            //   duedate = new Date(duedate.getFullYear(), duedate.getMonth(), duedate.getDate());
+            //   toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+            //   fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+            //   if (moment(duedate).isBetween(fromDate, toDate) || moment(duedate).isSame(fromDate) || moment(duedate).isSame(toDate)) {
+            //     this.taskDelegate = "Yes";
+            //     this.setState({
+            //       approverEmail: taskDelegation[0].DelegatedTo.EMail,
+            //       approverName: taskDelegation[0].DelegatedTo.Title,
+            //       delegatedToId: taskDelegation[0].DelegatedTo.ID,
+            //       delegatedFromId: taskDelegation[0].DelegatedFor.ID,
+            //     });
+            //     //Get Delegated To ID
+            //     const DelegatedTo = await this._Service.getUserByEmail(taskDelegation[0].DelegatedTo.EMail);
+            //     //const DelegatedTo = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get();
+            //     if (DelegatedTo) {
+            //       this.setState({
+            //         delegateToIdInSubSite: DelegatedTo.Id,
+            //       });
+            //       //Get Delegated For ID
+            //       const DelegatedFor = await this._Service.getUserByEmail(taskDelegation[0].DelegatedFor.EMail);
+            //       //const DelegatedFor = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get();
+            //       if (DelegatedFor) {
+            //         this.setState({
+            //           delegateForIdInSubSite: DelegatedFor.Id,
+            //         });
+            //         //detail list adding an item for reviewers
+            //         const index = this.state.reviewers.indexOf(DelegatedFor.Id);
 
-                    this.state.reviewers[index] = DelegatedTo.Id;
+            //         this.state.reviewers[index] = DelegatedTo.Id;
 
-                    const detailitem = {
-                      HeaderIDId: Number(this.newheaderid),
-                      Workflow: "Review",
-                      Title: this.state.documentName,
-                      ResponsibleId: (this.state.delegatedToId !== "" ? DelegatedTo.Id : user.Id),
-                      DueDate: this.state.dueDate,
-                      DelegatedFromId: (this.state.delegatedToId !== "" ? DelegatedFor.Id : parseInt("")),
-                      ResponseStatus: "Under Review",
-                      SourceDocument: {
-                        Description: this.state.documentName,
-                        Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                      },
-                      OwnerId: this.state.ownerId,
-                    }
-                    const detail = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
-                    // const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
-                    /* const detail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add({
-                      HeaderIDId: Number(this.newheaderid),
-                      Workflow: "Review",
-                      Title: this.state.documentName,
-                      ResponsibleId: (this.state.delegatedToId !== "" ? DelegatedTo.Id : user.Id),
-                      DueDate: this.state.dueDate,
-                      DelegatedFromId: (this.state.delegatedToId !== "" ? DelegatedFor.Id : parseInt("")),
-                      ResponseStatus: "Under Review",
-                      SourceDocument: {
-                        Description: this.state.documentName,
-                        Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                      },
-                      OwnerId: this.state.ownerId,
-                    }); */
-                    if (detail) {
-                      this.setState({ detailIdForApprover: detail.data.ID });
-                      this.newDetailItemID = detail.data.ID;
-                      const updateitem = {
-                        Link: {
-                          Description: this.state.documentName + "-Review",
-                          Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
-                        },
-                      }
-                      // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, updateitem)
-                      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, updateitem)
-                      /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
-                        Link: {
-                          Description: this.state.documentName + "-Review",
-                          Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
-                        },
-                      }); *///Update link
+            //         const detailitem = {
+            //           HeaderIDId: Number(this.newheaderid),
+            //           Workflow: "Review",
+            //           Title: this.state.documentName,
+            //           ResponsibleId: (this.state.delegatedToId !== "" ? DelegatedTo.Id : user.Id),
+            //           DueDate: this.state.dueDate,
+            //           DelegatedFromId: (this.state.delegatedToId !== "" ? DelegatedFor.Id : parseInt("")),
+            //           ResponseStatus: "Under Review",
+            //           SourceDocument: {
+            //             Description: this.state.documentName,
+            //             Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+            //           },
+            //           OwnerId: this.state.ownerId,
+            //         }
+            //         const detail = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+            //         // const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+            //         /* const detail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add({
+            //           HeaderIDId: Number(this.newheaderid),
+            //           Workflow: "Review",
+            //           Title: this.state.documentName,
+            //           ResponsibleId: (this.state.delegatedToId !== "" ? DelegatedTo.Id : user.Id),
+            //           DueDate: this.state.dueDate,
+            //           DelegatedFromId: (this.state.delegatedToId !== "" ? DelegatedFor.Id : parseInt("")),
+            //           ResponseStatus: "Under Review",
+            //           SourceDocument: {
+            //             Description: this.state.documentName,
+            //             Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+            //           },
+            //           OwnerId: this.state.ownerId,
+            //         }); */
+            //         if (detail) {
+            //           this.setState({ detailIdForApprover: detail.data.ID });
+            //           this.newDetailItemID = detail.data.ID;
+            //           const updateitem = {
+            //             Link: {
+            //               Description: this.state.documentName + "-Review",
+            //               Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
+            //             },
+            //           }
+            //           // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, updateitem)
+            //           await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, updateitem)
+            //           /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
+            //             Link: {
+            //               Description: this.state.documentName + "-Review",
+            //               Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
+            //             },
+            //           }); *///Update link
 
-                      //MY tasks list updation with delegated from
-                      const taskitem = {
-                        Title: "Review '" + this.state.documentName + "'",
-                        Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
-                        DueDate: this.state.dueDate,
-                        StartDate: this.today,
-                        AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : hubsieUser.Id),
-                        Priority: (this.state.criticalDocument === true ? "Critical" : ""),
-                        DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
-                        // Source: (this.props.project ? "Project" : "QDMS"),
-                        Source: "QDMS",
-                        DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : parseInt("")),
-                        Workflow: "Review",
-                        Link: {
-                          Description: this.state.documentName + "-Review",
-                          Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
-                        },
-                      }
-                      // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
-                      const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem);
-                      /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add({
-                        Title: "Review '" + this.state.documentName + "'",
-                        Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
-                        DueDate: this.state.dueDate,
-                        StartDate: this.today,
-                        AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : hubsieUser.Id),
-                        Priority: (this.state.criticalDocument === true ? "Critical" : ""),
-                        DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
-                        Source: (this.props.project ? "Project" : "QDMS"),
-                        DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : parseInt("")),
-                        Workflow: "Review",
-                        Link: {
-                          Description: this.state.documentName + "-Review",
-                          Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
-                        },
-                      }); */
-                      if (task) {
-                        this.TaskID = task.data.ID;
-                        const dataitem = {
-                          TaskID: task.data.ID,
-                        }
-                        // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, dataitem)
-                        await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, dataitem)
-                        /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update
-                          ({
-                            TaskID: task.data.ID,
-                          }); */
-                        await this._sendmail(DelegatedTo.Email, "DocReview", DelegatedTo.Title);
-                        await this._adaptiveCard("Review", DelegatedTo.Email, DelegatedTo.Title, "General");
-                      }//taskID
-                    }//r
-                  }//Delegated For
-                }//Delegated To
-              }
-              else {
-                //detail list adding an item for reviewers
-                const dataitem = {
-                  HeaderIDId: Number(this.newheaderid),
-                  Workflow: "Review",
-                  Title: this.state.documentName,
-                  ResponsibleId: user.Id,
-                  DueDate: this.state.dueDate,
-                  ResponseStatus: "Under Review",
-                  SourceDocument: {
-                    Description: this.state.documentName,
-                    Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                  },
-                  OwnerId: this.state.ownerId,
-                }
-                // const details = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, dataitem);
-                const details = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, dataitem);
-                /* const details = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add({
-                  HeaderIDId: Number(this.newheaderid),
-                  Workflow: "Review",
-                  Title: this.state.documentName,
-                  ResponsibleId: user.Id,
-                  DueDate: this.state.dueDate,
-                  ResponseStatus: "Under Review",
-                  SourceDocument: {
-                    Description: this.state.documentName,
-                    Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                  },
-                  OwnerId: this.state.ownerId,
-                }); */
-                if (details) {
-                  this.setState({ detailIdForApprover: details.data.ID });
-                  this.newDetailItemID = details.data.ID;
-                  const dataitem = {
-                    Link: {
-                      Description: this.state.documentName + "-Review",
-                      Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
-                    },
-                  }
-                  // const updatedetail = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
-                  const updatedetail = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
-                  /* const updatedetail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update({
-                    Link: {
-                      Description: this.state.documentName + "-Review",
-                      Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
-                    },
-                  }); */
-                  //MY tasks list updation with delegated from
-                  const taskitem = {
-                    Title: "Review '" + this.state.documentName + "'",
-                    Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
-                    DueDate: this.state.dueDate,
-                    StartDate: this.today,
-                    AssignedToId: hubsieUser.Id,
-                    Priority: (this.state.criticalDocument === true ? "Critical" : ""),
-                    // Source: (this.props.project ? "Project" : "QDMS"),
-                    Source: "QDMS",
-                    Workflow: "Review",
-                    Link: {
-                      Description: this.state.documentName + "-Review",
-                      Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
-                    },
-                  }
-                  // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem)
-                  const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem)
-                  /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add({
-                    Title: "Review '" + this.state.documentName + "'",
-                    Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
-                    DueDate: this.state.dueDate,
-                    StartDate: this.today,
-                    AssignedToId: hubsieUser.Id,
-                    Priority: (this.state.criticalDocument === true ? "Critical" : ""),
-                    Source: (this.props.project ? "Project" : "QDMS"),
-                    Workflow: "Review",
-                    Link: {
-                      Description: this.state.documentName + "-Review",
-                      Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
-                    },
-                  }); */
-                  if (task) {
-                    const dataitem = {
-                      TaskID: task.data.ID,
-                    }
-                    const updatetask = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
-                    // const updatetask = await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
-                    /* const updatetask = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update
-                      ({
-                        TaskID: task.data.ID,
-                      }); */
-                    if (updatetask) {
-                      // await this._sendmail(user.Email, "DocReview", user.Title);
-                      // await this._adaptiveCard("Review", user.Email, user.Title, "General");
-                    }
-                  }//taskId
-                }//r
-              }//else
+            //           //MY tasks list updation with delegated from
+            //           const taskitem = {
+            //             Title: "Review '" + this.state.documentName + "'",
+            //             Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
+            //             DueDate: this.state.dueDate,
+            //             StartDate: this.today,
+            //             AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : hubsieUser.Id),
+            //             Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+            //             DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
+            //             // Source: (this.props.project ? "Project" : "QDMS"),
+            //             Source: "QDMS",
+            //             DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : parseInt("")),
+            //             Workflow: "Review",
+            //             Link: {
+            //               Description: this.state.documentName + "-Review",
+            //               Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
+            //             },
+            //           }
+            //           // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+            //           const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+            //           /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add({
+            //             Title: "Review '" + this.state.documentName + "'",
+            //             Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
+            //             DueDate: this.state.dueDate,
+            //             StartDate: this.today,
+            //             AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : hubsieUser.Id),
+            //             Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+            //             DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
+            //             Source: (this.props.project ? "Project" : "QDMS"),
+            //             DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : parseInt("")),
+            //             Workflow: "Review",
+            //             Link: {
+            //               Description: this.state.documentName + "-Review",
+            //               Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
+            //             },
+            //           }); */
+            //           if (task) {
+            //             this.TaskID = task.data.ID;
+            //             const dataitem = {
+            //               TaskID: task.data.ID,
+            //             }
+            //             // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, dataitem)
+            //             await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, dataitem)
+            //             /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update
+            //               ({
+            //                 TaskID: task.data.ID,
+            //               }); */
+            //             await this._sendmail(DelegatedTo.Email, "DocReview", DelegatedTo.Title);
+            //             await this._adaptiveCard("Review", DelegatedTo.Email, DelegatedTo.Title, "General");
+            //           }//taskID
+            //         }//r
+            //       }//Delegated For
+            //     }//Delegated To
+            //   }
+            //   else {
+            //     //detail list adding an item for reviewers
+            //     const dataitem = {
+            //       HeaderIDId: Number(this.newheaderid),
+            //       Workflow: "Review",
+            //       Title: this.state.documentName,
+            //       ResponsibleId: user.Id,
+            //       DueDate: this.state.dueDate,
+            //       ResponseStatus: "Under Review",
+            //       SourceDocument: {
+            //         Description: this.state.documentName,
+            //         Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+            //       },
+            //       OwnerId: this.state.ownerId,
+            //     }
+            //     // const details = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, dataitem);
+            //     const details = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, dataitem);
+            //     /* const details = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add({
+            //       HeaderIDId: Number(this.newheaderid),
+            //       Workflow: "Review",
+            //       Title: this.state.documentName,
+            //       ResponsibleId: user.Id,
+            //       DueDate: this.state.dueDate,
+            //       ResponseStatus: "Under Review",
+            //       SourceDocument: {
+            //         Description: this.state.documentName,
+            //         Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+            //       },
+            //       OwnerId: this.state.ownerId,
+            //     }); */
+            //     if (details) {
+            //       this.setState({ detailIdForApprover: details.data.ID });
+            //       this.newDetailItemID = details.data.ID;
+            //       const dataitem = {
+            //         Link: {
+            //           Description: this.state.documentName + "-Review",
+            //           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
+            //         },
+            //       }
+            //       // const updatedetail = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
+            //       const updatedetail = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
+            //       /* const updatedetail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update({
+            //         Link: {
+            //           Description: this.state.documentName + "-Review",
+            //           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
+            //         },
+            //       }); */
+            //       //MY tasks list updation with delegated from
+            //       const taskitem = {
+            //         Title: "Review '" + this.state.documentName + "'",
+            //         Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
+            //         DueDate: this.state.dueDate,
+            //         StartDate: this.today,
+            //         AssignedToId: hubsieUser.Id,
+            //         Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+            //         // Source: (this.props.project ? "Project" : "QDMS"),
+            //         Source: "QDMS",
+            //         Workflow: "Review",
+            //         Link: {
+            //           Description: this.state.documentName + "-Review",
+            //           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
+            //         },
+            //       }
+            //       // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem)
+            //       const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem)
+            //       /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add({
+            //         Title: "Review '" + this.state.documentName + "'",
+            //         Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
+            //         DueDate: this.state.dueDate,
+            //         StartDate: this.today,
+            //         AssignedToId: hubsieUser.Id,
+            //         Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+            //         Source: (this.props.project ? "Project" : "QDMS"),
+            //         Workflow: "Review",
+            //         Link: {
+            //           Description: this.state.documentName + "-Review",
+            //           Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
+            //         },
+            //       }); */
+            //       if (task) {
+            //         const dataitem = {
+            //           TaskID: task.data.ID,
+            //         }
+            //         const updatetask = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
+            //         // const updatetask = await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, dataitem)
+            //         /* const updatetask = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update
+            //           ({
+            //             TaskID: task.data.ID,
+            //           }); */
+            //         if (updatetask) {
+            //           // await this._sendmail(user.Email, "DocReview", user.Title);
+            //           // await this._adaptiveCard("Review", user.Email, user.Title, "General");
+            //         }
+            //       }//taskId
+            //     }//r
+            //   }//else
 
-            }//IF
+            // }//IF
             //If no task delegation
-            else {
+            // else {
               // alert("no task delegation")
               //detail list adding an item for reviewers
               const detailitem = {
@@ -861,7 +861,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   Description: "Review request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
                   DueDate: this.state.dueDate,
                   StartDate: this.today,
-                  AssignedToId: hubsieUser.Id,
+                  AssignedToId: user.Id,
                   Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                   // Source: (this.props.project ? "Project" : "QDMS"),
                   Source: "QDMS",
@@ -904,14 +904,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   }
                 }//taskId
               }//r
-              this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
-              setTimeout(() => {
-                window.location.replace(this.siteUrl);
-              }, 3000);
+              // this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
+              // setTimeout(() => {
+              //   window.location.replace(this.siteUrl);
+              // }, 3000);
 
 
-            }//else
-          }//hubsiteuser
+            // }//else
+          // }//hubsiteuser
         }//user
       }
       const indexitem = {
@@ -954,7 +954,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(parseInt(this.newheaderid)).update({
         ReviewersId: this.state.reviewers
       }); */
-      await this._triggerDocumentUnderReview(this.sourceDocumentID, "Review");
+      const flowtrigger = await this._triggerDocumentUnderReview(this.sourceDocumentID, "Review");
       const logitem = {
         Title: this.state.documentID,
         Status: "Under Review",
@@ -965,7 +965,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         Workflow: "Review",
         DueDate: this.state.dueDate,
       }
-      await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
+      const logupdate = await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
       // await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
@@ -977,6 +977,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         Workflow: "Review",
         DueDate: this.state.dueDate,
       }); */
+      const final = [await flowtrigger,await logupdate];
+      if(final){
       if (this.taskDelegate === "Yes") {
         this.setState({
           hideLoading: true,
@@ -999,6 +1001,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     setTimeout(() => {
                       window.location.replace(this.siteUrl);
                     }, 3000);
+                  }
     }
   }
   // la for under review permission
@@ -1030,8 +1033,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   //  qdms request to approve
   public async _underApprove(previousHeaderItem) {
-    /* this._LAUrlGetting();
-    this._LaUrlGettingAdaptive(); */
+    this._LAUrlGetting();
+    // this._LaUrlGettingAdaptive();
     const headeritem = {
       Title: this.state.documentName,
       DocumentID: this.state.documentID,
