@@ -1149,10 +1149,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         }); */
       }
 
-      this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
-                    setTimeout(() => {
-                      window.location.replace(this.siteUrl);
-                    }, 3000);
+      // this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
+      //               setTimeout(() => {
+      //                 window.location.replace(this.siteUrl);
+      //               }, 3000);
 
 
       //Task delegation getting user id from hubsite
@@ -1164,301 +1164,301 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         });
 
         //Task delegation 
-        const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationSettings, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')");
+        // const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationSettings, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')");
         // const taskDelegation: any[] = await this._Service.getTaskDelegation(this.props.siteUrl, this.props.taskDelegationSettings, user.Id);
         /* const taskDelegation: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.taskDelegationSettings).items
         .select("DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate")
         .expand("DelegatedFor,DelegatedTo")
         .filter("DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')").get(); */
 
-        if (taskDelegation.length > 0) {
-          let duedate = moment(this.state.dueDate).toDate();
-          let toDate = moment(taskDelegation[0].ToDate).toDate();
-          let fromDate = moment(taskDelegation[0].FromDate).toDate();
-          duedate = new Date(duedate.getFullYear(), duedate.getMonth(), duedate.getDate());
-          toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
-          fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
-          if (moment(duedate).isBetween(fromDate, toDate) || moment(duedate).isSame(fromDate) || moment(duedate).isSame(toDate)) {
-            this.taskDelegate = "Yes";
-            this.setState({
-              approverEmail: taskDelegation[0].DelegatedTo.EMail,
-              approverName: taskDelegation[0].DelegatedTo.Title,
+      //   if (taskDelegation.length > 0) {
+      //     let duedate = moment(this.state.dueDate).toDate();
+      //     let toDate = moment(taskDelegation[0].ToDate).toDate();
+      //     let fromDate = moment(taskDelegation[0].FromDate).toDate();
+      //     duedate = new Date(duedate.getFullYear(), duedate.getMonth(), duedate.getDate());
+      //     toDate = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+      //     fromDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+      //     if (moment(duedate).isBetween(fromDate, toDate) || moment(duedate).isSame(fromDate) || moment(duedate).isSame(toDate)) {
+      //       this.taskDelegate = "Yes";
+      //       this.setState({
+      //         approverEmail: taskDelegation[0].DelegatedTo.EMail,
+      //         approverName: taskDelegation[0].DelegatedTo.Title,
 
-              delegatedToId: taskDelegation[0].DelegatedTo.ID,
-              delegatedFromId: taskDelegation[0].DelegatedFor.ID,
-            });
-            //detail list adding an item for approval
-            const DelegatedTo = await this._Service.getUserByEmail(taskDelegation[0].DelegatedTo.EMail);
-            //const DelegatedTo = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get();
-            if (DelegatedTo) {
-              this.setState({
-                delegateToIdInSubSite: DelegatedTo.Id,
-              });
-              const DelegatedFor = await this._Service.getUserByEmail(taskDelegation[0].DelegatedFor.EMail);
-              //const DelegatedFor = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get();
-              if (DelegatedFor) {
-                this.setState({
-                  delegateForIdInSubSite: DelegatedFor.Id,
-                });
-                const itemdetail = {
-                  HeaderIDId: Number(this.newheaderid),
-                  Workflow: "Approval",
-                  Title: this.state.documentName,
-                  ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
-                  DueDate: this.state.dueDate,
-                  DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
-                  ResponseStatus: "Under Approval",
-                  SourceDocument: {
-                    Description: this.state.documentName,
-                    Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                  },
-                  OwnerId: this.state.ownerId,
-                }
-                const detailsAdd = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, itemdetail);
-                // const detailsAdd = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, itemdetail);
-                /* const detailsAdd = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add
-                  ({
-                    HeaderIDId: Number(this.newheaderid),
-                    Workflow: "Approval",
-                    Title: this.state.documentName,
-                    ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
-                    DueDate: this.state.dueDate,
-                    DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
-                    ResponseStatus: "Under Approval",
-                    SourceDocument: {
-                      Description: this.state.documentName,
-                      Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                    },
-                    OwnerId: this.state.ownerId,
-                  }); */
-                if (detailsAdd) {
-                  this.setState({ detailIdForApprover: detailsAdd.data.ID });
-                  this.newDetailItemID = detailsAdd.data.ID;
-                  const itemtoupdate = {
-                    Link: {
-                      Description: this.state.documentName + "-Approve",
-                      Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
-                    },
-                  }
-                  await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, itemtoupdate)
-                  // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, itemtoupdate)
-                  /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailsAdd.data.ID).update({
-                    Link: {
-                      Description: this.state.documentName + "-Approve",
-                      Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
-                    },
-                  }); */
-                  const initem = {
-                    ApproverId: this.state.delegateToIdInSubSite,
-                  }
-                  // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, initem);
-                  await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, initem);
-                  /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
-                    ApproverId: this.state.delegateToIdInSubSite,
-                  }); */
-                  const sourceitem = {
-                    ApproverId: this.state.delegateToIdInSubSite,
-                  }
-                  await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
-                  // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
-                  /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
-                    ApproverId: this.state.delegateToIdInSubSite,
-                  }); */
-                  const headeritem = {
-                    ApproverId: this.state.delegateToIdInSubSite,
-                  }
-                  await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem);
-                  // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem);
-                  /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.newheaderid).update({
-                    ApproverId: this.state.delegateToIdInSubSite,
-                  }); */
-                  //MY tasks list updation
-                  const taskitem = {
-                    Title: "Approve '" + this.state.documentName + "'",
-                    Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
-                    DueDate: this.state.dueDate,
-                    StartDate: this.today,
-                    AssignedToId: (this.state.delegatedToId),
-                    Workflow: "Approval",
-                    // Priority:(this.state.criticalDocument === true ? "Critical" :""),
-                    DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
-                    // Source: (this.props.project ? "Project" : "QDMS"),
-                    Source: "QDMS",
-                    DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
-                    Link: {
-                      Description: this.state.documentName + "-Approve",
-                      Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
-                    },
+      //         delegatedToId: taskDelegation[0].DelegatedTo.ID,
+      //         delegatedFromId: taskDelegation[0].DelegatedFor.ID,
+      //       });
+      //       //detail list adding an item for approval
+      //       const DelegatedTo = await this._Service.getUserByEmail(taskDelegation[0].DelegatedTo.EMail);
+      //       //const DelegatedTo = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedTo.EMail).get();
+      //       if (DelegatedTo) {
+      //         this.setState({
+      //           delegateToIdInSubSite: DelegatedTo.Id,
+      //         });
+      //         const DelegatedFor = await this._Service.getUserByEmail(taskDelegation[0].DelegatedFor.EMail);
+      //         //const DelegatedFor = await this._Service.siteUsers.getByEmail(taskDelegation[0].DelegatedFor.EMail).get();
+      //         if (DelegatedFor) {
+      //           this.setState({
+      //             delegateForIdInSubSite: DelegatedFor.Id,
+      //           });
+      //           const itemdetail = {
+      //             HeaderIDId: Number(this.newheaderid),
+      //             Workflow: "Approval",
+      //             Title: this.state.documentName,
+      //             ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
+      //             DueDate: this.state.dueDate,
+      //             DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
+      //             ResponseStatus: "Under Approval",
+      //             SourceDocument: {
+      //               Description: this.state.documentName,
+      //               Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+      //             },
+      //             OwnerId: this.state.ownerId,
+      //           }
+      //           const detailsAdd = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, itemdetail);
+      //           // const detailsAdd = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, itemdetail);
+      //           /* const detailsAdd = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add
+      //             ({
+      //               HeaderIDId: Number(this.newheaderid),
+      //               Workflow: "Approval",
+      //               Title: this.state.documentName,
+      //               ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approver),
+      //               DueDate: this.state.dueDate,
+      //               DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
+      //               ResponseStatus: "Under Approval",
+      //               SourceDocument: {
+      //                 Description: this.state.documentName,
+      //                 Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+      //               },
+      //               OwnerId: this.state.ownerId,
+      //             }); */
+      //           if (detailsAdd) {
+      //             this.setState({ detailIdForApprover: detailsAdd.data.ID });
+      //             this.newDetailItemID = detailsAdd.data.ID;
+      //             const itemtoupdate = {
+      //               Link: {
+      //                 Description: this.state.documentName + "-Approve",
+      //                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
+      //               },
+      //             }
+      //             await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, itemtoupdate)
+      //             // await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, itemtoupdate)
+      //             /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailsAdd.data.ID).update({
+      //               Link: {
+      //                 Description: this.state.documentName + "-Approve",
+      //                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
+      //               },
+      //             }); */
+      //             const initem = {
+      //               ApproverId: this.state.delegateToIdInSubSite,
+      //             }
+      //             // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, initem);
+      //             await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, initem);
+      //             /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
+      //               ApproverId: this.state.delegateToIdInSubSite,
+      //             }); */
+      //             const sourceitem = {
+      //               ApproverId: this.state.delegateToIdInSubSite,
+      //             }
+      //             await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
+      //             // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem);
+      //             /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
+      //               ApproverId: this.state.delegateToIdInSubSite,
+      //             }); */
+      //             const headeritem = {
+      //               ApproverId: this.state.delegateToIdInSubSite,
+      //             }
+      //             await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem);
+      //             // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem);
+      //             /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.newheaderid).update({
+      //               ApproverId: this.state.delegateToIdInSubSite,
+      //             }); */
+      //             //MY tasks list updation
+      //             const taskitem = {
+      //               Title: "Approve '" + this.state.documentName + "'",
+      //               Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
+      //               DueDate: this.state.dueDate,
+      //               StartDate: this.today,
+      //               AssignedToId: (this.state.delegatedToId),
+      //               Workflow: "Approval",
+      //               // Priority:(this.state.criticalDocument === true ? "Critical" :""),
+      //               DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
+      //               // Source: (this.props.project ? "Project" : "QDMS"),
+      //               Source: "QDMS",
+      //               DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
+      //               Link: {
+      //                 Description: this.state.documentName + "-Approve",
+      //                 Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
+      //               },
 
-                  }
-                  // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
-                  const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem);
-                  /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add
-                    ({
-                      Title: "Approve '" + this.state.documentName + "'",
-                      Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
-                      DueDate: this.state.dueDate,
-                      StartDate: this.today,
-                      AssignedToId: (this.state.delegatedToId),
-                      Workflow: "Approval",
-                      // Priority:(this.state.criticalDocument === true ? "Critical" :""),
-                      DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
-                      Source: (this.props.project ? "Project" : "QDMS"),
-                      DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
-                      Link: {
-                        Description: this.state.documentName + "-Approve",
-                        Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
-                      },
+      //             }
+      //             // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+      //             const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem);
+      //             /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add
+      //               ({
+      //                 Title: "Approve '" + this.state.documentName + "'",
+      //                 Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
+      //                 DueDate: this.state.dueDate,
+      //                 StartDate: this.today,
+      //                 AssignedToId: (this.state.delegatedToId),
+      //                 Workflow: "Approval",
+      //                 // Priority:(this.state.criticalDocument === true ? "Critical" :""),
+      //                 DelegatedOn: (this.state.delegatedToId !== "" ? this.today : " "),
+      //                 Source: (this.props.project ? "Project" : "QDMS"),
+      //                 DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
+      //                 Link: {
+      //                   Description: this.state.documentName + "-Approve",
+      //                   Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detailsAdd.data.ID + ""
+      //                 },
 
-                    }); */
-                  if (task) {
-                    const taskitem = {
-                      TaskID: task.data.ID,
-                    }
-                    this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, taskitem);
-                    // this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, taskitem);
-                    /* this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailsAdd.data.ID).update
-                      ({
-                        TaskID: task.data.ID,
-                      }); */
-                    //notification preference checking                                 
-                    await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
-                    await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
+      //               }); */
+      //             if (task) {
+      //               const taskitem = {
+      //                 TaskID: task.data.ID,
+      //               }
+      //               this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, taskitem);
+      //               // this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, detailsAdd.data.ID, taskitem);
+      //               /* this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detailsAdd.data.ID).update
+      //                 ({
+      //                   TaskID: task.data.ID,
+      //                 }); */
+      //               //notification preference checking                                 
+      //               await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
+      //               await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
 
-                  }//taskID
-                }//r
+      //             }//taskID
+      //           }//r
 
-              }//DelegatedFor
-            }//DelegatedTo
-          }//duedate checking
-          else {
-            const detailitem = {
-              HeaderIDId: Number(this.newheaderid),
-              Workflow: "Approval",
-              Title: this.state.documentName,
-              ResponsibleId: this.state.approver,
-              DueDate: this.state.dueDate,
-              ResponseStatus: "Under Approval",
-              SourceDocument: {
-                Description: this.state.documentName,
-                Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-              },
-              OwnerId: this.state.ownerId,
-            }
-            // const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
-            const detail = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
-            /* const detail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add
-              ({
-                HeaderIDId: Number(this.newheaderid),
-                Workflow: "Approval",
-                Title: this.state.documentName,
-                ResponsibleId: this.state.approver,
-                DueDate: this.state.dueDate,
-                ResponseStatus: "Under Approval",
-                SourceDocument: {
-                  Description: this.state.documentName,
-                  Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
-                },
-                OwnerId: this.state.ownerId,
-              }); */
-            if (detail) {
-              this.setState({ detailIdForApprover: detail.data.ID });
-              this.newDetailItemID = detail.data.ID;
-              const detailitem = {
-                Link: {
-                  Description: this.state.documentName + "-Approve",
-                  Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
-                },
-              }
-              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
-              // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
-              /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
-                Link: {
-                  Description: this.state.documentName + "-Approve",
-                  Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
-                },
-              }); */
-              const inditem = {
-                ApproverId: this.state.approver,
-              }
-              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inditem)
-              // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inditem)
-              /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
-                ApproverId: this.state.approver,
-              }); */
-              const sourceitem = {
-      ApproverId: this.state.approver
-              }
-              await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
-              // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
-              /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
-                ApproverId: this.state.approver,
+      //         }//DelegatedFor
+      //       }//DelegatedTo
+      //     }//duedate checking
+      //     else {
+      //       const detailitem = {
+      //         HeaderIDId: Number(this.newheaderid),
+      //         Workflow: "Approval",
+      //         Title: this.state.documentName,
+      //         ResponsibleId: this.state.approver,
+      //         DueDate: this.state.dueDate,
+      //         ResponseStatus: "Under Approval",
+      //         SourceDocument: {
+      //           Description: this.state.documentName,
+      //           Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+      //         },
+      //         OwnerId: this.state.ownerId,
+      //       }
+      //       // const detail = await this._Service.addToWorkflowDetail(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+      //       const detail = await this._Service.addItem(this.props.siteUrl, this.props.workflowDetailsList, detailitem);
+      //       /* const detail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.add
+      //         ({
+      //           HeaderIDId: Number(this.newheaderid),
+      //           Workflow: "Approval",
+      //           Title: this.state.documentName,
+      //           ResponsibleId: this.state.approver,
+      //           DueDate: this.state.dueDate,
+      //           ResponseStatus: "Under Approval",
+      //           SourceDocument: {
+      //             Description: this.state.documentName,
+      //             Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
+      //           },
+      //           OwnerId: this.state.ownerId,
+      //         }); */
+      //       if (detail) {
+      //         this.setState({ detailIdForApprover: detail.data.ID });
+      //         this.newDetailItemID = detail.data.ID;
+      //         const detailitem = {
+      //           Link: {
+      //             Description: this.state.documentName + "-Approve",
+      //             Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
+      //           },
+      //         }
+      //         await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
+      //         // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
+      //         /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update({
+      //           Link: {
+      //             Description: this.state.documentName + "-Approve",
+      //             Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
+      //           },
+      //         }); */
+      //         const inditem = {
+      //           ApproverId: this.state.approver,
+      //         }
+      //         await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inditem)
+      //         // await this._Service.updateItemById(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, inditem)
+      //         /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).update({
+      //           ApproverId: this.state.approver,
+      //         }); */
+      //         const sourceitem = {
+      // ApproverId: this.state.approver
+      //         }
+      //         await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
+      //         // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourceitem)
+      //         /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
+      //           ApproverId: this.state.approver,
 
-              }); */
-              const headeritem = {
-                ApproverId: this.state.approver,
-              }
-              await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem)
-              // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem)
-              /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.newheaderid).update({
-                ApproverId: this.state.approver,
-              }); */
-              //MY tasks list updation
-              const taskitem =
-              {
-                Title: "Approve '" + this.state.documentName + "'",
-                Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
-                DueDate: this.state.dueDate,
-                StartDate: this.today,
-                AssignedToId: user.Id,
-                Workflow: "Approval",
-                Priority: (this.state.criticalDocument === true ? "Critical" : ""),
-                // Source: (this.props.project ? "Project" : "QDMS"),
-                Source: "QDMS",
-                Link: {
-                  Description: this.state.documentName + "-Approve",
-                  Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
-                },
-              }
-              // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem)
-              const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem)
-              /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add
-                ({
-                  Title: "Approve '" + this.state.documentName + "'",
-                  Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
-                  DueDate: this.state.dueDate,
-                  StartDate: this.today,
-                  AssignedToId: user.Id,
-                  Workflow: "Approval",
-                  Priority: (this.state.criticalDocument === true ? "Critical" : ""),
-                  Source: (this.props.project ? "Project" : "QDMS"),
-                  Link: {
-                    Description: this.state.documentName + "-Approve",
-                    Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
-                  },
+      //         }); */
+      //         const headeritem = {
+      //           ApproverId: this.state.approver,
+      //         }
+      //         await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem)
+      //         // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowHeaderList, this.newheaderid, headeritem)
+      //         /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.newheaderid).update({
+      //           ApproverId: this.state.approver,
+      //         }); */
+      //         //MY tasks list updation
+      //         const taskitem =
+      //         {
+      //           Title: "Approve '" + this.state.documentName + "'",
+      //           Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
+      //           DueDate: this.state.dueDate,
+      //           StartDate: this.today,
+      //           AssignedToId: user.Id,
+      //           Workflow: "Approval",
+      //           Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+      //           // Source: (this.props.project ? "Project" : "QDMS"),
+      //           Source: "QDMS",
+      //           Link: {
+      //             Description: this.state.documentName + "-Approve",
+      //             Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
+      //           },
+      //         }
+      //         // const task = await this._Service.addToWorkflowTasksList(this.props.siteUrl, this.props.workflowTasksList, taskitem)
+      //         const task = await this._Service.addItem(this.props.siteUrl, this.props.workflowTasksList, taskitem)
+      //         /* const task = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTasksList).items.add
+      //           ({
+      //             Title: "Approve '" + this.state.documentName + "'",
+      //             Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.currentUser + "' on '" + this.today + "'",
+      //             DueDate: this.state.dueDate,
+      //             StartDate: this.today,
+      //             AssignedToId: user.Id,
+      //             Workflow: "Approval",
+      //             Priority: (this.state.criticalDocument === true ? "Critical" : ""),
+      //             Source: (this.props.project ? "Project" : "QDMS"),
+      //             Link: {
+      //               Description: this.state.documentName + "-Approve",
+      //               Url: this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + detail.data.ID + ""
+      //             },
 
-                }); */
-              if (task) {
-                const detailitem = {
-                  TaskID: task.data.ID,
-                }
-                await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
-                // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
-                /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update
-                  ({
-                    TaskID: task.data.ID,
-                  }); */
-                //notification preference checking                                 
-                await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
-                await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
+      //           }); */
+      //         if (task) {
+      //           const detailitem = {
+      //             TaskID: task.data.ID,
+      //           }
+      //           await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
+      //           // await this._Service.updateItemById(this.props.siteUrl, this.props.workflowDetailsList, detail.data.ID, detailitem)
+      //           /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(detail.data.ID).update
+      //             ({
+      //               TaskID: task.data.ID,
+      //             }); */
+      //           //notification preference checking                                 
+      //           await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
+      //           await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
 
 
-              }//taskID
-            }//r
-          }
+      //         }//taskID
+      //       }//r
+      //     }
 
-        }
-        else {
+      //   }
+      //   else {
           const detitem = {
             HeaderIDId: Number(this.newheaderid),
             Workflow: "Approval",
@@ -1582,7 +1582,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
 
             }//taskID
           }//r
-        }//else no delegation
+        // }//else no delegation
       }
       const inddata = {
         WorkflowStatus: "Under Approval",
