@@ -237,12 +237,12 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let params = new URLSearchParams(window.location.search);
     let documentindexid = params.get('did');
     this.documentIndexID = documentindexid;
-    if (documentindexid != "" && documentindexid != null) {
+    if (documentindexid !== "" && documentindexid !== null) {
       // this._Service.itemsFromIndex(this.props.siteUrl, this.props.documentIndexList, Number(documentindexid)).then(DocumentStatus => {
       this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndexList, Number(documentindexid), "DocumentStatus,SourceDocumentID,WorkflowStatus").then(DocumentStatus => {
         this.sourceDocumentID = DocumentStatus.SourceDocumentID;
-        if ((DocumentStatus.WorkflowStatus != "Under Review" && DocumentStatus.WorkflowStatus != "Under Approval")) {
-          if (DocumentStatus.DocumentStatus == "Active") {
+        if ((DocumentStatus.WorkflowStatus !== "Under Review" && DocumentStatus.WorkflowStatus !== "Under Approval")) {
+          if (DocumentStatus.DocumentStatus === "Active") {
             this.setState({ accessDeniedMessageBar: "none", qdmsEditDocumentView: "none", projectEditDocumentView: "none" });
             //Permission handiling 
             this.setState({
@@ -298,7 +298,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     console.log("dataForEdit", indexItems);
     let tempReviewers: any[] = [];
     let temReviewersID: any[] = [];
-    if (documentindexid != "" && documentindexid != null) {
+    if (documentindexid !== "" && documentindexid !== null) {
 
       // this._Service.itemsFromIndexExpanded(this.props.siteUrl, this.props.documentIndexList, documentindexid).then(async dataForEdit => {
       this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, documentindexid, "Title,Owner/Title,Owner/ID,Owner/EMail,SubCategoryID,WorkflowStatus,SourceDocument,SubCategory,Approver/Title,Approver/ID,Approver/EMail,ApprovedDate,BusinessUnit,BusinessUnitID,Category,CategoryID,DepartmentName,DepartmentID,DocumentID,DocumentName,ExpiryDate,Reviewers/ID,Reviewers/Title,ExpiryLeadPeriod,CategoryID,CriticalDocument,Template,PublishFormat,ApprovedDate,DirectPublish,CreateDocument,LegalEntity", "Owner,Approver,Reviewers").then(async dataForEdit => {
@@ -320,14 +320,14 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           departmentId: dataForEdit.DepartmentID
           
         });
-        if (indexItems.ApproverId != null) {
+        if (indexItems.ApproverId !== null) {
           this.setState({
             approver: dataForEdit.Approver.ID,
             approverName: dataForEdit.Approver.Title,
             approverEmail : dataForEdit.Approver.EMail
           });
         }
-        if (dataForEdit.SourceDocument != null) {
+        if (dataForEdit.SourceDocument !== null) {
           this.setState({
             linkToDoc: dataForEdit.SourceDocument.Url,
           });
@@ -340,33 +340,33 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           tempReviewers.push(dataForEdit.Reviewers[k].Title);
         }
 
-        if (indexItems.SubCategoryID != null) {
+        if (indexItems.SubCategoryID !== null) {
           this.setState({
             subCategoryId: parseInt(dataForEdit.SubCategoryID)
           });
         }
-        if (dataForEdit.ExpiryDate != null) {
+        if (dataForEdit.ExpiryDate !== null) {
           let date = new Date(dataForEdit.ExpiryDate);
           this.setState({ expiryDate: date, expiryCheck: true, hideExpiry: "" });
         }
-        if (dataForEdit.CriticalDocument == true) {
+        if (dataForEdit.CriticalDocument === true) {
           this.setState({ criticalDocument: true });
         }
-        if (dataForEdit.CreateDocument == true) {
+        if (dataForEdit.CreateDocument === true) {
           this.setState({ createDocument: true, hideCreate: "", createDocumentCheckBoxDiv: "none", replaceDocument: "", hidePublish: "none", hideDoc: "none", hideDirect: "none" });
           this.isDocument = "Yes";
         }
-        if (dataForEdit.Template == true) {
+        if (dataForEdit.Template === true) {
           this.setState({ templateDocument: true });
         }
-        if (dataForEdit.DirectPublish == true) {
+        if (dataForEdit.DirectPublish === true) {
           let date = new Date(dataForEdit.ApprovedDate);
           this.setState({ directPublishCheck: true, hidePublish: "none", publishOptionKey: dataForEdit.PublishFormat, approvalDateEdit: date });
         }
         this.setState({
           reviewersName: tempReviewers,
         });
-        // if(dataForEdit.WorkflowStatus == "Draft"||dataForEdit.WorkflowStatus == "Published"){
+        // if(dataForEdit.WorkflowStatus === "Draft"||dataForEdit.WorkflowStatus === "Published"){
         //   this.setState({
         //     hidebutton: "none",
         //   });
@@ -403,7 +403,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     console.log(responseJSON);
     if (response.ok) {
       console.log(responseJSON['Status']);
-      if (responseJSON['Status'] == "Valid") {
+      if (responseJSON['Status'] === "Valid") {
         this.setState({
           titleReadonly: false,
           checkrename: "none"
@@ -425,15 +425,15 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     const userMessageSettings: any[] = await this._Service.getSelectFilterList(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'DocumentIndex'");
     console.log(userMessageSettings);
     for (var i in userMessageSettings) {
-      if (userMessageSettings[i].Title == "DirectPublishSuccess") {
+      if (userMessageSettings[i].Title === "DirectPublishSuccess") {
         var publishmsg = userMessageSettings[i].Message;
         this.directPublish = replaceString(publishmsg, '[DocumentName]', this.state.documentName);
       }
-      else if (userMessageSettings[i].Title == "EditDocumentSuccess") {
+      else if (userMessageSettings[i].Title === "EditDocumentSuccess") {
         var editmsg = userMessageSettings[i].Message;
         this.editDocument = replaceString(editmsg, '[DocumentName]', this.state.documentName);
       }
-      else if (userMessageSettings[i].Title == "InvalidQueryParams") {
+      else if (userMessageSettings[i].Title === "InvalidQueryParams") {
         this.setState({
           invalidQueryParam: userMessageSettings[i].Message,
         });
@@ -483,7 +483,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       const departments = await this._Service.getSelectExpand(this.props.siteUrl, this.props.department, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
       console.log('departments: ', departments);
       for (let i = 0; i < departments.length; i++) {
-        if (departments[i].ID == this.state.departmentId) {
+        if (departments[i].ID === this.state.departmentId) {
           const deptapprove = await this._Service.getUserIdByEmail(departments[i].Approver.EMail);
           approverEmail = departments[i].Approver.EMail;
           approverName = departments[i].Approver.Title;
@@ -507,7 +507,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       // let publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
       let publishedDocument: any[] = await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category");
       for (let i = 0; i < publishedDocument.length; i++) {
-        if (publishedDocument[i].Template == true) {
+        if (publishedDocument[i].Template === true) {
           let publishedDocumentdata = {
             key: publishedDocument[i].ID,
             text: publishedDocument[i].DocumentName,
@@ -580,7 +580,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       console.log("qdms :" + qdms);
       //if (!this.props.project)
       // {
-      if (this.siteUrl == qdms) {
+      if (this.siteUrl === qdms) {
         this.setState({ hidesource: "none" })
       }
 
@@ -639,16 +639,16 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   //   var splitted = this.myfile.name.split(".");
   //   console.log('splitted: ', splitted);
   //   type = splitted[splitted.length - 1];
-  //   if (this.state.replaceDocumentCheckbox == true) {
+  //   if (this.state.replaceDocumentCheckbox === true) {
   //     var docsplitted = this.state.documentName.split(".");
   //     doctype = docsplitted[docsplitted.length - 1];
-  //     if (doctype != type) {
+  //     if (doctype !== type) {
   //       this.setState({ validDocType: "" });
   //       // @ts-ignore
   //       (document.querySelector("#editqdms") as HTMLInputElement).value = null;
   //     }
   //   }
-  //   if (type == "docx") {
+  //   if (type === "docx") {
   //     this.setState({ isdocx: "", nodocx: "none" });
   //   }
   //   else {
@@ -676,10 +676,10 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     // alert(docsplit);
     type = splitted[splitted.length - 1];
 
-    if (this.state.replaceDocumentCheckbox == true) {
+    if (this.state.replaceDocumentCheckbox === true) {
       var docsplitted = this.state.documentName.split(".");
       let doctype = docsplitted[docsplitted.length - 1];
-      if (doctype != type) {
+      if (doctype !== type) {
         this.setState({ validDocType: "" });
         // @ts-ignore
         (document.querySelector("#editqdms") as HTMLInputElement).value = null;
@@ -698,11 +698,11 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     this.setState({ hidetemplate: "", sourceId: option.key });
     let publishedDocumentArray: any[] = [];
     let sorted_PublishedDocument: any[];
-    if (option.key == "Quality") {
+    if (option.key === "Quality") {
       // let publishedDocument: any[] = await this._Service.getqdmsLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
       let publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
-        if (publishedDocument[i].Template == true) {
+        if (publishedDocument[i].Template === true) {
           let publishedDocumentdata = {
             key: publishedDocument[i].ID,
             text: publishedDocument[i].DocumentName,
@@ -717,7 +717,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       let publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
-        if (publishedDocument[i].Template == true) {
+        if (publishedDocument[i].Template === true) {
           let publishedDocumentdata = {
             key: publishedDocument[i].ID,
             text: publishedDocument[i].DocumentName,
@@ -737,19 +737,19 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     let type: any;
     let publishName: any;
     this.isDocument = "Yes";
-    if (this.state.sourceId == "Quality") {
+    if (this.state.sourceId === "Quality") {
       // await this._Service.getqdmsselectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary).then((publishdoc: any) => {
       await this._Service.getSelectLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID").then((publishdoc: any) => {
         console.log(publishdoc);
         for (let i = 0; i < publishdoc.length; i++) {
-          if (publishdoc[i].Id == this.state.templateId) {
+          if (publishdoc[i].Id === this.state.templateId) {
 
             publishName = publishdoc[i].LinkFilename;
           }
         }
         var split = publishName.split(".", 2);
         type = split[1];
-        if (type == "docx") {
+        if (type === "docx") {
           this.setState({ isdocx: "", nodocx: "none" });
         }
         else {
@@ -762,13 +762,13 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category").then((publishdoc: any) => {
         console.log(publishdoc);
         for (let i = 0; i < publishdoc.length; i++) {
-          if (publishdoc[i].Id == this.state.templateId) {
+          if (publishdoc[i].Id === this.state.templateId) {
             publishName = publishdoc[i].LinkFilename;
           }
         }
         var split = publishName.split(".", 2);
         type = split[1];
-        if (type == "docx") {
+        if (type === "docx") {
           this.setState({ isdocx: "", nodocx: "none" });
         }
         else {
@@ -803,7 +803,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     console.log(responseJSON);
     if (response.ok) {
       console.log(responseJSON['Status']);
-      if (responseJSON['Status'] == "Valid") {
+      if (responseJSON['Status'] === "Valid") {
         this.setState({ checkdirect: "none", hideDirect: "", hidePublish: "" });
       }
       else {
@@ -885,8 +885,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   // On update click
   public async _onUpdateClick() {
-    if (this.state.createDocument == true && this.isDocument == "Yes" || this.state.createDocument == false) {
-      if (this.state.expiryCheck == true) {
+    if (this.state.createDocument === true && this.isDocument === "Yes" || this.state.createDocument === false) {
+      if (this.state.expiryCheck === true) {
 
         //Validation without direct publish
         // if (this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver') && this.validator.fieldValid('expiryDate') && this.validator.fieldValid('ExpiryLeadPeriod')) {
@@ -896,8 +896,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           this.validator.hideMessages();
         }
         //Validation with direct publish
-        // else if ((this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver') && this.validator.fieldValid('expiryDate') && this.validator.fieldValid('ExpiryLeadPeriod')) {
-        else if ((this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.state.owner && this.state.approverEmail && this.state.expiryDate && this.state.expiryLeadPeriod) {
+        // else if ((this.state.directPublishCheck === true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver') && this.validator.fieldValid('expiryDate') && this.validator.fieldValid('ExpiryLeadPeriod')) {
+        else if ((this.state.directPublishCheck === true) && this.validator.fieldValid('publish') && this.state.owner && this.state.approverEmail && this.state.expiryDate && this.state.expiryLeadPeriod) {
           this.setState({ updateDisable: true, hideloader: false, saveDisable: false });
           await this._updateDocument();
           this.validator.hideMessages();
@@ -918,8 +918,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           this.validator.hideMessages();
         }
         //Validation with direct publish
-        // else if ((this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver')) {
-        else if ((this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.state.owner && this.state.approverEmail) {
+        // else if ((this.state.directPublishCheck === true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver')) {
+        else if ((this.state.directPublishCheck === true) && this.validator.fieldValid('publish') && this.state.owner && this.state.approverEmail) {
           this.setState({ updateDisable: true, hideloader: false, saveDisable: false });
           await this._updateDocument();
           this.validator.hideMessages();
@@ -973,7 +973,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     //  upload = "#editqdms";
 
     // With document
-    if (this.state.createDocument == true) {
+    if (this.state.createDocument === true) {
       await this._updateDocumentIndex();
       // Get file from form
       // @ts-ignore: Object is possibly 'null'.
@@ -982,16 +982,16 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
        console.log('mydoc: ', this.state.mydoc);
       
       // @ts-ignore: Object is possibly 'null'.
-      // if ((document.querySelector("#editqdms") as HTMLInputElement).files.length != 0) {
-      if ( this.state.mydoc != null) {
+      // if ((document.querySelector("#editqdms") as HTMLInputElement).files.length !== 0) {
+      if ( this.state.mydoc !== null) {
         // @ts-ignore: Object is possibly 'null'.
         // let myfile = (document.querySelector("#editqdms") as HTMLInputElement).files[0];
         console.log(this.state.mydoc.name, "this.state.mydoc.name");
         // var splitted = myfile.name.split(".");
         let myfile = this.state.mydoc;
         var splitted = this.state.mydoc.name.split(".");
-        if (this.state.replaceDocumentCheckbox == true) {
-          if (this.state.titleReadonly == true) {
+        if (this.state.replaceDocumentCheckbox === true) {
+          if (this.state.titleReadonly === true) {
             documentNameExtension = this.state.documentName;
           }
           else {
@@ -999,7 +999,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           }
         }
         else {
-          if (this.state.titleReadonly == true) {
+          if (this.state.titleReadonly === true) {
             documentNameExtension = this.state.documentName + '.' + splitted[splitted.length - 1];
           }
           else {
@@ -1028,7 +1028,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
               revision = "0";
 
               this._updatePublishDocument();
-              if (this.state.replaceDocumentCheckbox == true) {
+              if (this.state.replaceDocumentCheckbox === true) {
                 let itemUpdate = {
                   SourceDocument: {
                     Description: this.documentNameExtension,
@@ -1054,7 +1054,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
 
                 // update document index
-                if (this.state.directPublishCheck == false) {
+                if (this.state.directPublishCheck === false) {
                   let indexItems = {
                     SourceDocumentID: parseInt(this.state.sourceDocumentId),
                     DocumentName: this.documentNameExtension,
@@ -1091,7 +1091,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 }
                 await this._triggerPermission(sourceDocumentId);
                 this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
-                if (this.state.directPublishCheck == true) {
+                if (this.state.directPublishCheck === true) {
 
                   this.setState({ hideLoading: false, hideCreateLoading: "none" });
                   await this._publish();
@@ -1108,7 +1108,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           }
         }
       }
-      else if (this.state.templateId != "") {
+      else if (this.state.templateId !== "") {
         let publishName;
         let extension;
         let newDocumentName;
@@ -1118,7 +1118,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           let publishdoc = await this.QDMSUrl.getList(this.props.QDMSUrl + "/" + this.props.publisheddocumentLibrary).items.select("LinkFilename,ID")();
           console.log(publishdoc);
           for (let i = 0; i < publishdoc.length; i++) {
-            if (publishdoc[i].Id == this.state.templateId) {
+            if (publishdoc[i].Id === this.state.templateId) {
               publishName = publishdoc[i].LinkFilename;
             }
           }
@@ -1159,7 +1159,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 }
                 await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
                 // update document index
-                if (this.state.directPublishCheck == false) {
+                if (this.state.directPublishCheck === false) {
                   let itemUpdateItems = {
                     SourceDocumentID: parseInt(this.state.sourceDocumentId),
                     DocumentName: this.documentNameExtension,
@@ -1196,7 +1196,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 }
                 await this._triggerPermission(sourceDocumentId);
                 this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
-                if (this.state.directPublishCheck == true) {
+                if (this.state.directPublishCheck === true) {
                   this.setState({ hideLoading: false, hideCreateLoading: "none" });
                   await this._publish();
                 }
@@ -1228,7 +1228,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   // Update Document Index
   public _updateDocumentIndex() {
     // Without Expiry date
-    if ((this.state.expiryCheck == false) || (this.state.expiryCheck == "")) {
+    if ((this.state.expiryCheck === false) || (this.state.expiryCheck === "")) {
       let itemUpdate = {
         Title: this.state.title,
         DocumentName: this.state.documentid + " " + this.state.title,
@@ -1280,7 +1280,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   // Update Source Document
   public _updateSourceDocument() {
     // Without Expiry date
-    if (this.state.expiryCheck == false) {
+    if (this.state.expiryCheck === false) {
       let updateItems = {
         Title: this.state.title,
         DocumentID: this.state.documentid,
@@ -1345,7 +1345,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     console.log("publishDocumentID", publishDocumentID);
     if (publishDocumentID.length > 0) {
       // Without Expiry date
-      if (this.state.expiryCheck == false) {
+      if (this.state.expiryCheck === false) {
 
         for (var s in publishDocumentID) {
           let libraryUpdate = {
@@ -1397,7 +1397,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     extensionSplit = split[1];
     if (sourceLink) {
 
-      if (this.state.directPublishCheck == false) {
+      if (this.state.directPublishCheck === false) {
         this.setState({
           approvalDate: null,
         });
@@ -1536,7 +1536,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     }
     await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemToUpdate);
 
-    if (this.state.owner != this.currentId) {
+    if (this.state.owner !== this.currentId) {
       this._sendMail(this.state.ownerEmail, "DocPublish", this.state.ownerName);
     }
     let itemToLog = {
@@ -1565,24 +1565,24 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     const notificationPreference: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.notificationPreference, "Preference", "EmailUser/EMail eq '" + emailuser + "'");
     console.log(notificationPreference[0].Preference);
     if (notificationPreference.length > 0) {
-      if (notificationPreference[0].Preference == "Send all emails") {
+      if (notificationPreference[0].Preference === "Send all emails") {
         mailSend = "Yes";
       }
-      else if (notificationPreference[0].Preference == "Send mail for critical document" && this.state.criticalDocument == true) {
+      else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
         mailSend = "Yes";
       }
       else {
         mailSend = "No";
       }
     }
-    else if (this.state.criticalDocument == true) {
+    else if (this.state.criticalDocument === true) {
       mailSend = "Yes";
     }
-    if (mailSend == "Yes") {
+    if (mailSend === "Yes") {
       const emailNotification: any[] = await this._Service.getItems(this.props.siteUrl, this.props.emailNotification);
       console.log(emailNotification);
       for (var k in emailNotification) {
-        if (emailNotification[k].Title == type) {
+        if (emailNotification[k].Title === type) {
           Subject = emailNotification[k].Subject;
           Body = emailNotification[k].Body;
         }
@@ -1738,8 +1738,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           this.validator.hideMessages();
         }
         //Validation with direct publish
-        // else if ((this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver') && this.validator.fieldValid('expiryDate') && this.validator.fieldValid('ExpiryLeadPeriod')) {
-        else if ((this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.state.owner && this.state.approverEmail && this.state.expiryDate && this.state.expiryLeadPeriod) {
+        // else if ((this.state.directPublishCheck === true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver') && this.validator.fieldValid('expiryDate') && this.validator.fieldValid('ExpiryLeadPeriod')) {
+        else if ((this.state.directPublishCheck === true) && this.validator.fieldValid('publish') && this.state.owner && this.state.approverEmail && this.state.expiryDate && this.state.expiryLeadPeriod) {
           this.setState({ updateDisable: true, hideloader: false });
           if (this.isDocument === "Yes") {
             this.setState({

@@ -31,7 +31,7 @@ export default class NotificationPreference extends React.Component<INotificatio
     // Updating current user's preference.
     try {
       // Adding as new entry if there is no preference set for the user
-      if (this.state.currentPreferenceItemID == 0) {
+      if (this.state.currentPreferenceItemID === 0) {
         const notitem = {
           Title: this.state.currentUserLoginName,
           EmailUserId: this.state.currentUserId,
@@ -69,19 +69,19 @@ export default class NotificationPreference extends React.Component<INotificatio
           .filter("PageName eq 'NotificationPreference'").get() */
         .then(userMessages => {
           if (userMessages.length > 0) {
-            if (option.key == this.props.noEmail)
+            if (option.key === this.props.noEmail)
               this.setState({
                 message: userMessages[0]['Message'],
                 defaultPreference: option.key,
                 showMessage: ""
               });
-            else if (option.key == this.props.sendForCriticalDocuments)
+            else if (option.key === this.props.sendForCriticalDocuments)
               this.setState({
                 defaultPreference: option.key,
                 message: userMessages[1]['Message'],
                 showMessage: ""
               });
-            else if (option.key == this.props.sendForAllDocuments)
+            else if (option.key === this.props.sendForAllDocuments)
               this.setState({
                 defaultPreference: option.key,
                 message: userMessages[2]['Message'],

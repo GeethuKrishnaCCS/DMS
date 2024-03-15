@@ -176,20 +176,20 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //const userMessageSettings: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.userMessageSettings).items.select("Title,Message").filter("PageName eq 'Review'").get();
     console.log(userMessageSettings);
     for (var i in userMessageSettings) {
-      if (userMessageSettings[i].Title == "ReviewSubmitSuccess") {
+      if (userMessageSettings[i].Title === "ReviewSubmitSuccess") {
         this.documentReviewedSuccess = userMessageSettings[i].Message;
       }
-      else if (userMessageSettings[i].Title == "ReviewDraftSuccess") {
+      else if (userMessageSettings[i].Title === "ReviewDraftSuccess") {
         this.documentSavedAsDraft = userMessageSettings[i].Message;
       }
-      else if (userMessageSettings[i].Title == "NoAccess") {
+      else if (userMessageSettings[i].Title === "NoAccess") {
         this.setState({
           noAccess: userMessageSettings[i].Message,
         });
         this.noAccess = userMessageSettings[i].Message;
 
       }
-      else if (userMessageSettings[i].Title == "InvalidQueryParams") {
+      else if (userMessageSettings[i].Title === "InvalidQueryParams") {
         this.setState({
           invalidQueryParam: userMessageSettings[i].Message,
         });
@@ -218,7 +218,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //console.log(id);
     //console.log(this.detailID);
     // if (this.props.project) {
-    //   if (id != "" && id != null && detailid != "" && detailid != null && this.workFlow == "dcc" && this.workFlow !== null) {
+    //   if (id !== "" && id !== null && detailid !== "" && detailid !== null && this.workFlow === "dcc" && this.workFlow !== null) {
     //     this.headerId = parseInt(id);
     //     this.valid = "ok";
     //     this.detailID = parseInt(detailid);
@@ -228,7 +228,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //       ifDccComment: "none",
     //     });
     //   }
-    //   else if (id != "" && id != null && detailid != "" && detailid != null) {
+    //   else if (id !== "" && id !== null && detailid !== "" && detailid !== null) {
     //     this.headerId = parseInt(id);
     //     this.valid = "ok";
     //     this.detailID = parseInt(detailid);
@@ -238,7 +238,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //       divForReview: "",
     //     });
     //   }
-    //   else if (id == "" || id == null || detailid == "" || detailid == null || this.workFlow !== "dcc" || this.workFlow == null) {
+    //   else if (id === "" || id === null || detailid === "" || detailid === null || this.workFlow !== "dcc" || this.workFlow === null) {
     //     this.setState({ accessDeniedMsgBar: "", loaderDisplay: "none", invalidMessage: this.state.invalidQueryParam });
     //     setTimeout(() => {
     //       this.setState({ accessDeniedMsgBar: 'none', });
@@ -252,8 +252,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //else 
     {
 
-      // if (id != "" && id != null && detailid != "" && detailid != null && this.workFlow !== "dcc") {
-        if (id != "" && id != null && detailid != "" && detailid != null ) {
+      // if (id !== "" && id !== null && detailid !== "" && detailid !== null && this.workFlow !== "dcc") {
+        if (id !== "" && id !== null && detailid !== "" && detailid !== null ) {
       
         this.headerId = parseInt(id);
         this.valid = "ok";
@@ -305,8 +305,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       //const DocumentIndexItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).select("DepartmentID,BusinessUnitID").get();
       console.log("DocumentIndexItem", DocumentIndexItem);
       //cheching if department selected
-      if (DocumentIndexItem.DepartmentID != null) {
-        this.departmentExist == "Exists";
+      if (DocumentIndexItem.DepartmentID !== null) {
+        this.departmentExist === "Exists";
         let deptid = parseInt(DocumentIndexItem.DepartmentID);
         const departmentItem: any = await this._Service.getItemById(this.props.siteUrl, this.props.departmentList, deptid)
         //const departmentItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.departmentList).items.getById(deptid).get();
@@ -318,7 +318,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
         let accessGroupID;
         console.log(accessGroupItem.length);
         for (let a = 0; a < accessGroupItem.length; a++) {
-          if (accessGroupItem[a].Title == accessGroupvar) {
+          if (accessGroupItem[a].Title === accessGroupvar) {
             accessGroupID = accessGroupItem[a].GroupID;
             this.GetGroupMembers(this.props.context, accessGroupID);
           }
@@ -327,8 +327,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       //if no department  
       else {
         //alert("with bussinessUnit");
-        if (DocumentIndexItem.BusinessUnitID != null) {
-          this.departmentExist == "Exists";
+        if (DocumentIndexItem.BusinessUnitID !== null) {
+          this.departmentExist === "Exists";
           let bussinessUnitID = parseInt(DocumentIndexItem.BusinessUnitID);
           const bussinessUnitItem: any = await this._Service.getItemById(this.props.siteUrl, this.props.bussinessUnitList, bussinessUnitID)
           //const bussinessUnitItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.bussinessUnitList).items.getById(bussinessUnitID).get();
@@ -340,7 +340,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
           let accessGroupID;
           console.log(accessGroupItem.length);
           for (let a = 0; a < accessGroupItem.length; a++) {
-            if (accessGroupItem[a].Title == accessGroupvar) {
+            if (accessGroupItem[a].Title === accessGroupvar) {
               accessGroupID = accessGroupItem[a].GroupID;
               this.GetGroupMembers(this.props.context, accessGroupID);
             }
@@ -402,7 +402,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     console.log(responseJSON);
     if (response.ok) {
       console.log(responseJSON['Status']);
-      if (responseJSON['Status'] == "Valid") {
+      if (responseJSON['Status'] === "Valid") {
         this.setState({
           // access: "",
           accessDeniedMsgBar: "none",
@@ -443,9 +443,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       .then(Items => {
         // console.log(Items);
         this.taskID = Items[0].TaskID;
-        if (this.state.currentUserEmail == Items[0].Responsible.EMail) {
+        if (this.state.currentUserEmail === Items[0].Responsible.EMail) {
           this.setState({ access: "", accessDeniedMsgBar: "none", comments: Items[0].ResponsibleComment, });
-          if (Items[0].ResponseStatus == "Reviewed" || Items[0].ResponseStatus == "Returned with comments") {
+          if (Items[0].ResponseStatus === "Reviewed" || Items[0].ResponseStatus === "Returned with comments") {
             this.setState({ buttonHidden: "none", statusKey: Items[0].ResponseStatus });
           }
         }
@@ -525,13 +525,13 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //         documentControllerEmail: workFlowHeaderItems.DocumentController.EMail,
     //         documentControllerName: workFlowHeaderItems.DocumentController.Title,
     //       });
-    //       //if ((workFlowHeaderItems.PreviousReviewHeader != "0" || workFlowHeaderItems.PreviousReviewHeader != previousheadervalue)) {
-    //       if ((workFlowHeaderItems.PreviousReviewHeader != "0" && workFlowHeaderItems.Workflow == "Review")) {
+    //       //if ((workFlowHeaderItems.PreviousReviewHeader !== "0" || workFlowHeaderItems.PreviousReviewHeader !== previousheadervalue)) {
+    //       if ((workFlowHeaderItems.PreviousReviewHeader !== "0" && workFlowHeaderItems.Workflow === "Review")) {
     //         this.setState({ hideReviewersTable: "", });
     //         this._loadPreviousReturnWithComments(workFlowHeaderItems.PreviousReviewHeader);
     //       }
     //       this._documentIndexListBind(this.documentIndexId);
-    //       if (workFlowHeaderItems.DocumentController == null) { this.setState({ ifDccComment: "none", }); }
+    //       if (workFlowHeaderItems.DocumentController === null) { this.setState({ ifDccComment: "none", }); }
     //       else {
     //         this._loadPreviousReturnWithComments(workFlowHeaderItems.PreviousReviewHeader);
     //         this._documentIndexListBind(this.documentIndexId);
@@ -623,7 +623,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   private _checkingCurrent(userEmail) {
 
     for (var k in userEmail) {
-      if (this.state.currentUserEmail == userEmail[k].mail) {
+      if (this.state.currentUserEmail === userEmail[k].mail) {
         this.valid = "Yes";
         this.setState({
           loaderDisplay: "none",
@@ -633,7 +633,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
         break;
       }
     }
-    if (this.valid != "Yes") {
+    if (this.valid !== "Yes") {
 
       this.setState({
         loaderDisplay: "none", access: "none", accessDeniedMsgBar: "", invalidMessage: this.noAccess,
@@ -670,7 +670,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
 
     for (let i = 0; i < laUrl.length; i++) {
 
-      if (laUrl[i].Title == "Adaptive _Card") {
+      if (laUrl[i].Title === "Adaptive _Card") {
 
         this.postUrlForAdaptive = laUrl[i].PostUrl;
 
@@ -736,12 +736,12 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     console.log("projectInformation", projectInformation);
     if (projectInformation.length > 0) {
       for (var k in projectInformation) {
-        if (projectInformation[k].Key == "ProjectName") {
+        if (projectInformation[k].Key === "ProjectName") {
           this.setState({
             projectName: projectInformation[k].Title,
           });
         }
-        if (projectInformation[k].Key == "ProjectNumber") {
+        if (projectInformation[k].Key === "ProjectNumber") {
           this.setState({
             projectNumber: projectInformation[k].Title,
           });
@@ -753,7 +753,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     var today = new Date();
     let date = today.toLocaleString();
     //Updationg DocumentRevisionlog
-    // if (this.props.project && this.workFlow == "dcc") {
+    // if (this.props.project && this.workFlow === "dcc") {
     //   this._Service.getItemFilter(
     //     this.props.siteUrl,
     //     this.props.documentRevisionLog,
@@ -849,7 +849,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       });
       console.log("dccReviewItems", this.state.dccReviewItems);
     }
-    // if (this.props.project && this.workFlow == "dcc") {
+    // if (this.props.project && this.workFlow === "dcc") {
     //   const dccComments: any[] = await this._Service.getItemSelectExpandFilter(
     //     this.props.siteUrl,
     //     this.props.workFlowDetail,
@@ -914,7 +914,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
             ResponseDate: this.currentDate,
           }) */
           .then(async deleteTask => {
-            if (this.taskID != null) {
+            if (this.taskID !== null) {
               let list = await this._Service.deleteItemById(this.props.siteUrl, this.props.workflowTaskListName, this.taskID)
               //let list = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName);
               //await list.items.getById(this.taskID).delete();
@@ -931,23 +931,23 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
               .then(async ResponseStatus => {
                 if (ResponseStatus.length > 0) { //checking all reviewers response status
                   for (var k in ResponseStatus) {
-                    if (ResponseStatus[k].ResponseStatus == "Reviewed") {
+                    if (ResponseStatus[k].ResponseStatus === "Reviewed") {
                       count++;
                     }
-                    else if (ResponseStatus[k].ResponseStatus == "Returned with comments") {
+                    else if (ResponseStatus[k].ResponseStatus === "Returned with comments") {
                       reviewStatus = "Returned with comments";
                     }
-                    else if (ResponseStatus[k].ResponseStatus == "Cancelled") {
+                    else if (ResponseStatus[k].ResponseStatus === "Cancelled") {
                       cancelCount++;
                     }
-                    else if (ResponseStatus[k].ResponseStatus == "Under Review") {
+                    else if (ResponseStatus[k].ResponseStatus === "Under Review") {
                       this.setState({
                         reviewPending: "Yes",
                       });
                     }
                   }
                   //all reviewers reviewed
-                  if (ResponseStatus.length == count || (ResponseStatus.length == add(count, cancelCount))) {
+                  if (ResponseStatus.length === count || (ResponseStatus.length === add(count, cancelCount))) {
                     this.setState({
                       buttonHidden: "none",
                     });
@@ -1143,7 +1143,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                           StartDate: this.currentDate,
                                           AssignedToId: taskDelegation[0].DelegatedTo.ID,
                                           Workflow: "Approval",
-                                          Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                          Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                           DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
                                           Source: "QDMS",
                                           DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
@@ -1163,7 +1163,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                               StartDate: this.currentDate,
                                               AssignedToId: taskDelegation[0].DelegatedTo.ID,
                                               Workflow: "Approval",
-                                              Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                              Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                               DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
                                               Source: (this.props.project ? "Project" : "QDMS"),
                                               DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
@@ -1277,7 +1277,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                   StartDate: this.currentDate,
                                   AssignedToId: user.Id,
                                   Workflow: "Approval",
-                                  Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                  Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                   Source: "QDMS",
                                   Link: {
                                     // "__metadata": { type: "SP.FieldUrlValue" },
@@ -1295,7 +1295,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                       StartDate: this.currentDate,
                                       AssignedToId: user.Id,
                                       Workflow: "Approval",
-                                      Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                      Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                       Source: (this.props.project ? "Project" : "QDMS"),
                                       Link: {
                                         "__metadata": { type: "SP.FieldUrlValue" },
@@ -1405,7 +1405,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                 StartDate: this.currentDate,
                                 AssignedToId: user.Id,
                                 Workflow: "Approval",
-                                Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                 Source: "QDMS",
                                 Link: {
                                   // "__metadata": { type: "SP.FieldUrlValue" },
@@ -1424,7 +1424,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                     StartDate: this.currentDate,
                                     AssignedToId: user.Id,
                                     Workflow: "Approval",
-                                    Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                    Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                     Source: (this.props.project ? "Project" : "QDMS"),
                                     Link: {
                                       "__metadata": { type: "SP.FieldUrlValue" },
@@ -1482,7 +1482,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                       }).catch(reject => console.error('Error getting Id of user by Email ', reject));
                   }
                   //any of the reviewer returned with comments
-                  else if (reviewStatus == "Returned with comments" && this.state.reviewPending == "No") {
+                  else if (reviewStatus === "Returned with comments" && this.state.reviewPending === "No") {
                     this.setState({
                       buttonHidden: "none",
                     });
@@ -1542,7 +1542,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                       });
                   }
                   //if any review process pending
-                  else if (this.state.reviewPending == "Yes") {
+                  else if (this.state.reviewPending === "Yes") {
                     this.setState({
                       buttonHidden: "none",
                     });
@@ -1594,7 +1594,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
             ResponseDate: this.currentDate,
           }) */
           .then(async deleteTask => {
-            if (this.taskID != null) {
+            if (this.taskID !== null) {
               let list = await this._Service.deleteItemById(this.props.siteUrl, this.props.workflowTaskListName, this.taskID)
               //let list = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName);
               //await list.items.getById(this.taskID).delete();
@@ -1611,23 +1611,23 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
               .then(async ResponseStatus => {
                 if (ResponseStatus.length > 0) { //checking all reviewers response status
                   for (var k in ResponseStatus) {
-                    if (ResponseStatus[k].ResponseStatus == "Reviewed") {
+                    if (ResponseStatus[k].ResponseStatus === "Reviewed") {
                       count++;
                     }
-                    else if (ResponseStatus[k].ResponseStatus == "Returned with comments") {
+                    else if (ResponseStatus[k].ResponseStatus === "Returned with comments") {
                       reviewStatus = "Returned with comments";
                     }
-                    else if (ResponseStatus[k].ResponseStatus == "Cancelled") {
+                    else if (ResponseStatus[k].ResponseStatus === "Cancelled") {
                       cancelCount++;
                     }
-                    else if (ResponseStatus[k].ResponseStatus == "Under Review") {
+                    else if (ResponseStatus[k].ResponseStatus === "Under Review") {
                       this.setState({
                         reviewPending: "Yes",
                       });
                     }
                   }
                   //all reviewers reviewed
-                  if (ResponseStatus.length == count || (ResponseStatus.length == add(count, cancelCount))) {
+                  if (ResponseStatus.length === count || (ResponseStatus.length === add(count, cancelCount))) {
                     this.setState({
                       buttonHidden: "none",
                     });
@@ -1824,7 +1824,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                           StartDate: this.currentDate,
                                           AssignedToId: taskDelegation[0].DelegatedTo.ID,
                                           Workflow: "Approval",
-                                          Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                          Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                           DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
                                           Source: "QDMS",
                                           DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
@@ -1844,7 +1844,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                               StartDate: this.currentDate,
                                               AssignedToId: taskDelegation[0].DelegatedTo.ID,
                                               Workflow: "Approval",
-                                              Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                              Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                               DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
                                               Source: (this.props.project ? "Project" : "QDMS"),
                                               DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
@@ -1958,7 +1958,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                   StartDate: this.currentDate,
                                   AssignedToId: user.Id,
                                   Workflow: "Approval",
-                                  Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                  Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                   Source: "QDMS",
                                   Link: {
                                     // "__metadata": { type: "SP.FieldUrlValue" },
@@ -1976,7 +1976,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                       StartDate: this.currentDate,
                                       AssignedToId: user.Id,
                                       Workflow: "Approval",
-                                      Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                      Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                       Source: (this.props.project ? "Project" : "QDMS"),
                                       Link: {
                                         "__metadata": { type: "SP.FieldUrlValue" },
@@ -2088,7 +2088,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                 StartDate: this.currentDate,
                                 AssignedToId: user.Id,
                                 Workflow: "Approval",
-                                Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                 Source: "QDMS",
                                 Link: {
                                   // "__metadata": { type: "SP.FieldUrlValue" },
@@ -2106,7 +2106,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                     StartDate: this.currentDate,
                                     AssignedToId: user.Id,
                                     Workflow: "Approval",
-                                    Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+                                    Priority: (this.state.criticalDocument === true ? "Critical" : ""),
                                     Source: (this.props.project ? "Project" : "QDMS"),
                                     Link: {
                                       "__metadata": { type: "SP.FieldUrlValue" },
@@ -2162,7 +2162,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                       }).catch(reject => console.error('Error getting Id of user by Email ', reject));
                   }
                   //any of the reviewer returned with comments
-                  else if (reviewStatus == "Returned with comments" && this.state.reviewPending == "No") {
+                  else if (reviewStatus === "Returned with comments" && this.state.reviewPending === "No") {
                     this.setState({
                       buttonHidden: "none",
                       statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
@@ -2222,7 +2222,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                       });
                   }
                   //if any review process pending
-                  else if (this.state.reviewPending == "Yes") {
+                  else if (this.state.reviewPending === "Yes") {
                     this.setState({
                       buttonHidden: "none",
                     });
@@ -2288,14 +2288,14 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //         ResponseDate: this.currentDate,
   //       }) */
   //       .then(async deleteTask => {
-  //         if (this.taskID != null) {
+  //         if (this.taskID !== null) {
   //           let list = await this._Service.deleteItemById(this.props.siteUrl, this.props.workflowTaskListName, this.taskID)
   //           //let list = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName);
   //           //await list.items.getById(this.taskID).delete();
   //         }
   //       });
   //     //if dcc review return with comments
-  //     if (this.state.status == "Returned with comments") {
+  //     if (this.state.status === "Returned with comments") {
   //       this.setState({
   //         buttonHidden: "none",
   //       });
@@ -2370,7 +2370,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //         reviewers: headerItemsForDCCSubmit.ReviewersId,
   //       });
   //       console.log(this.state.reviewers);
-  //       if (this.state.reviewers != null) {
+  //       if (this.state.reviewers !== null) {
   //         this.setState({
   //           buttonHidden: "none",
   //         });
@@ -2570,7 +2570,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                                     DueDate: this.state.DueDate,
   //                                     StartDate: this.currentDate,
   //                                     AssignedToId: taskDelegation[0].DelegatedTo.ID,
-  //                                     Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                                     Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                                     DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
   //                                     Source: (this.props.project ? "Project" : "QDMS"),
   //                                     DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
@@ -2588,7 +2588,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                                       DueDate: this.state.DueDate,
   //                                       StartDate: this.currentDate,
   //                                       AssignedToId: taskDelegation[0].DelegatedTo.ID,
-  //                                       Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                                       Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                                       DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
   //                                       Source: (this.props.project ? "Project" : "QDMS"),
   //                                       DelegatedFromId: taskDelegation[0].DelegatedFor.ID,
@@ -2697,7 +2697,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                             DueDate: this.state.DueDate,
   //                             StartDate: this.currentDate,
   //                             AssignedToId: hubsieUser.Id,
-  //                             Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                             Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                             Source: (this.props.project ? "Project" : "QDMS"),
   //                             Workflow: "Review",
   //                             Link: {
@@ -2713,7 +2713,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                               DueDate: this.state.DueDate,
   //                               StartDate: this.currentDate,
   //                               AssignedToId: hubsieUser.Id,
-  //                               Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                               Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                               Source: (this.props.project ? "Project" : "QDMS"),
   //                               Workflow: "Review",
   //                               Link: {
@@ -2816,7 +2816,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                           DueDate: this.state.DueDate,
   //                           StartDate: this.currentDate,
   //                           AssignedToId: hubsieUser.Id,
-  //                           Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                           Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                           Source: (this.props.project ? "Project" : "QDMS"),
   //                           Workflow: "Review",
   //                           Link: {
@@ -2832,7 +2832,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                             DueDate: this.state.DueDate,
   //                             StartDate: this.currentDate,
   //                             AssignedToId: hubsieUser.Id,
-  //                             Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                             Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                             Source: (this.props.project ? "Project" : "QDMS"),
   //                             Workflow: "Review",
   //                             Link: {
@@ -3001,10 +3001,10 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                           HeaderIDId: Number(this.headerId),
   //                           Workflow: "Approval",
   //                           Title: this.state.documentName,
-  //                           ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approverId),
+  //                           ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approverId),
   //                           DueDate: this.state.DueDate,
   //                           OwnerId: this.state.ownerID,
-  //                           DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+  //                           DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
   //                           ResponseStatus: "Under Approval",
   //                           SourceDocument: {
   //                             "__metadata": { type: "SP.FieldUrlValue" },
@@ -3018,10 +3018,10 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                               HeaderIDId: Number(this.headerId),
   //                               Workflow: "Approval",
   //                               Title: this.state.documentName,
-  //                               ResponsibleId: (this.state.delegatedToId != "" ? this.state.delegateToIdInSubSite : this.state.approverId),
+  //                               ResponsibleId: (this.state.delegatedToId !== "" ? this.state.delegateToIdInSubSite : this.state.approverId),
   //                               DueDate: this.state.DueDate,
   //                               OwnerId: this.state.ownerID,
-  //                               DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegateForIdInSubSite : parseInt("")),
+  //                               DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegateForIdInSubSite : parseInt("")),
   //                               ResponseStatus: "Under Approval",
   //                               SourceDocument: {
   //                                 "__metadata": { type: "SP.FieldUrlValue" },
@@ -3077,12 +3077,12 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                               Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
   //                               DueDate: this.state.DueDate,
   //                               StartDate: this.currentDate,
-  //                               AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : user.Id),
+  //                               AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : user.Id),
   //                               Workflow: "Approval",
-  //                               Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                               Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                               DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
   //                               Source: (this.props.project ? "Project" : "QDMS"),
-  //                               DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
+  //                               DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
   //                               Link: {
   //                                 "__metadata": { type: "SP.FieldUrlValue" },
   //                                 Description: this.state.documentName + "-- Approve",
@@ -3097,12 +3097,12 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                                   Description: "Approval request for  '" + this.state.documentName + "' by '" + this.state.requestor + "' on '" + this.state.requestorDate + "'",
   //                                   DueDate: this.state.DueDate,
   //                                   StartDate: this.currentDate,
-  //                                   AssignedToId: (this.state.delegatedToId != "" ? this.state.delegatedToId : user.Id),
+  //                                   AssignedToId: (this.state.delegatedToId !== "" ? this.state.delegatedToId : user.Id),
   //                                   Workflow: "Approval",
-  //                                   Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                                   Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                                   DelegatedOn: (this.state.delegatedToId !== "" ? this.currentDate : " "),
   //                                   Source: (this.props.project ? "Project" : "QDMS"),
-  //                                   DelegatedFromId: (this.state.delegatedToId != "" ? this.state.delegatedFromId : 0),
+  //                                   DelegatedFromId: (this.state.delegatedToId !== "" ? this.state.delegatedFromId : 0),
   //                                   Link: {
   //                                     "__metadata": { type: "SP.FieldUrlValue" },
   //                                     Description: this.state.documentName + "-- Approve",
@@ -3210,7 +3210,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                       StartDate: this.currentDate,
   //                       AssignedToId: user.Id,
   //                       Workflow: "Approval",
-  //                       Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                       Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                       Source: (this.props.project ? "Project" : "QDMS"),
   //                       Link: {
   //                         "__metadata": { type: "SP.FieldUrlValue" },
@@ -3228,7 +3228,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                           StartDate: this.currentDate,
   //                           AssignedToId: user.Id,
   //                           Workflow: "Approval",
-  //                           Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                           Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                           Source: (this.props.project ? "Project" : "QDMS"),
   //                           Link: {
   //                             "__metadata": { type: "SP.FieldUrlValue" },
@@ -3335,7 +3335,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                     StartDate: this.currentDate,
   //                     AssignedToId: user.Id,
   //                     Workflow: "Approval",
-  //                     Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                     Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                     Source: (this.props.project ? "Project" : "QDMS"),
   //                     Link: {
   //                       "__metadata": { type: "SP.FieldUrlValue" },
@@ -3352,7 +3352,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
   //                         StartDate: this.currentDate,
   //                         AssignedToId: user.Id,
   //                         Workflow: "Approval",
-  //                         Priority: (this.state.criticalDocument == true ? "Critical" : ""),
+  //                         Priority: (this.state.criticalDocument === true ? "Critical" : ""),
   //                         Source: (this.props.project ? "Project" : "QDMS"),
   //                         Link: {
   //                           "__metadata": { type: "SP.FieldUrlValue" },
@@ -3436,7 +3436,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
         notificationPreference: notificationPreference[0].Preference,
       });
     }
-    else if (this.state.criticalDocument == true) {
+    else if (this.state.criticalDocument === true) {
       //console.log("Send mail for critical document");
       this.status = "Yes";
     }
@@ -3448,7 +3448,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     Subject = emailNoficationSettings[0].Subject;
     Body = emailNoficationSettings[0].Body;
 
-    if (type == "DocApproval") {
+    if (type === "DocApproval") {
       link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentApprovalSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + detailID}>Link</a>`;
       //for binding current reviewers comments in table
       //       if (this.props.project) {
@@ -3533,7 +3533,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
           });
       }
     }
-    else if (type == "DocReview") {
+    else if (type === "DocReview") {
       link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentReviewSitePage + ".aspx?hid=" + this.headerId + "&dtlid=" + detailID}>Link</a>`;
       //       if (this.props.project) {
       //         await this._Service.getItemSelectExpandFilter(
@@ -3577,7 +3577,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       //       }
     }
     //returned with comments mail body
-    else if (type == "DocReturn") {
+    else if (type === "DocReturn") {
       //       if (this.props.project) {
       //         await this._Service.getItemSelectExpandFilter(
       //           this.props.siteUrl,
@@ -3674,11 +3674,11 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     let replacelink = replaceString(replaceBody, '[Link]', link);
     let var1: any[] = replacelink.split('/');
     let FinalBody = replacelink;
-    if (this.state.notificationPreference == "Send all emails") {
+    if (this.state.notificationPreference === "Send all emails") {
       this.status = "Yes";
       //console.log("Send mail for all");                 
     }
-    else if (this.state.notificationPreference == "Send mail for critical document" && this.state.criticalDocument == true) {
+    else if (this.state.notificationPreference === "Send mail for critical document" && this.state.criticalDocument === true) {
       //console.log("Send mail for critical document");
       this.status = "Yes";
     }
@@ -3690,7 +3690,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       });
     }
     //mail sending
-    if (this.status == "Yes") {
+    if (this.status === "Yes") {
       //Check if TextField value is empty or not  
       if (email) {
         //Create Body for Email  
@@ -3699,7 +3699,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
             "subject": replacedSubjectWithDueDate,
             "body": {
               "contentType": "HTML",
-              "content": FinalBody + "<br></br>" + (type == "DocReturn" ? DocumentLink : "") + "<br></br>" + finalBody
+              "content": FinalBody + "<br></br>" + (type === "DocReturn" ? DocumentLink : "") + "<br></br>" + finalBody
             },
             "toRecipients": [
               {
@@ -3925,7 +3925,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                         {this.state.currentReviewItems.map((item, key) => {
                           return (<tr className={styles.tr}>
                             <td className={styles.th}>{item.Responsible.Title}</td>
-                            <td className={styles.th}>{(item.ResponseDate == null) ? "Not Reviewed Yet" : moment(item.ResponseDate).format('DD/MM/YYYY, h:mm a')}</td>
+                            <td className={styles.th}>{(item.ResponseDate === null) ? "Not Reviewed Yet" : moment(item.ResponseDate).format('DD/MM/YYYY, h:mm a')}</td>
                             <td className={styles.th}>{item.ResponseStatus}</td>
                             <td className={styles.th}>{item.ResponsibleComment}</td>
                           </tr>);

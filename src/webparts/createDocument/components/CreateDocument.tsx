@@ -232,7 +232,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     const category: any[] = await this._Service.getItems(this.props.siteUrl, this.props.category);
     let categorydata;
     for (let i = 0; i < category.length; i++) {
-      // if (category[i].QDMS == true) {
+      // if (category[i].QDMS === true) {
       categorydata = {
         key: category[i].ID,
         text: category[i].Category,
@@ -269,11 +269,11 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     const userMessageSettings: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'DocumentIndex'");
     console.log(userMessageSettings);
     for (var i in userMessageSettings) {
-      if (userMessageSettings[i].Title == "CreateDocumentSuccess") {
+      if (userMessageSettings[i].Title === "CreateDocumentSuccess") {
         var successmsg = userMessageSettings[i].Message;
         this.createDocument = replaceString(successmsg, '[DocumentName]', this.state.documentName);
       }
-      if (userMessageSettings[i].Title == "DirectPublishSuccess") {
+      if (userMessageSettings[i].Title === "DirectPublishSuccess") {
         var publishmsg = userMessageSettings[i].Message;
         this.directPublish = replaceString(publishmsg, '[DocumentName]', this.state.documentName);
       }
@@ -292,11 +292,11 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     const department = await this._Service.getItemsByID(this.props.siteUrl, this.props.department, option.key);
     let departmentCode = department.Title;
     this.setState({ departmentId: option.key, departmentCode: departmentCode, department: option.text, saveDisable: false });
-    if (this.state.businessUnitCode == "") {
+    if (this.state.businessUnitCode === "") {
       // const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
       const departments = await this._Service.getSelectExpand(this.props.siteUrl, this.props.department, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
       for (let i = 0; i < departments.length; i++) {
-        if (departments[i].ID == option.key) {
+        if (departments[i].ID === option.key) {
           const deptapprove = await this._Service.getUserIdByEmail(departments[i].Approver.EMail);
           approverEmail = departments[i].Approver.EMail;
           approverName = departments[i].Approver.Title;
@@ -315,7 +315,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let categoryCode = category.Title;
     await this._Service.getItems(this.props.siteUrl, this.props.subCategory).then(subcategory => {
       for (let i = 0; i < subcategory.length; i++) {
-        if (subcategory[i].CategoryId == option.key) {
+        if (subcategory[i].CategoryId === option.key) {
           let subcategorydata = {
             key: subcategory[i].ID,
             text: subcategory[i].SubCategory,
@@ -383,13 +383,13 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let getSelectedApprover: any[] = [];
 
     this.setState({ validApprover: "", approver: null, approverEmail: "", approverName: "", });
-    if (this.state.businessUnitCode != "") {
+    if (this.state.businessUnitCode !== "") {
     }
     else {
       // const departments = await this._Service.getItemsFromDepartments(this.props.siteUrl, this.props.department);
       const departments = await this._Service.getSelectExpand(this.props.siteUrl, this.props.department, "ID,Title,Approver/Title,Approver/ID,Approver/EMail", "Approver");
       for (let i = 0; i < departments.length; i++) {
-        if (departments[i].ID == this.state.departmentId) {
+        if (departments[i].ID === this.state.departmentId) {
           const deptapprove = await this._Service.getUserIdByEmail(departments[i].Approver.EMail);
           approverEmail = departments[i].Approver.EMail;
           approverName = departments[i].Approver.Title;
@@ -415,7 +415,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       });
     }
     else if (!isChecked) {
-      if (this.state.upload == true) {
+      if (this.state.upload === true) {
         this.myfile.value = "";
       }
       this.setState({ hideDirect: "", checkdirect: "none", insertdocument: "none", hideDoc: "", createDocument: false, hidePublish: "none", directPublishCheck: false });
@@ -497,10 +497,10 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       uploadOrTemplateRadioBtn: option.key,
       createDocument: true
     });
-    if (option.key == "Upload") {
+    if (option.key === "Upload") {
       this.setState({ upload: true, hideupload: "", template: false, hidesource: "none", hidetemplate: "none" });
     }
-    if (option.key == "Template") {
+    if (option.key === "Template") {
       let publishedDocumentArray: any[] = [];
       let sorted_PublishedDocument: any[];
       this.setState({ template: true, upload: false, hideupload: "none", hidetemplate: "" });
@@ -854,7 +854,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
           if (addidseq) {
             await this._incrementSequenceNumber(incrementstring, sequenceNumber);
 
-            if (this.state.departmentCode != "") {
+            if (this.state.departmentCode !== "") {
               documentid = this.state.departmentCode + separator + this.state.categoryCode + separator + this.state.incrementSequenceNumber;
             }
             else {
@@ -878,7 +878,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
           const afterCounter = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIdSequenceSettings, settingsid, idItems);
           if (afterCounter) {
             await this._incrementSequenceNumber(incrementstring, sequenceNumber);
-            if (this.state.departmentCode != "") {
+            if (this.state.departmentCode !== "") {
               documentid = this.state.departmentCode + separator + this.state.categoryCode + separator + this.state.incrementSequenceNumber;
             }
             else {
@@ -917,7 +917,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       await this._createDocumentIndex();
       // Get file from form
       // @ts-ignore: Object is possibly 'null'.
-      if ((document.querySelector(upload) as HTMLInputElement).files[0] != null) {
+      if ((document.querySelector(upload) as HTMLInputElement).files[0] !== null) {
         // @ts-ignore: Object is possibly 'null'.
         let myfile = (document.querySelector(upload) as HTMLInputElement).files[0];
         console.log(myfile);
@@ -1006,7 +1006,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
           }
         }
       }
-      else if (this.state.templateId != "") {
+      else if (this.state.templateId !== "") {
         let publishName;
         let extension;
         let newDocumentName;
@@ -1372,7 +1372,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     await this._Service.getByIdUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemToUpdate);
     // await this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemToUpdate);
 
-    if (this.state.owner != this.currentId) {
+    if (this.state.owner !== this.currentId) {
       this._sendMail(this.state.ownerEmail, "DocPublish", this.state.ownerName);
     }
     let itemToLog = {
@@ -1573,7 +1573,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
           this.validator.hideMessages();
         }
         //Validation with direct publish
-        else if (this.validator.fieldValid('Title') && this.validator.fieldValid('category') && this.validator.fieldValid('BU/Dep') && (this.state.directPublishCheck == true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver')) {
+        else if (this.validator.fieldValid('Title') && this.validator.fieldValid('category') && this.validator.fieldValid('BU/Dep') && (this.state.directPublishCheck === true) && this.validator.fieldValid('publish') && this.validator.fieldValid('Owner') && this.validator.fieldValid('Approver')) {
 
           if (this.isDocument === "Yes") {
             this.setState({
