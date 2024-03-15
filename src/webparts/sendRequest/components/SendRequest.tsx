@@ -1159,9 +1159,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       const user = await this._Service.getUserByEmail(this.state.approverEmail);
       //const user = await this._Service.siteUsers.getByEmail(this.state.approverEmail).get();
       if (user) {
-        this.setState({
-          hubSiteUserId: user.Id,
-        });
+        // this.setState({
+        //   hubSiteUserId: user.Id,
+        // });
 
         //Task delegation 
         // const taskDelegation: any[] = await this._Service.getSelectExpandFilter(this.props.siteUrl, this.props.taskDelegationSettings, "DelegatedFor/ID,DelegatedFor/Title,DelegatedFor/EMail,DelegatedTo/ID,DelegatedTo/Title,DelegatedTo/EMail,FromDate,ToDate", "DelegatedFor,DelegatedTo", "DelegatedFor/ID eq '" + user.Id + "' and(Status eq 'Active')");
@@ -1515,6 +1515,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             }); */
             const sourcedata = {
               ApproverId: this.state.approver,
+              WorkflowStatus: "Under Review",
+        Workflow: "Review",
+        OwnerId: this.state.ownerId,
             }
             await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
             // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
@@ -1577,8 +1580,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   TaskID: task.data.ID,
                 }); */
               //notification preference checking                                 
-              await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
-              await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
+              // await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
+              // await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
 
             }//taskID
           }//r
@@ -1603,7 +1606,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         Workflow: "Approval",
         ReviewersId: this.state.currentUserReviewer,
       }
-      await this._Service.getByIdUpdate(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
+      await this._Service.getByIdUpdateSourceLibrary(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
       // await this._Service.updateItemById(this.props.siteUrl, this.props.sourceDocumentLibrary, this.sourceDocumentID, sourcedata)
       /* await this._Service.getList(this.props.siteUrl + "/" + this.props.sourceDocumentLibrary).items.getById(this.sourceDocumentID).update({
         WorkflowStatus: "Under Approval",
@@ -1623,10 +1626,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
 
 
-      this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
-                    setTimeout(() => {
-                      window.location.replace(this.siteUrl);
-                    }, 3000);
+      // this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
+      //               setTimeout(() => {
+      //                 window.location.replace(this.siteUrl);
+      //               }, 3000);
 
 
       // await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
@@ -1640,7 +1643,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         Workflow: "Approval",
         DueDate: this.state.dueDate,
       }); */
-      await this._triggerPermission(this.sourceDocumentID);
+     const permissiontrigger = await this._triggerPermission(this.sourceDocumentID);
+     const completed = [await permissiontrigger]
+     if(completed){
       this.setState({
         comments: "",
         statusKey: "",
@@ -1653,6 +1658,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
           hideLoading: true,
           statusMessage: { isShowMessage: true, message: this.taskDelegateUnderApproval, messageType: 4 },
         });
+        setTimeout(() => {
+          window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
+        }, 10000);
       }
       else {
         this.setState({
@@ -1660,11 +1668,13 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
           saveDisable: "none",
           statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 },
         });
+        setTimeout(() => {
+          window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
+        }, 10000);
       }
+    }
 
-      // setTimeout(() => {
-      //   window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
-      // }, 10000);
+      
 
       
 
@@ -1682,7 +1692,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
 
   }
   // set permission for approver
-  protected async _triggerPermission(sourceDocumentID) {
+  private async _triggerPermission(sourceDocumentID) {
     const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrl;
     const requestHeaders: Headers = new Headers();
