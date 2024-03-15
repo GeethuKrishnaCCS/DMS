@@ -145,7 +145,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     this._revisionCoding = this._revisionCoding.bind(this);
     this._legalEntityChange = this._legalEntityChange.bind(this);
     this._add = this._add.bind(this);
-    this._checkdirectPublish = this._checkdirectPublish.bind(this);
+    this._checkdirectPublish = this._checkdirectPublish.bind(this);  //La
     this._onUploadCheck = this._onUploadCheck.bind(this);
     this._onTemplateCheck = this._onTemplateCheck.bind(this);
     this._onSendForReview = this._onSendForReview.bind(this);

@@ -46,7 +46,7 @@ export default class DocumentReviewWebPart extends BaseClientSideWebPart<IDocume
         accessGroupDetailsList: this.properties.accessGroupDetailsList,
         projectInformationListName: this.properties.projectInformationListName,
         bussinessUnitList: this.properties.bussinessUnitList,
-        masterListName: this.properties.masterListName,
+        requestListName: this.properties.requestListName,
       }
     );
 
@@ -166,8 +166,8 @@ export default class DocumentReviewWebPart extends BaseClientSideWebPart<IDocume
                 PropertyPaneTextField('hubsite', {
                   label: "Hub Site Name"
                 }),
-                PropertyPaneTextField('masterListName', {
-                  label: "Master List Name"
+                PropertyPaneTextField('requestListName', {
+                  label: "Request List Name"
                 }),
                 PropertyPaneTextField('documentApprovalSitePage', {
                   label: "Document Approval SitePage"
