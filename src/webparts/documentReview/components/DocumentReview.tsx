@@ -163,9 +163,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     this.documentIndexId = headerItem.DocumentIndexID;
     //Permission handiling 
     await this._accessGroups();
-    await this._LAUrlGettingForPermission();
+    // await this._LAUrlGettingForPermission();
      this._LAUrlGetting();
-    this._LAUrlGettingForUnderReview();
+    // this._LAUrlGettingForUnderReview();
     // console.log('this.state.currentReviewItems: ', this.state.currentReviewItems);
     // this._checkingReviewStatus();
   }
@@ -295,6 +295,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     // else 
     {
       AccessGroup = await this._Service.getItemSelectFilter(this.props.siteUrl, this.props.accessGroups, "AccessGroups,AccessFields", "Title eq 'QDMS_SendReviewWF'")
+      debugger;
       //AccessGroup = await this._Service.getQDMS_SendReviewWF(this.props.siteUrl, this.props.accessGroups)
       //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroups).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendReviewWF'").get();
       let AccessGroupItems: any[] = AccessGroup[0].AccessGroups.split(',');
@@ -657,6 +658,9 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrlForUnderReview = laUrl[0].PostUrl;
   }
+
+  
+
   //Adaptive Card
   /* private _LaUrlGettingAdaptive = async () => {
 
@@ -673,10 +677,6 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       }
 
     }
-
-
-
-
 
   } */
 
@@ -1415,6 +1415,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
 
                               }
                               await this._Service.createNewItem(this.props.siteUrl, this.props.workflowTaskListName, taskitem)
+                              
                                 /* await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowTaskListName).items.add
                                   ({
                                     Title: "Approve '" + this.state.documentName + "'",
@@ -1437,6 +1438,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                   const detdata = {
                                     TaskID: taskId.data.ID,
                                   }
+                                  
                                   this._Service.updateItemById(this.props.siteUrl, this.props.workFlowDetail, r.data.ID, detdata)
 
                                     /* sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workFlowDetail).items.getById(r.data.ID).update
@@ -1445,6 +1447,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
                                       }) */
                                     .then(async aftermail => {
                                       this.validator.hideMessages();
+                                      
                                       this.setState({
                                         statusMessage: { isShowMessage: true, message: this.documentReviewedSuccess, messageType: 4 },
                                         comments: "",
@@ -3720,7 +3723,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       }
     }
   }
-  protected async triggerDocumentReview(sourceDocumentID, ResponseStatus) {
+ /*  protected async triggerDocumentReview(sourceDocumentID, ResponseStatus) {
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     // alert("In function");
     // alert(transmittalID);
@@ -3738,9 +3741,30 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     };
     let responseText: string = "";
     let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+  } */
 
-
+  protected async triggerDocumentReview(sourceDocumentID, ResponseStatus) {
+    // const laUrl = await this._Service.DocumentSendForReview(this.props.siteUrl, this.props.requestList);
+    const laUrl = await this._Service.getItemFilter(this.props.siteUrl, this.props.requestListName, "Title eq 'QDMS_DocumentPermission_UnderApproval'")
+    console.log("Posturl", laUrl[0].PostUrl);
+    this.postUrl = laUrl[0].PostUrl;
+    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const postURL = this.postUrl;
+    const requestHeaders: Headers = new Headers();
+    requestHeaders.append("Content-type", "application/json");
+    const body: string = JSON.stringify({
+      'SiteURL': siteUrl,
+      'ItemId': sourceDocumentID,
+      'WorkflowStatus': ResponseStatus
+    });
+    const postOptions: IHttpClientOptions = {
+      headers: requestHeaders,
+      body: body
+    };
+    await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
   }
+
+
   protected async triggerDocumentUnderReview(sourceDocumentID, ResponseStatus) {
     let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     // alert("In function");
