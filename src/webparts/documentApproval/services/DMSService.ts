@@ -29,6 +29,9 @@ export class DMSService extends BaseService {
     public getItemById(siteUrl: string, listname: string, itemid: any): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid)();
     }
+    public getLibraryItemById(siteUrl: string, listname: string, itemid: any): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/" + listname).items.getById(itemid)();
+    }
     public getItemByIdSelect(siteUrl: string, listname: string, itemid: any, select: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid).select(select)();
     }

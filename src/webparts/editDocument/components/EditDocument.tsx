@@ -191,7 +191,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     this._onUpdateClick = this._onUpdateClick.bind(this);
     this._updateWithoutDocument = this._updateWithoutDocument.bind(this);
     this._add = this._add.bind(this);
-    this._checkRename = this._checkRename.bind(this);
+    // this._checkRename = this._checkRename.bind(this);
     this._onReplaceDocumentChecked = this._onReplaceDocumentChecked.bind(this);
     this._onSendForReview = this._onSendForReview.bind(this);
     this.onConfirmReview = this.onConfirmReview.bind(this);
@@ -234,8 +234,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   private async _queryParamGetting() {
     this.setState({ accessDeniedMessageBar: "none", createDocumentView: "none", createDocumentProject: "none", qdmsEditDocumentView: "", projectEditDocumentView: "none", revokeExpiryView: "none", });
     //Query getting...
-    let params = new URLSearchParams(window.location.search);
-    let documentindexid = params.get('did');
+    const params = new URLSearchParams(window.location.search);
+    const documentindexid = params.get('did');
     this.documentIndexID = documentindexid;
     if (documentindexid !== "" && documentindexid !== null) {
       // this._Service.itemsFromIndex(this.props.siteUrl, this.props.documentIndexList, Number(documentindexid)).then(DocumentStatus => {
@@ -296,8 +296,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     const indexItems = await this._Service.getItemsByID(this.props.siteUrl, this.props.documentIndexList, Number(documentindexid));
 
     console.log("dataForEdit", indexItems);
-    let tempReviewers: any[] = [];
-    let temReviewersID: any[] = [];
+    const tempReviewers: any[] = [];
+    const temReviewersID: any[] = [];
     if (documentindexid !== "" && documentindexid !== null) {
 
       // this._Service.itemsFromIndexExpanded(this.props.siteUrl, this.props.documentIndexList, documentindexid).then(async dataForEdit => {
@@ -346,7 +346,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           });
         }
         if (dataForEdit.ExpiryDate !== null) {
-          let date = new Date(dataForEdit.ExpiryDate);
+          const date = new Date(dataForEdit.ExpiryDate);
           this.setState({ expiryDate: date, expiryCheck: true, hideExpiry: "" });
         }
         if (dataForEdit.CriticalDocument === true) {
@@ -360,7 +360,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           this.setState({ templateDocument: true });
         }
         if (dataForEdit.DirectPublish === true) {
-          let date = new Date(dataForEdit.ApprovedDate);
+          const date = new Date(dataForEdit.ApprovedDate);
           this.setState({ directPublishCheck: true, hidePublish: "none", publishOptionKey: dataForEdit.PublishFormat, approvalDateEdit: date });
         }
         this.setState({
@@ -375,50 +375,50 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     }
 
   }
-  // Check permission to rename
-  public async _checkRename(type) {
-    this.setState({ checkrename: "" });
-    // const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
-    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_PermissionWebpart'");
-    console.log("Posturl", laUrl[0].PostUrl);
-    this.permissionpostUrl = laUrl[0].PostUrl;
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
-    const postURL = this.permissionpostUrl;
+  // // Check permission to rename
+  // public async _checkRename(type) {
+  //   this.setState({ checkrename: "" });
+  //   // const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
+  //   const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_PermissionWebpart'");
+  //   console.log("Posturl", laUrl[0].PostUrl);
+  //   this.permissionpostUrl = laUrl[0].PostUrl;
+  //   const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+  //   const postURL = this.permissionpostUrl;
 
-    const requestHeaders: Headers = new Headers();
-    requestHeaders.append("Content-type", "application/json");
-    const body: string = JSON.stringify({
-      'PermissionTitle': type,
-      'SiteUrl': siteUrl,
-      'CurrentUserEmail': this.currentEmail
+  //   const requestHeaders: Headers = new Headers();
+  //   requestHeaders.append("Content-type", "application/json");
+  //   const body: string = JSON.stringify({
+  //     'PermissionTitle': type,
+  //     'SiteUrl': siteUrl,
+  //     'CurrentUserEmail': this.currentEmail
 
-    });
-    const postOptions: IHttpClientOptions = {
-      headers: requestHeaders,
-      body: body
-    };
+  //   });
+  //   const postOptions: IHttpClientOptions = {
+  //     headers: requestHeaders,
+  //     body: body
+  //   };
 
-    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-    let responseJSON = await response.json();
-    console.log(responseJSON);
-    if (response.ok) {
-      console.log(responseJSON['Status']);
-      if (responseJSON['Status'] === "Valid") {
-        this.setState({
-          titleReadonly: false,
-          checkrename: "none"
-        });
-      }
-      else {
-        this.setState({
-          titleReadonly: true,
-          checkrename: "none"
-        });
-      }
-    }
+  //   const response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+  //   const responseJSON = await response.json();
+  //   console.log(responseJSON);
+  //   if (response.ok) {
+  //     console.log(responseJSON['Status']);
+  //     if (responseJSON['Status'] === "Valid") {
+  //       this.setState({
+  //         titleReadonly: false,
+  //         checkrename: "none"
+  //       });
+  //     }
+  //     else {
+  //       this.setState({
+  //         titleReadonly: true,
+  //         checkrename: "none"
+  //       });
+  //     }
+  //   }
 
-    else { }
-  }
+  //   else { }
+  // }
   //Messages
   private async _userMessageSettings() {
     // const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
@@ -501,14 +501,14 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   //Create Document Change
   public _onCreateDocChecked = async (ev: React.FormEvent<HTMLInputElement>, isChecked?: boolean) => {
     // this.setState({ checkdirect: "" });
-    let publishedDocumentArray: any[] = [];
+    const publishedDocumentArray: any[] = [];
     let sorted_PublishedDocument: any[];
     if (isChecked) {
-      // let publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
-      let publishedDocument: any[] = await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category");
+      // const publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      const publishedDocument: any[] = await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category");
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true) {
-          let publishedDocumentdata = {
+          const publishedDocumentdata = {
             key: publishedDocument[i].ID,
             text: publishedDocument[i].DocumentName,
           };
@@ -571,9 +571,9 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     }
   }
   private _onTemplateCheck = async (ev: React.FormEvent<HTMLInputElement>, isChecked?: boolean) => {
-    let publishedDocumentArray: any[] = [];
+    const publishedDocumentArray: any[] = [];
     let sorted_PublishedDocument: any[];
-    let qdms = window.location.protocol + "//" + window.location.hostname + "/" + this.props.QDMSUrl;
+    const qdms = window.location.protocol + "//" + window.location.hostname + "/" + this.props.QDMSUrl;
     // this.QDMSUrl = window.location.protocol + "//" + window.location.hostname + "/sites/" + this.props.QDMSUrl;
     if (isChecked) {
       console.log("site :" + this.siteUrl);
@@ -588,11 +588,11 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
         this.setState({ hidesource: "" })
       }
       this.setState({ template: true, upload: false, hideupload: "none", hidetemplate: "" });
-      // let publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
-      let publishedDocument: any[] = await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category");
+      // const publishedDocument: any[] = await this._Service.getselectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      const publishedDocument: any[] = await this._Service.getSelectLibraryItems(this.props.siteUrl, this.props.publisheddocumentLibrary, "LinkFilename,ID,Template,DocumentName,Category");
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true && publishedDocument[i].Category === this.state.category) {
-          let publishedDocumentdata = {
+          const publishedDocumentdata = {
             key: publishedDocument[i].ID,
             text: publishedDocument[i].DocumentName,
           };
@@ -617,9 +617,9 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   // public _addd(e) {
   //   this.setState({ insertdocument: "none", validDocType: "none" });
   //   this.myfile = e.target.value;
-  //   //let upload;
-  //   let type;
-  //   let doctype;
+  //   //const upload;
+  //   const type;
+  //   const doctype;
   //   this.isDocument = "Yes";
   //   // if (this.props.project) {
   //   //   //  upload = "#editproject";
@@ -627,9 +627,9 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   //   // else {
   //   //   // upload = "#editqdms";
   //   // }
-  //   // let myfile = e.target.files[0];
+  //   // const myfile = e.target.files[0];
   //   // this.myfile = e.target.value;
-  //   //  let myfile = (document.querySelector("#editqdms") as HTMLInputElement).files[0];
+  //   //  const myfile = (document.querySelector("#editqdms") as HTMLInputElement).files[0];
   //   this.myfile = e.currentTarget.files[0];
   //   console.log(this.myfile);
   //   this.setState({ ...this.state, mydoc: this.myfile });
@@ -663,7 +663,6 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     // this.myfile = e.target.value;
     this.myfile = e.currentTarget.files[0];
     let type;
-    let myfile;
     this.isDocument = "Yes";
     // @ts-ignore: Object is possibly 'null'.
     // myfile = (document.querySelector("#editqdms") as HTMLInputElement).files[0];
@@ -678,7 +677,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
     if (this.state.replaceDocumentCheckbox === true) {
       var docsplitted = this.state.documentName.split(".");
-      let doctype = docsplitted[docsplitted.length - 1];
+      const doctype = docsplitted[docsplitted.length - 1];
       if (doctype !== type) {
         this.setState({ validDocType: "" });
         // @ts-ignore
@@ -696,14 +695,14 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
   public async _sourcechange(option: { key: any; text: any }) {
     this.setState({ hidetemplate: "", sourceId: option.key });
-    let publishedDocumentArray: any[] = [];
+    const publishedDocumentArray: any[] = [];
     let sorted_PublishedDocument: any[];
     if (option.key === "Quality") {
-      // let publishedDocument: any[] = await this._Service.getqdmsLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
-      let publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
+      // const publishedDocument: any[] = await this._Service.getqdmsLibraryItems(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
+      const publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.QDMSUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true) {
-          let publishedDocumentdata = {
+          const publishedDocumentdata = {
             key: publishedDocument[i].ID,
             text: publishedDocument[i].DocumentName,
           };
@@ -714,11 +713,11 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       this.setState({ templateDocuments: sorted_PublishedDocument, sourceId: option.key });
     }
     else {
-      // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
-      let publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      // const publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      const publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true) {
-          let publishedDocumentdata = {
+          const publishedDocumentdata = {
             key: publishedDocument[i].ID,
             text: publishedDocument[i].DocumentName,
           };
@@ -778,40 +777,40 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     }
   }
   // On direct publih checked
-  public async _checkdirectPublish(type) {
-    // const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
-    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_PermissionWebpart'");
-    console.log("Posturl", laUrl[0].PostUrl);
-    this.permissionpostUrl = laUrl[0].PostUrl;
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
-    const postURL = this.permissionpostUrl;
+  // public async _checkdirectPublish(type) {
+  //   // const laUrl = await this._Service.getQDMSPermissionWebpart(this.props.siteUrl, this.props.requestList);
+  //   const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_PermissionWebpart'");
+  //   console.log("Posturl", laUrl[0].PostUrl);
+  //   this.permissionpostUrl = laUrl[0].PostUrl;
+  //   const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+  //   const postURL = this.permissionpostUrl;
 
-    const requestHeaders: Headers = new Headers();
-    requestHeaders.append("Content-type", "application/json");
-    const body: string = JSON.stringify({
-      'PermissionTitle': type,
-      'SiteUrl': siteUrl,
-      'CurrentUserEmail': this.currentEmail
+  //   const requestHeaders: Headers = new Headers();
+  //   requestHeaders.append("Content-type", "application/json");
+  //   const body: string = JSON.stringify({
+  //     'PermissionTitle': type,
+  //     'SiteUrl': siteUrl,
+  //     'CurrentUserEmail': this.currentEmail
 
-    });
-    const postOptions: IHttpClientOptions = {
-      headers: requestHeaders,
-      body: body
-    };
-    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-    let responseJSON = await response.json();
-    console.log(responseJSON);
-    if (response.ok) {
-      console.log(responseJSON['Status']);
-      if (responseJSON['Status'] === "Valid") {
-        this.setState({ checkdirect: "none", hideDirect: "", hidePublish: "" });
-      }
-      else {
-        this.setState({ checkdirect: "none", hideDirect: "", hidePublish: "none" });
-      }
-    }
-    else { }
-  }
+  //   });
+  //   const postOptions: IHttpClientOptions = {
+  //     headers: requestHeaders,
+  //     body: body
+  //   };
+  //   const response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+  //   const responseJSON = await response.json();
+  //   console.log(responseJSON);
+  //   if (response.ok) {
+  //     console.log(responseJSON['Status']);
+  //     if (responseJSON['Status'] === "Valid") {
+  //       this.setState({ checkdirect: "none", hideDirect: "", hidePublish: "" });
+  //     }
+  //     else {
+  //       this.setState({ checkdirect: "none", hideDirect: "", hidePublish: "none" });
+  //     }
+  //   }
+  //   else { }
+  // }
   //Direct Publish change
   private _onDirectPublishChecked = (ev: React.FormEvent<HTMLInputElement>, isChecked?: boolean) => {
     if (isChecked) {
@@ -820,10 +819,10 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       //   this._checkdirectPublish('Project_DirectPublish');
       // }
       // else
-      {
-        this.setState({ checkdirect: "", });
-        this._checkdirectPublish('QDMS_DirectPublish');
-      }
+      // {
+      //   this.setState({ checkdirect: "", });
+      //   this._checkdirectPublish('QDMS_DirectPublish');
+      // }
       this.setState({ hidePublish: "none", directPublishCheck: true, approvalDate: new Date() });
     }
     else if (!isChecked) { this.setState({ hidePublish: "none", directPublishCheck: false, approvalDate: new Date(), publishOption: "" }); }
@@ -850,7 +849,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   //Expiry Lead Period Change
   public _expLeadPeriodChange = (ev: React.FormEvent<HTMLInputElement>, expiryLeadPeriod: string) => {
-    let LeadPeriodformat = /^[0-9]*$/;
+    const LeadPeriodformat = /^[0-9]*$/;
     if (expiryLeadPeriod.match(LeadPeriodformat)) {
       if (Number(expiryLeadPeriod) < 101) {
         this.setState({ expiryLeadPeriod: expiryLeadPeriod || '', leadmsg: "none" });
@@ -880,7 +879,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   // Format date
   private _onFormatDate = (date: Date): string => {
     console.log(moment(date).format("DD/MM/YYYY"));
-    let selectd = moment(date).format("DD/MM/YYYY");
+    const selectd = moment(date).format("DD/MM/YYYY");
     return selectd;
   }
   // On update click
@@ -941,7 +940,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'Send For Review New DMS'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrl;
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
@@ -988,7 +987,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
         // let myfile = (document.querySelector("#editqdms") as HTMLInputElement).files[0];
         console.log(this.state.mydoc.name, "this.state.mydoc.name");
         // var splitted = myfile.name.split(".");
-        let myfile = this.state.mydoc;
+        const myfile = this.state.mydoc;
         var splitted = this.state.mydoc.name.split(".");
         if (this.state.replaceDocumentCheckbox === true) {
           if (this.state.titleReadonly === true) {
@@ -1029,7 +1028,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
               this._updatePublishDocument();
               if (this.state.replaceDocumentCheckbox === true) {
-                let itemUpdate = {
+                const itemUpdate = {
                   SourceDocument: {
                     Description: this.documentNameExtension,
                     Url: this.props.siteUrl + "/" + this.props.sourceDocumentLibrary + "/Forms/AllItems.aspx?FilterField1=DocumentIndex&FilterValue1=" + parseInt(this.documentIndexID) + "&FilterType1=Lookup&viewid=c46304af-9c51-4289-bea2-ddb05655f7c2"
@@ -1044,7 +1043,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 }, 5000);
               }
               else {
-                let logItems = {
+                const logItems = {
                   Title: this.state.documentid,
                   Status: "Document Created",
                   LogDate: this.today,
@@ -1055,7 +1054,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
                 // update document index
                 if (this.state.directPublishCheck === false) {
-                  let indexItems = {
+                  const indexItems = {
                     SourceDocumentID: parseInt(this.state.sourceDocumentId),
                     DocumentName: this.documentNameExtension,
                     SourceDocument: {
@@ -1073,7 +1072,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 }
                 else {
 
-                  let indexItems = {
+                  const indexItems = {
                     SourceDocumentID: parseInt(this.state.sourceDocumentId),
                     ApprovedDate: this.state.approvalDate,
                     DocumentName: this.documentNameExtension,
@@ -1115,7 +1114,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
 
         // Get template
         if (this.state.sourceId === "Quality") {
-          let publishdoc = await this.QDMSUrl.getList(this.props.QDMSUrl + "/" + this.props.publisheddocumentLibrary).items.select("LinkFilename,ID")();
+          const publishdoc = await this.QDMSUrl.getList(this.props.QDMSUrl + "/" + this.props.publisheddocumentLibrary).items.select("LinkFilename,ID")();
           console.log(publishdoc);
           for (let i = 0; i < publishdoc.length; i++) {
             if (publishdoc[i].Id === this.state.templateId) {
@@ -1129,7 +1128,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
             newDocumentName = this.state.documentName + "." + extension;
             this.documentNameExtension = newDocumentName;
             documentIdname = this.state.documentid + '.' + extension;
-            let siteUrl = this.props.siteUrl + "/" + this.props.publisheddocumentLibrary + "/" + this.state.category + + "/" + publishName;
+            const siteUrl = this.props.siteUrl + "/" + this.props.publisheddocumentLibrary + "/" + this.state.category + + "/" + publishName;
             this._Service.getBuffer(siteUrl).then(templateData => {
               return this._Service.uploadDocument(documentIdname, templateData, this.props.sourceDocumentLibrary);
             }).then(fileUploaded => {
@@ -1150,7 +1149,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 revision = "0";
                 //}
                 this._updatePublishDocument();
-                let logItems = {
+                const logItems = {
                   Title: this.state.documentid,
                   Status: "Document Created",
                   LogDate: this.today,
@@ -1160,7 +1159,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                 await this._Service.createNewItem(this.props.siteUrl, this.props.documentRevisionLogList, logItems);
                 // update document index
                 if (this.state.directPublishCheck === false) {
-                  let itemUpdateItems = {
+                  const itemUpdateItems = {
                     SourceDocumentID: parseInt(this.state.sourceDocumentId),
                     DocumentName: this.documentNameExtension,
 
@@ -1176,7 +1175,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
                   this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemUpdateItems);
                 }
                 else {
-                  let itemUpdateItems = {
+                  const itemUpdateItems = {
                     SourceDocumentID: parseInt(this.state.sourceDocumentId),
                     ApprovedDate: this.state.approvalDate,
                     DocumentName: this.documentNameExtension,
@@ -1229,7 +1228,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   public _updateDocumentIndex() {
     // Without Expiry date
     if ((this.state.expiryCheck === false) || (this.state.expiryCheck === "")) {
-      let itemUpdate = {
+      const itemUpdate = {
         Title: this.state.title,
         DocumentName: this.state.documentid + " " + this.state.title,
         SubCategoryID: this.state.subCategoryId,
@@ -1251,7 +1250,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       });
     }
     else{
-      let itemUpdate = {
+      const itemUpdate = {
         Title: this.state.title,
         DocumentName: this.state.documentid + " " + this.state.title,
         SubCategoryID: this.state.subCategoryId,
@@ -1281,7 +1280,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   public _updateSourceDocument() {
     // Without Expiry date
     if (this.state.expiryCheck === false) {
-      let updateItems = {
+      const updateItems = {
         Title: this.state.title,
         DocumentID: this.state.documentid,
         ReviewersId: this.state.reviewers,
@@ -1308,7 +1307,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     }
     // With Expiry Date
     else {
-      let updateItems = {
+      const updateItems = {
         DocumentID: this.state.documentid,
         Title: this.state.title,
         ReviewersId: this.state.reviewers,
@@ -1348,7 +1347,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       if (this.state.expiryCheck === false) {
 
         for (var s in publishDocumentID) {
-          let libraryUpdate = {
+          const libraryUpdate = {
             Title: this.state.title,
             DocumentName: this.documentNameExtension,
             SubCategory: this.state.subCategory,
@@ -1367,7 +1366,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       else {
 
         for (var j in publishDocumentID) {
-          let libraryUpdate = {
+          const libraryUpdate = {
             Title: this.state.title,
             DocumentName: this.documentNameExtension,
             SubCategory: this.state.subCategory,
@@ -1403,7 +1402,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
         });
       }
 
-      let libraryUpdate = {
+      const libraryUpdate = {
         Title: this.state.title,
         DocumentName: this.state.documentid + this.state.title + "." + extensionSplit,
         OwnerId: this.state.owner,
@@ -1420,7 +1419,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
         const publishDocumentID: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.publisheddocumentLibrary, "ID", "DocumentIndex/ID eq '" + this.documentIndexID + "'");
         console.log("publishDocumentID", publishDocumentID);
         for (var k in publishDocumentID) {
-          let libraryUpdate = {
+          const libraryUpdate = {
             Title: this.state.title,
             DocumentName: this.state.documentid + this.state.title + "." + extensionSplit,
             OwnerId: this.state.owner,
@@ -1434,7 +1433,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           this._Service.itemFromLibraryUpdate(this.props.siteUrl, this.props.publisheddocumentLibrary, publishDocumentID[k].ID, libraryUpdate);
 
         }
-        let indexUpdate = {
+        const indexUpdate = {
           DocumentName: this.state.documentid + " " + this.state.title + "." + extensionSplit,
           SourceDocument: {
             Description: this.state.documentid + " " + this.state.title + "." + extensionSplit,
@@ -1461,10 +1460,10 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   // Document permission
   protected async _triggerPermission(sourceDocumentID) {
     // const laUrl = await this._Service.DocumentPermission(this.props.siteUrl, this.props.requestList);
-    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPermission-Create Document'");
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq ''DMS-Create Document Permission'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrl;
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
@@ -1488,7 +1487,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPublish'");
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrl;
 
     const requestHeaders: Headers = new Headers();
@@ -1510,8 +1509,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       body: body
     };
 
-    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-    let responseJSON = await response.json();
+    const response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+    const responseJSON = await response.json();
     console.log(responseJSON);
     if (response.ok) {
       this._publishUpdate(responseJSON.PublishDocID);
@@ -1520,15 +1519,15 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   // QDMS revision coding
   public _revisionCoding = async () => {
-    let revision = parseInt("0");
-    let rev = revision + 1;
+    const revision = parseInt("0");
+    const rev = revision + 1;
     this.setState({ newRevision: rev.toString() });
 
   }
   // Published Document Metadata update
   public async _publishUpdate(publishid) {
     await this._Service.itemFromLibraryByID(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId);
-    let itemToUpdate = {
+    const itemToUpdate = {
       PublishFormat: this.state.publishOption,
       WorkflowStatus: "Published",
       Revision: this.state.newRevision,
@@ -1539,7 +1538,7 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
     if (this.state.owner !== this.currentId) {
       this._sendMail(this.state.ownerEmail, "DocPublish", this.state.ownerName);
     }
-    let itemToLog = {
+    const itemToLog = {
       Title: this.state.documentid,
       Status: "Published",
       LogDate: this.today,
@@ -1555,8 +1554,8 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
   }
   //Send Mail
   public _sendMail = async (emailuser, type, name) => {
-    let formatday = moment(this.today).format('DD/MMM/YYYY');
-    let day = formatday.toString();
+    const formatday = moment(this.today).format('DD/MMM/YYYY');
+    const day = formatday.toString();
     let mailSend = "No";
     let Subject;
     let Body;
@@ -1587,13 +1586,13 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
           Body = emailNotification[k].Body;
         }
       }
-      let replacedSubject = replaceString(Subject, '[DocumentName]', this.state.documentName);
-      let replaceRequester = replaceString(Body, '[Sir/Madam]', name);
-      let replaceDate = replaceString(replaceRequester, '[PublishedDate]', day);
-      let replaceApprover = replaceString(replaceDate, '[Approver]', this.state.approverName);
-      let replaceBody = replaceString(replaceApprover, '[DocumentName]', this.state.documentName);
+      const replacedSubject = replaceString(Subject, '[DocumentName]', this.state.documentName);
+      const replaceRequester = replaceString(Body, '[Sir/Madam]', name);
+      const replaceDate = replaceString(replaceRequester, '[PublishedDate]', day);
+      const replaceApprover = replaceString(replaceDate, '[Approver]', this.state.approverName);
+      const replaceBody = replaceString(replaceApprover, '[DocumentName]', this.state.documentName);
       //Create Body for Email  
-      let emailPostBody: any = {
+      const emailPostBody: any = {
         "message": {
           "subject": replacedSubject,
           "body": {
@@ -1668,14 +1667,14 @@ export default class EditDocument extends React.Component<IEditDocumentProps, IE
       this.setState({ upload: true, hideupload: "", template: false, hidesource: "none", hidetemplate: "none" });
     }
     if (option.key === "Template") {
-      let publishedDocumentArray: any[] = [];
+      const publishedDocumentArray: any[] = [];
       let sorted_PublishedDocument: any[];
       this.setState({ template: true, upload: false, hideupload: "none", hidetemplate: "" });
-      // let publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
-      let publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      // const publishedDocument: any[] = await this._Service.itemFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
+      const publishedDocument: any[] = await this._Service.getItemsFromLibrary(this.props.siteUrl, this.props.publisheddocumentLibrary);
       for (let i = 0; i < publishedDocument.length; i++) {
         if (publishedDocument[i].Template === true) {
-          let publishedDocumentdata = {
+          const publishedDocumentdata = {
             key: publishedDocument[i].ID,
             text: publishedDocument[i].DocumentName,
           };

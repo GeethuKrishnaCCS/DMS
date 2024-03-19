@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './SendRequest.module.scss';
 import type { ISendRequestProps, ISendRequestState } from '../interfaces';
-import { DatePicker, DefaultButton, Dialog, DialogFooter, DialogType, ITooltipHostStyles, Label, Link, mergeStyles, mergeStyleSets, MessageBar, PrimaryButton, ProgressIndicator, Spinner, TextField } from '@fluentui/react';
+import { DatePicker, DefaultButton, Dialog, DialogFooter, DialogType,Label, Link,MessageBar, PrimaryButton, ProgressIndicator, Spinner, TextField } from '@fluentui/react';
 import SimpleReactValidator from 'simple-react-validator';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import * as moment from 'moment';
@@ -167,7 +167,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     const userMessageSettings: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.userMessageSettings, "Title,Message", "PageName eq 'SendRequest'");
     // const userMessageSettings: any[] = await this._Service.getItemsFromUserMsgSettings(this.props.siteUrl, this.props.userMessageSettings);
 
-    for (let i in userMessageSettings) {
+    for (const i in userMessageSettings) {
       if (userMessageSettings[i].Title === "InvalidSendRequestUser") {
         this.invalidUser = userMessageSettings[i].Message;
       }
@@ -181,32 +181,32 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         this.workflowStatus = userMessageSettings[i].Message;
       }
       if (userMessageSettings[i].Title === "DccReview") {
-        let DccReview = userMessageSettings[i].Message;
+        const DccReview = userMessageSettings[i].Message;
         this.dccReview = replaceString(DccReview, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "UnderApproval") {
-        let UnderApproval = userMessageSettings[i].Message;
+        const UnderApproval = userMessageSettings[i].Message;
         this.underApproval = replaceString(UnderApproval, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "UnderReview") {
-        let UnderReview = userMessageSettings[i].Message;
+        const UnderReview = userMessageSettings[i].Message;
         this.underReview = replaceString(UnderReview, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "TaskDelegateDccReview") {
-        let TaskDelegateDccReview = userMessageSettings[i].Message;
+        const TaskDelegateDccReview = userMessageSettings[i].Message;
         this.taskDelegateDccReview = replaceString(TaskDelegateDccReview, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "TaskDelegateUnderApproval") {
-        let TaskDelegateUnderApproval = userMessageSettings[i].Message;
+        const TaskDelegateUnderApproval = userMessageSettings[i].Message;
         this.taskDelegateUnderApproval = replaceString(TaskDelegateUnderApproval, '[DocumentName]', this.state.documentName);
 
       }
       if (userMessageSettings[i].Title === "TaskDelegateUnderReview") {
-        let TaskDelegateUnderReview = userMessageSettings[i].Message;
+        const TaskDelegateUnderReview = userMessageSettings[i].Message;
         this.taskDelegateUnderReview = replaceString(TaskDelegateUnderReview, '[DocumentName]', this.state.documentName);
 
       }
@@ -292,20 +292,20 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     this._Service.getItemsByID(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID).then(async indexItems => {
       //this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).get().then(async indexItems => {
 
-      // let documentID;
-      // let documentName;
-      // let ownerName;
-      // let ownerId;
-      // let revision;
-      // let linkToDocument;
-      // let criticalDocument;
-      // let approverName;
-      // let approverId;
-      // let approverEmail;
+      // const documentID;
+      // const documentName;
+      // const ownerName;
+      // const ownerId;
+      // const revision;
+      // const linkToDocument;
+      // const criticalDocument;
+      // const approverName;
+      // const approverId;
+      // const approverEmail;
       const  temReviewersID: any[] = [];
       const tempReviewers: any[] = [];
-      // let businessUnitID;
-      // let departmentId;
+      // const businessUnitID;
+      // const departmentId;
       //Get Document Index
       const documentIndexItem: any = await this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, "DocumentID,DocumentName,DepartmentID,BusinessUnitID,Owner/ID,Owner/Title,Owner/EMail,Approver/ID,Approver/Title,Approver/EMail,Revision,SourceDocument,CriticalDocument,SourceDocumentID,Reviewers/ID,Reviewers/Title,Reviewers/EMail", "Owner,Approver,Reviewers");
       // const documentIndexItem: any = await this._Service.getDocumentIndexItem(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
@@ -324,7 +324,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       // const approverEmail = documentIndexItem.Approver.EMail;
       const businessUnitID = documentIndexItem.BusinessUnitID;
       const departmentId = documentIndexItem.DepartmentID;
-      for (let k in documentIndexItem.Reviewers) {
+      for (const k in documentIndexItem.Reviewers) {
         temReviewersID.push(documentIndexItem.Reviewers[k].ID);
         this.setState({
           reviewers: temReviewersID,
@@ -377,8 +377,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
 
     const getSelecteddccreviewer: any[] = [];
     for (let item in items) {
-      dccreviewerEmail = items[item].secondaryText,
-        dccreviewerName = items[item].text,
+      dccreviewerEmail = items[item].secondaryText;
+        dccreviewerName = items[item].text;
         getSelecteddccreviewer.push(items[item].id);
     }
     this.setState({
@@ -391,7 +391,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   public _reviewerChange = (items: any[]) => {
     this.setState({ saveDisable: "" });
     this.getSelectedReviewers = [];
-    for (let item in items) {
+    for (const item in items) {
       this.getSelectedReviewers.push(items[item].id);
     }
     this.setState({ reviewers: this.getSelectedReviewers });
@@ -453,7 +453,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   // on format date
   private _onFormatDate = (date: Date): string => {
-    const dat = date;
     const selectd = moment(date).format("DD/MM/YYYY");
     return selectd;
   };
@@ -466,7 +465,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     //this.setState({ saveDisable: true, hideLoading: false });
     let sorted_previousHeaderItems: any[] = [];
     let previousHeaderItem = 0;
-    let dcc = "dcc";
     const previousHeaderItems = await this._Service.getSelectFilter(this.props.siteUrl, this.props.workflowHeaderList, "ID", "DocumentIndex eq '" + this.documentIndexID + "' and(WorkflowStatus eq 'Returned with comments')");
     // const previousHeaderItems = await this._Service.getPreviousHeaderItems(this.props.siteUrl, this.props.workflowHeaderList, this.documentIndexID);
     //const previousHeaderItems = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.select("ID").filter("DocumentIndex eq '" + this.documentIndexID + "' and(WorkflowStatus eq 'Returned with comments')").get();
@@ -549,7 +547,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         DueDate: this.state.dueDate,
       }
       // const log = await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, revisionitem);
-      const log = await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, revisionitem);
+      await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, revisionitem);
       /* const log = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
         Status: "Workflow Initiated",
@@ -847,7 +845,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                     Url: this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + details.data.ID + ""
                   },
                 }
-                const updatedetail = await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailsdata)
+                await this._Service.getByIdUpdate(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailsdata)
                 // const updatedetail = await this._Service.updateWorkflowDetailsList(this.props.siteUrl, this.props.workflowDetailsList, details.data.ID, detailsdata)
                 /* const updatedetail = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.getById(details.data.ID).update({
                   Link: {
@@ -899,7 +897,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                       TaskID: task.data.ID,
                     }); */
                   if (updatetask) {
-                    // await this._sendmail(user.Email, "DocReview", user.Title);
+                    await this._sendmail(user.Email, "DocReview", user.Title);
                     // await this._adaptiveCard("Review", user.Email, user.Title, "General");
                   }
                 }//taskId
@@ -1088,7 +1086,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         DueDate: this.state.dueDate,
 
       }
-      const log = await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
+      await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
       // const log = await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, logitem);
       /* const log = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
@@ -1451,12 +1449,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       //           //notification preference checking                                 
       //           await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
       //           await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
-
-
       //         }//taskID
       //       }//r
       //     }
-
       //   }
       //   else {
           const detitem = {
@@ -1580,7 +1575,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   TaskID: task.data.ID,
                 }); */
               //notification preference checking                                 
-              // await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
+              await this._sendmail(this.state.approverEmail, "DocApproval", this.state.approverName);
               // await this._adaptiveCard("Approval", this.state.approverEmail, this.state.approverName, "General");
 
             }//taskID
@@ -1624,14 +1619,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         DueDate: this.state.dueDate,
       }
       await this._Service.addItem(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
-
-
       // this.setState({ hideCreateLoading: "none", statusMessage: { isShowMessage: true, message: this.underApproval, messageType: 4 } });
       //               setTimeout(() => {
       //                 window.location.replace(this.siteUrl);
       //               }, 3000);
-
-
       // await this._Service.addToDocumentRevision(this.props.siteUrl, this.props.documentRevisionLogList, datarevision)
       /* await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.add({
         Title: this.state.documentID,
@@ -1672,14 +1663,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
           window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/Lists/" + this.props.documentIndexList);
         }, 10000);
       }
-    }
-
-      
-
-      
-
-
-      //msg
+    }   //msg
     }//newheaderid
   }
   // La for under approval permission
@@ -1687,9 +1671,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     // const laUrl = await this._Service.getUnderApproval(this.props.siteUrl, this.props.requestList);
     const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'QDMS_DocumentPermission_UnderApproval'");
     //const laUrl = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.requestList).items.filter("Title eq 'QDMS_DocumentPermission_UnderApproval'").get();
-
     this.postUrl = laUrl[0].PostUrl;
-
   }
   // set permission for approver
   private async _triggerPermission(sourceDocumentID) {
@@ -1706,15 +1688,11 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       headers: requestHeaders,
       body: body
     };
-    const responseText: string = "";
-    const response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-
-
+    await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
   }
   private _LaUrlGettingAdaptive = async () => {
     const laUrl: any[] = await this._Service.getItems(this.props.siteUrl, this.props.requestList);
     //const laUrl: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.requestList).items.get();
-
     for (let i = 0; i < laUrl.length; i++) {
       if (laUrl[i].Title === "Adaptive _Card") {
         this.postUrlForAdaptive = laUrl[i].PostUrl;
@@ -1724,8 +1702,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   public _adaptiveCard = async (Workflow, Email, Name, Type) => {
     const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrlForAdaptive;
-    let splitted = this.state.documentName.split(".");
-    let ext = splitted[splitted.length - 1];
+    const splitted = this.state.documentName.split(".");
+    const ext = splitted[splitted.length - 1];
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
     const body: string = JSON.stringify({
@@ -1749,12 +1727,10 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   }
   //Send Mail
   public _sendmail = async (emailuser, type, name) => {
-
     let mailSend = "No";
     let Subject;
     let Body;
     let link;
-
     const notificationPreference: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.notificationPreference, "Preference", "EmailUser/EMail eq '" + emailuser + "'");
     // const notificationPreference: any[] = await this._Service.getMailPreference(this.props.siteUrl, this.props.notificationPreference, emailuser);
     //const notificationPreference: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPreference).items.filter("EmailUser/EMail eq '" + emailuser + "'").select("Preference").get();
@@ -1765,7 +1741,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       }
       else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
         mailSend = "Yes";
-
       }
       else {
         mailSend = "No";
@@ -1774,17 +1749,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     else if (this.state.criticalDocument === true) {
       mailSend = "Yes";
     }
-
     if (mailSend === "Yes") {
       const emailNotification: any[] = await this._Service.getFilter(this.props.siteUrl, this.props.emailNotification, "Title eq '" + type + "'")
       // const emailNotification: any[] = await this._Service.getEmailNotification(this.props.siteUrl, this.props.emailNotification, type)
       //const emailNotification: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.emailNotification).items.filter("Title eq '" + type + "'").get();
-
       Subject = emailNotification[0].Subject;
       Body = emailNotification[0].Body;
       if (type === "DocApproval") {
         link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentApprovalPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + this.newDetailItemID}>Link</a>`;
-
       }
       else if (type === "DocDCCReview") {
         link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + this.newDetailItemID + "&wf=dcc"} >Link</a>`;
@@ -1792,24 +1764,14 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       else {
         link = `<a href=${window.location.protocol + "//" + window.location.hostname + this.props.siteUrl + "/SitePages/" + this.props.documentReviewPage + ".aspx?hid=" + this.newheaderid + "&dtlid=" + this.newDetailItemID}>Link</a>`;
       }
-
       //Replacing the email body with current values
       const dueDateformail = moment(this.state.dueDate).format("DD/MM/YYYY");
-
       const replacedSubject = replaceString(Subject, '[DocumentName]', this.state.documentName);
-
       const replacedSubjectWithDueDate = replaceString(replacedSubject, '[DueDate]', dueDateformail);
-
       const replaceRequester = replaceString(Body, '[Sir/Madam],', name);
-
       const replaceBody = replaceString(replaceRequester, '[DocumentName]', this.state.documentName);
-
       const replacelink = replaceString(replaceBody, '[Link]', link);
-
-      const var1: any[] = replacelink.split('/');
-
-      const FinalBody = replacelink;
-
+       const FinalBody = replacelink;
       //Create Body for Email  
       const emailPostBody: any = {
         "message": {
@@ -1828,7 +1790,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
           ],
         }
       };
-
       //Send Email uisng MS Graph  
       await this._Service.sendMail(emailPostBody);
       /* this.props.context.msGraphClientFactory
@@ -1884,10 +1845,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
   private modalProps = {
     isBlocking: true,
   };
-
   public render(): React.ReactElement<ISendRequestProps> {
 
-   
     return (
       <section className={`${styles.sendRequest}`}>
         <div>
@@ -1897,7 +1856,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
           <div style={{ display: this.state.access }}>
             <div className={styles.border}>
               <div className={styles.alignCenter}> {this.props.webpartHeader}</div>
-              <br></br>
+              <br/>
               <div className={styles.header}>
                 <div className={styles.divMetadataCol1}>
                   <h3 >Document Details</h3>
@@ -1911,7 +1870,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                 <div className={styles.divMetadataCol3}>
                   <Label >Revision :</Label><div className={styles.divLabel}> {this.state.revision}</div>
                 </div>
-
               </div>
               <div className={styles.divRow}>
                 <Label >Document :</Label><div className={styles.divLabel}>  <a href={this.state.linkToDoc} target="_blank">{this.state.documentName}</a></div>
@@ -1973,9 +1931,8 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
                   /><div style={{ color: "#dc3545" }}>{this.validator.message("DueDate", this.state.dueDate, "required")}{" "}</div>
                 </div>
               </div>
-
               <div className={styles.mt}>
-                < TextField label="Comments" id="comments" value={this.state.comments} onChange={this._commentschange} multiline autoAdjustHeight></TextField></div>
+                < TextField label="Comments" id="comments" value={this.state.comments} onChange={this._commentschange} multiline autoAdjustHeight/></div>
               <div> {this.state.statusMessage.isShowMessage ?
                 <MessageBar
                   messageBarType={this.state.statusMessage.messageType}
@@ -2012,7 +1969,6 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
             </div>
           </div>
           <div style={{ display: this.state.accessDeniedMsgBar }}>
-
             {this.state.statusMessage.isShowMessage ?
               <MessageBar
                 messageBarType={this.state.statusMessage.messageType}

@@ -72,7 +72,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       validApprover: "none",
       hideDoc: "",
       createDocument: false,
-      hideDirect: "none",
+      hideDirect: "",
       upload: false,
       checkdirect: "none",
       insertdocument: "none",
@@ -665,10 +665,10 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     if (isChecked) {
       // this.setState({ checkdirect: "", });
       // this._checkdirectPublish('QDMS_DirectPublish');
-      this.setState({ hidePublish: "", directPublishCheck: true, approvalDate: new Date() });
+      this.setState({ hidePublish: "", directPublishCheck: true, approvalDate: new Date(),saveDisable: true });
     }
     else if (!isChecked) {
-      this.setState({ hidePublish: "none", directPublishCheck: false, approvalDate: new Date(), publishOption: "" });
+      this.setState({ hidePublish: "none", directPublishCheck: false,saveDisable: false, approvalDate: new Date(), publishOption: "" });
     }
   }
   // Direct publish change
@@ -988,11 +988,14 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
               }
               else {
                 if (this.state.sendForReview === true) {
-                  this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
+                  const sendReview = await this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
+                  const final = [await sendReview]
+                    if(final){
                   this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
                   setTimeout(() => {
                     window.location.replace(this.siteUrl);
                   }, 5000);
+                }
                 }
                 else {
                   this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
@@ -1094,11 +1097,14 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
                 }
                 else {
                   if (this.state.sendForReview === true) {
-                    this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
+                    const sendReview = await this._triggerSendForReview(sourceDocumentId, this.state.newDocumentId);
+                    const final = [await sendReview]
+                    if(final){
                     this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
                     setTimeout(() => {
                       window.location.replace(this.siteUrl);
                     }, 5000);
+                  }
                   }
                   else {
                     this.setState({ hideCreateLoading: "none", norefresh: "none", statusMessage: { isShowMessage: true, message: this.createDocument, messageType: 4 } });
@@ -1362,7 +1368,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   // Published Document Metadata update
   public async _publishUpdate() {
 
-    await this._Service.itemFromLibraryByID(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId);
+    // await this._Service.itemFromLibraryByID(this.props.siteUrl, this.props.sourceDocumentLibrary, this.state.sourceDocumentId);
     let itemToUpdate = {
       PublishFormat: this.state.publishOption,
       WorkflowStatus: "Published",

@@ -2,7 +2,6 @@ import * as React from 'react';
 import styles from './DocumentApproval.module.scss';
 import type { IDocumentApprovalProps, IDocumentApprovalState } from '../interfaces';
 import { ProgressIndicator, Label, Link, Dropdown, TextField, MessageBar, Spinner, DialogFooter, PrimaryButton, Dialog, DefaultButton, IDropdownOption, DialogType } from '@fluentui/react';
-import * as _ from 'lodash';
 import { Accordion, AccordionItem } from 'react-light-accordion';
 import 'react-light-accordion/demo/css/index.css';
 import { MSGraphClient, HttpClient, SPHttpClient, HttpClientConfiguration, HttpClientResponse, ODataVersion, IHttpClientConfiguration, IHttpClientOptions, ISPHttpClientOptions } from '@microsoft/sp-http';
@@ -107,10 +106,10 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     this._Service = new DMSService(this.props.context);
     this._queryParamGetting = this._queryParamGetting.bind(this);
     this._userMessageSettings = this._userMessageSettings.bind(this);
-    this._accessGroups = this._accessGroups.bind(this);
+    // this._accessGroups = this._accessGroups.bind(this);
     this._openRevisionHistory = this._openRevisionHistory.bind(this);
     this._bindApprovalForm = this._bindApprovalForm.bind(this);
-    this._project = this._project.bind(this);
+    // this._project = this._project.bind(this);
     this._drpdwnPublishFormat = this._drpdwnPublishFormat.bind(this);
     this._status = this._status.bind(this);
     this._commentsChange = this._commentsChange.bind(this);
@@ -126,7 +125,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     this._generateNewRevision = this._generateNewRevision.bind(this);
     this._checkCurrentUser = this._checkCurrentUser.bind(this);
     this._LAUrlGetting = this._LAUrlGetting.bind(this);
-    this._checkPermission = this._checkPermission.bind(this);
+    // this._checkPermission = this._checkPermission.bind(this);
   }
 
   public componentWillMount = () => {
@@ -149,7 +148,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     //Get Current User
     const user = await this._Service.getCurrentUser()
     //const user = await sp.web.currentUser.get();
-    let userEmail = user.Email;
+    const userEmail = user.Email;
     this.currentEmail = userEmail;
     //Get Today
     this.today = new Date();
@@ -163,29 +162,29 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     this.documentIndexID = headerItem.DocumentIndexID;
 
     if (this.valid === "ok") {
-      //Get Access
-      // if (this.props.project) 
-      // {
-      //   await this._checkCurrentUser();
-      //   // this._checkPermission('Project_SendApprovalWF');
-      // }
-      // else
-      {
-        await this._accessGroups();
-        // await this._checkCurrentUser();
-      }
-      // await this._checkCurrentUser();
+    //   //Get Access
+    //   // if (this.props.project) 
+    //   // {
+    //   //   await this._checkCurrentUser();
+    //   //   // this._checkPermission('Project_SendApprovalWF');
+    //   // }
+    //   // else
+    //   // {
+    //   //   await this._accessGroups();
+    await this._checkCurrentUser();
+    //   // }
+    //   // await this._checkCurrentUser();
     }
-    // this._LAUrlGetting();
+    await this._LAUrlGetting();
   }
   //Get Parameter from URL
   private async _queryParamGetting() {
     await this._userMessageSettings();
     //Query getting...
-    let params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search);
 
-    let headerid = params.get('hid');
-    let detailid = params.get('dtlid');
+    const headerid = params.get('hid');
+    const detailid = params.get('dtlid');
     if (headerid !== "" && headerid !== null && detailid !== "" && detailid !== null) {
       this.workflowHeaderID = parseInt(headerid);
       this.workflowDetailID = parseInt(detailid);
@@ -216,9 +215,9 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     )
     //const userMessageSettings: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.userMessageSettings).items.select("Title,Message").filter("PageName eq 'Approve'").get();
     console.log(userMessageSettings);
-    for (var i in userMessageSettings) {
+    for (let i in userMessageSettings) {
       if (userMessageSettings[i].Title === "ApproveSubmitSuccess") {
-        var successmsg = userMessageSettings[i].Message;
+        const successmsg = userMessageSettings[i].Message;
         this.documentApprovedSuccess = replaceString(successmsg, '[DocumentName]', this.state.documentName);
       }
       else if (userMessageSettings[i].Title === "ApproveDraftSuccess") {
@@ -231,229 +230,229 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
         this.invalidUser = userMessageSettings[i].Message;
       }
       else if (userMessageSettings[i].Title === "ApproveRejectSuccess") {
-        var rejectmsg = userMessageSettings[i].Message;
+        const rejectmsg = userMessageSettings[i].Message;
         this.documentRejectSuccess = replaceString(rejectmsg, '[DocumentName]', this.state.documentName);
       }
       else if (userMessageSettings[i].Title === "ApproveReturnSuccess") {
-        var returnmsg = userMessageSettings[i].Message;
+        const returnmsg = userMessageSettings[i].Message;
         this.documentReturnSuccess = replaceString(returnmsg, '[DocumentName]', this.state.documentName);
       }
     }
 
   }
   // Get permission
-  public async _checkPermission(type) {
-    const laUrl = await this._Service.getItemFilter(
-      this.props.siteUrl,
-      this.props.requestList,
-      "Title eq 'QDMS_PermissionWebpart'"
-    )
-    //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestList).items.filter("Title eq 'QDMS_PermissionWebpart'").get();
-    console.log("Posturl", laUrl[0].PostUrl);
-    this.permissionpostUrl = laUrl[0].PostUrl;
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
-    const postURL = this.permissionpostUrl;
+  // public async _checkPermission(type) {
+  //   const laUrl = await this._Service.getItemFilter(
+  //     this.props.siteUrl,
+  //     this.props.requestList,
+  //     "Title eq 'QDMS_PermissionWebpart'"
+  //   )
+  //   //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestList).items.filter("Title eq 'QDMS_PermissionWebpart'").get();
+  //   console.log("Posturl", laUrl[0].PostUrl);
+  //   this.permissionpostUrl = laUrl[0].PostUrl;
+  //   const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+  //   const postURL = this.permissionpostUrl;
 
-    const requestHeaders: Headers = new Headers();
-    requestHeaders.append("Content-type", "application/json");
-    const body: string = JSON.stringify({
-      'PermissionTitle': type,
-      'SiteUrl': siteUrl,
-      'CurrentUserEmail': this.currentEmail
+  //   const requestHeaders: Headers = new Headers();
+  //   requestHeaders.append("Content-type", "application/json");
+  //   const body: string = JSON.stringify({
+  //     'PermissionTitle': type,
+  //     'SiteUrl': siteUrl,
+  //     'CurrentUserEmail': this.currentEmail
 
-    });
-    const postOptions: IHttpClientOptions = {
-      headers: requestHeaders,
-      body: body
-    };
-    let responseText: string = "";
-    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-    let responseJSON = await response.json();
-    responseText = JSON.stringify(responseJSON);
-    console.log(responseJSON);
-    if (response.ok) {
-      console.log(responseJSON['Status']);
-      if (responseJSON['Status'] === "Valid") {
+  //   });
+  //   const postOptions: IHttpClientOptions = {
+  //     headers: requestHeaders,
+  //     body: body
+  //   };
+  //   const responseText: string = "";
+  //   const response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+  //   const responseJSON = await response.json();
+  //   responseText = JSON.stringify(responseJSON);
+  //   console.log(responseJSON);
+  //   if (response.ok) {
+  //     console.log(responseJSON['Status']);
+  //     if (responseJSON['Status'] === "Valid") {
 
-        await this._checkCurrentUser();
-      }
-      else {
-        this.setState({
-          loaderDisplay: "none",
-          accessDeniedMsgBar: "",
-          statusMessage: { isShowMessage: true, message: "You are not permitted to perform this operation", messageType: 1 },
-        });
-        setTimeout(() => {
-          this.setState({ accessDeniedMsgBar: 'none', });
-          window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
-        }, 10000);
-      }
-    }
-    else { }
-  }
+  //       await this._checkCurrentUser();
+  //     }
+  //     else {
+  //       this.setState({
+  //         loaderDisplay: "none",
+  //         accessDeniedMsgBar: "",
+  //         statusMessage: { isShowMessage: true, message: "You are not permitted to perform this operation", messageType: 1 },
+  //       });
+  //       setTimeout(() => {
+  //         this.setState({ accessDeniedMsgBar: 'none', });
+  //         window.location.replace(window.location.protocol + "//" + window.location.hostname + this.props.siteUrl);
+  //       }, 10000);
+  //     }
+  //   }
+  //   else { }
+  // }
   // Check Access
-  private async _accessGroups() {
-    let AccessGroup: any[] = [];
-    let ok = "No";
-    // if (this.props.project) {
-    //   AccessGroup = await this._Service.getSelectFilter(
-    //     this.props.siteUrl,
-    //     this.props.PermissionMatrixSettings,
-    //     "AccessGroups,AccessFields",
-    //     "Title eq 'Project_SendApprovalWF'"
-    //   )
-    //   //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.PermissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendApprovalWF'").get();
-    // }
-    // else 
-    {
-      AccessGroup = await this._Service.getSelectFilter(
-        this.props.siteUrl,
-        this.props.PermissionMatrixSettings,
-        "AccessGroups,AccessFields",
-        "Title eq 'QDMS_SendApprovalWF'"
-      )
-      //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.PermissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendApprovalWF'").get();
-    }
-    console.log('AccessGroup: ', AccessGroup);
-    let AccessGroupItems: any[] = AccessGroup[0].AccessGroups.split(',');
-    console.log("AccessGroupItems", AccessGroupItems);
-    const DocumentIndexItem: any = await this._Service.getByIdSelect(
-      this.props.siteUrl,
-      this.props.documentIndexList,
-      this.documentIndexID,
-      "DepartmentID"
-    )
-    //const DocumentIndexItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).select("DepartmentID").get();
-    console.log("DocumentIndexItem", DocumentIndexItem);
-    //cheching if department selected
-    if (DocumentIndexItem.DepartmentID !== null) {
-      this.departmentExists = "Exists";
-      let deptid = parseInt(DocumentIndexItem.DepartmentID);
-      const departmentItem: any = await this._Service.getItemById(
-        this.props.siteUrl,
-        this.props.departmentList,
-        deptid
-      )
-      //const departmentItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.departmentList).items.getById(deptid).get();
-      //let AG = DepartmentItem[0].AccessGroups;
-      console.log("departmentItem", departmentItem);
-      let accessGroupvar = departmentItem.AccessGroups;
-      const accessGroupItem: any = await this._Service.getItems(
-        this.props.siteUrl,
-        this.props.accessGroupDetailsList
-      )
-      //const accessGroupItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroupDetailsList).items.get();
-      let accessGroupID;
-      console.log(accessGroupItem.length);
-      for (let a = 0; a < accessGroupItem.length; a++) {
-        if (accessGroupItem[a].Title === accessGroupvar) {
-          accessGroupID = accessGroupItem[a].GroupID;
-          this.GetGroupMembers(this.props.context, accessGroupID);
-        }
-      }
-    }
-    //if no department
-    else {
-      //alert("with bussinessUnit");
-      if (DocumentIndexItem.BusinessUnitID !== null) {
-        this.departmentExists === "Exists";
-        let bussinessUnitID = parseInt(DocumentIndexItem.BusinessUnitID);
-        const bussinessUnitItem: any = await this._Service.getItemById(
-          this.props.siteUrl,
-          this.props.businessUnit,
-          bussinessUnitID
-        )
-        //const bussinessUnitItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.businessUnit).items.getById(bussinessUnitID).get();
-        console.log("departmentItem", bussinessUnitItem);
-        let accessGroupvar = bussinessUnitItem.AccessGroups;
-        // alert(accessGroupvar);
-        const accessGroupItem: any = await this._Service.getItems(
-          this.props.siteUrl,
-          this.props.accessGroupDetailsList
-        )
-        //const accessGroupItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroupDetailsList).items.get();
-        let accessGroupID;
-        console.log(accessGroupItem.length);
-        for (let a = 0; a < accessGroupItem.length; a++) {
-          if (accessGroupItem[a].Title === accessGroupvar) {
-            accessGroupID = accessGroupItem[a].GroupID;
-            this.GetGroupMembers(this.props.context, accessGroupID);
-          }
-        }
-      }
-    }
-  }
+  // private async _accessGroups() {
+  //   const AccessGroup: any[] = [];
+  //   const ok = "No";
+  //   // if (this.props.project) {
+  //   //   AccessGroup = await this._Service.getSelectFilter(
+  //   //     this.props.siteUrl,
+  //   //     this.props.PermissionMatrixSettings,
+  //   //     "AccessGroups,AccessFields",
+  //   //     "Title eq 'Project_SendApprovalWF'"
+  //   //   )
+  //   //   //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.PermissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendApprovalWF'").get();
+  //   // }
+  //   // else 
+  //   {
+  //     AccessGroup = await this._Service.getSelectFilter(
+  //       this.props.siteUrl,
+  //       this.props.PermissionMatrixSettings,
+  //       "AccessGroups,AccessFields",
+  //       "Title eq 'QDMS_SendApprovalWF'"
+  //     )
+  //     //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.PermissionMatrixSettings).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendApprovalWF'").get();
+  //   }
+  //   console.log('AccessGroup: ', AccessGroup);
+  //   const AccessGroupItems: any[] = AccessGroup[0].AccessGroups.split(',');
+  //   console.log("AccessGroupItems", AccessGroupItems);
+  //   const DocumentIndexItem: any = await this._Service.getByIdSelect(
+  //     this.props.siteUrl,
+  //     this.props.documentIndexList,
+  //     this.documentIndexID,
+  //     "DepartmentID"
+  //   )
+  //   //const DocumentIndexItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).select("DepartmentID").get();
+  //   console.log("DocumentIndexItem", DocumentIndexItem);
+  //   //cheching if department selected
+  //   if (DocumentIndexItem.DepartmentID !== null) {
+  //     this.departmentExists = "Exists";
+  //     const deptid = parseInt(DocumentIndexItem.DepartmentID);
+  //     const departmentItem: any = await this._Service.getItemById(
+  //       this.props.siteUrl,
+  //       this.props.departmentList,
+  //       deptid
+  //     )
+  //     //const departmentItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.departmentList).items.getById(deptid).get();
+  //     //const AG = DepartmentItem[0].AccessGroups;
+  //     console.log("departmentItem", departmentItem);
+  //     const accessGroupvar = departmentItem.AccessGroups;
+  //     const accessGroupItem: any = await this._Service.getItems(
+  //       this.props.siteUrl,
+  //       this.props.accessGroupDetailsList
+  //     )
+  //     //const accessGroupItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroupDetailsList).items.get();
+  //     const accessGroupID;
+  //     console.log(accessGroupItem.length);
+  //     for (const a = 0; a < accessGroupItem.length; a++) {
+  //       if (accessGroupItem[a].Title === accessGroupvar) {
+  //         accessGroupID = accessGroupItem[a].GroupID;
+  //         this.GetGroupMembers(this.props.context, accessGroupID);
+  //       }
+  //     }
+  //   }
+  //   //if no department
+  //   else {
+  //     //alert("with bussinessUnit");
+  //     if (DocumentIndexItem.BusinessUnitID !== null) {
+  //       this.departmentExists === "Exists";
+  //       const bussinessUnitID = parseInt(DocumentIndexItem.BusinessUnitID);
+  //       const bussinessUnitItem: any = await this._Service.getItemById(
+  //         this.props.siteUrl,
+  //         this.props.businessUnit,
+  //         bussinessUnitID
+  //       )
+  //       //const bussinessUnitItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.businessUnit).items.getById(bussinessUnitID).get();
+  //       console.log("departmentItem", bussinessUnitItem);
+  //       const accessGroupvar = bussinessUnitItem.AccessGroups;
+  //       // alert(accessGroupvar);
+  //       const accessGroupItem: any = await this._Service.getItems(
+  //         this.props.siteUrl,
+  //         this.props.accessGroupDetailsList
+  //       )
+  //       //const accessGroupItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroupDetailsList).items.get();
+  //       const accessGroupID;
+  //       console.log(accessGroupItem.length);
+  //       for (const a = 0; a < accessGroupItem.length; a++) {
+  //         if (accessGroupItem[a].Title === accessGroupvar) {
+  //           accessGroupID = accessGroupItem[a].GroupID;
+  //           this.GetGroupMembers(this.props.context, accessGroupID);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
   // Getting group members
-  public async GetGroupMembers(context: WebPartContext, groupId: string) {
-    let users: string[] = [];
-    try {
-      let response = await this._Service.getGroupMembers(groupId)
-      /* let client: MSGraphClient = await context.msGraphClientFactory.getClient();
-      let response = await client
-        .api(`/groups/${groupId}/members`)
-        .version('v1.0')
-        .select(['mail', 'displayName'])
-        .get(); */
-      response.value.map((item: any) => {
-        users.push(item);
-      });
-    } catch (error) {
-      console.log('MSGraphService.GetGroupMembers Error: ', error);
-    }
-    console.log('MSGraphService.GetGroupMembers: ', users, "GroupID:", groupId);
-    //checking current users 
-    if (users.length > 0) {
-      this._checkingCurrent(users);
-    }
-    else if (this.departmentExists === "Exists") {
-      this.setState({
-        loaderDisplay: "none",
-        accessDeniedMsgBar: "",
-        statusMessage: { isShowMessage: true, message: this.invalidUser, messageType: 1 },
-      });
-      setTimeout(() => {
-        this.setState({ accessDeniedMsgBar: 'none', });
-        window.location.replace(this.redirectUrlError);
-      }, 10000);
-    }
+  // public async GetGroupMembers(context: WebPartContext, groupId: string) {
+  //   const users: string[] = [];
+  //   try {
+  //     const response = await this._Service.getGroupMembers(groupId)
+  //     /* const client: MSGraphClient = await context.msGraphClientFactory.getClient();
+  //     const response = await client
+  //       .api(`/groups/${groupId}/members`)
+  //       .version('v1.0')
+  //       .select(['mail', 'displayName'])
+  //       .get(); */
+  //     response.value.map((item: any) => {
+  //       users.push(item);
+  //     });
+  //   } catch (error) {
+  //     console.log('MSGraphService.GetGroupMembers Error: ', error);
+  //   }
+  //   console.log('MSGraphService.GetGroupMembers: ', users, "GroupID:", groupId);
+  //   //checking current users 
+  //   if (users.length > 0) {
+  //     this._checkingCurrent(users);
+  //   }
+  //   else if (this.departmentExists === "Exists") {
+  //     this.setState({
+  //       loaderDisplay: "none",
+  //       accessDeniedMsgBar: "",
+  //       statusMessage: { isShowMessage: true, message: this.invalidUser, messageType: 1 },
+  //     });
+  //     setTimeout(() => {
+  //       this.setState({ accessDeniedMsgBar: 'none', });
+  //       window.location.replace(this.redirectUrlError);
+  //     }, 10000);
+  //   }
 
-    //return;
-  }
+  //   //return;
+  // }
   // Checking current user email
-  private async _checkingCurrent(userEmail) {
-    for (var k in userEmail) {
-      if (this.currentEmail === userEmail[k].mail) {
-        this.setState({ access: "none", accessDeniedMsgBar: "none" });
-        this.valid = "Yes";
-        await this._checkCurrentUser();
+  // private async _checkingCurrent(userEmail) {
+  //   for (var k in userEmail) {
+  //     if (this.currentEmail === userEmail[k].mail) {
+  //       this.setState({ access: "none", accessDeniedMsgBar: "none" });
+  //       this.valid = "Yes";
+  //       await this._checkCurrentUser();
 
-        break;
-      }
-    }
-    if (this.valid !== "Yes") {
+  //       break;
+  //     }
+  //   }
+  //   if (this.valid !== "Yes") {
 
-      this.setState({
-        loaderDisplay: "none",
-        accessDeniedMsgBar: "", access: "none",
-        statusMessage: { isShowMessage: true, message: this.invalidUser, messageType: 1 },
-      });
-      setTimeout(() => {
-        this.setState({ accessDeniedMsgBar: 'none', });
-        window.location.replace(this.redirectUrlError);
-      }, 10000);
-    }
-  }
+  //     this.setState({
+  //       loaderDisplay: "none",
+  //       accessDeniedMsgBar: "", access: "none",
+  //       statusMessage: { isShowMessage: true, message: this.invalidUser, messageType: 1 },
+  //     });
+  //     setTimeout(() => {
+  //       this.setState({ accessDeniedMsgBar: 'none', });
+  //       window.location.replace(this.redirectUrlError);
+  //     }, 10000);
+  //   }
+  // }
   //Check Current User is approver
   public async _checkCurrentUser() {
-    // if (this.currentEmail === this.approverEmail) {
-    //   this.setState({ access: "", accessDeniedMsgBar: "none", loaderDisplay: "none" });
-    //   if (this.props.project) {
-    //     this.setState({ hideProject: false });
-    //     await this._project();
-    //   }
-    //   await this._bindApprovalForm();
-    // }
-    // else 
+    if (this.currentEmail === this.approverEmail) {
+      this.setState({ access: "", accessDeniedMsgBar: "none", loaderDisplay: "none" });
+      // if (this.props.project) {
+      //   this.setState({ hideProject: false });
+      //   await this._project();
+      // }
+      await this._bindApprovalForm();
+    }
+    else 
     {
       this.setState({
         loaderDisplay: "none",
@@ -480,7 +479,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     let revision;
     let linkToDocument;
     let approverComment;
-    var reviewerArr: any[] = [];
+    let reviewerArr: any[] = [];
     let reviewDate;
     let criticalDocument;
     let taskID;
@@ -503,11 +502,11 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     requesterName = headerItem.Requester.Title;
     requesterEmail = headerItem.Requester.EMail;
     if (headerItem.RequestedDate !== null) {
-      var reqdate = new Date(headerItem.RequestedDate);
+      const reqdate = new Date(headerItem.RequestedDate);
       requestedDate = moment(reqdate).format('DD-MM-YYYY HH:mm');
     }
     requesterComment = headerItem.RequesterComment;
-    var duedate = new Date(headerItem.DueDate);
+    const duedate = new Date(headerItem.DueDate);
     dueDate = moment(duedate).format('DD-MM-YYYY');
     publishOption = headerItem.PublishFormat;
     //Get Document Index
@@ -537,9 +536,9 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       "Responsible"
     )
     //const detailItem: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.filter("HeaderID eq " + this.workflowHeaderID).select("ID,Workflow,ResponseDate,ResponsibleComment,ResponseStatus,Responsible/Title,TaskID").expand("Responsible").get();
-    for (var k in detailItem) {
+    for (let k in detailItem) {
       if (detailItem[k].Workflow === 'Review') {
-        var rewdate = new Date(detailItem[k].ResponseDate);
+        const rewdate = new Date(detailItem[k].ResponseDate);
         reviewDate = moment(rewdate).format('DD-MMM-YYYY HH:mm');
         reviewerArr.push({
           ResponseDate: reviewDate,
@@ -582,7 +581,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
         reviewersTableDiv: "none",
       });
     }
-    var split = documentName.split(".", 2);
+    const split = documentName.split(".", 2);
     type = split[1];
     if (type === "docx") {
       this.setState({ isdocx: "", nodocx: "none" });
@@ -626,7 +625,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
   }
   // Document Review trigger
   protected async triggerDocumentReview(sourceDocumentID, status) {
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     // alert("In function");
     // alert(transmittalID);
     const postURL = this.postUrl;
@@ -641,129 +640,129 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       headers: requestHeaders,
       body: body
     };
-    let responseText: string = "";
-    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+    const responseText: string = "";
+    const response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
 
 
   }
   //Bind datas for project
-  public async _project() {
-    let reviewDate;
-    let dccReviewerArr: any[] = [];
-    let acceptanceArray: any[] = [];
-    let sorted_Acceptance: any[] = [];
-    let projectName;
-    let projectNumber;
-    const headerItem: any = await this._Service.getByIdSelectExpand(
-      this.props.siteUrl,
-      this.props.workflowHeaderList,
-      this.workflowHeaderID,
-      "RevisionLevel/Id,RevisionLevel/Title,DocumentController/ID,DocumentController/Title,DocumentController/EMail,RevisionCodingId,ApproveInSameRevision,DocumentIndexID,AcceptanceCodeId",
-      "RevisionLevel,DocumentController"
-    )
-    //const headerItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.workflowHeaderID).select("RevisionLevel/Id,RevisionLevel/Title,DocumentController/ID,DocumentController/Title,DocumentController/EMail,RevisionCodingId,ApproveInSameRevision,DocumentIndexID,AcceptanceCodeId").expand("RevisionLevel,DocumentController").get();
-    let dcc = headerItem.DocumentController.ID;
-    let dccName = headerItem.DocumentController.Title;
-    let dccEmail = headerItem.DocumentController.EMail;
-    let documentIndexId = headerItem.DocumentIndexID;
-    let acceptanceCode = headerItem.AcceptanceCodeId;
-    let RevisionCodingId = headerItem.RevisionCodingId;
-    let ApproveInSameRevision = headerItem.ApproveInSameRevision;
-    const documentIndexItem: any = await this._Service.getByIdSelect(
-      this.props.siteUrl,
-      this.props.documentIndexList,
-      documentIndexId,
-      "ExternalDocument,TransmittalDocument,TransmittalRevision"
-    )
-    //const documentIndexItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(documentIndexId).select("ExternalDocument,TransmittalDocument,TransmittalRevision").get();
-    let externalDocument = documentIndexItem.ExternalDocument;
-    let transmittalDocument = documentIndexItem.TransmittalDocument;
-    let transmittalRevision = documentIndexItem.TransmittalRevision;
-    const projectInformation = await this._Service.getItems(
-      this.props.siteUrl,
-      this.props.projectInformationListName
-    )
-    //const projectInformation = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.projectInformationListName).items.get();
-    console.log("projectInformation", projectInformation);
-    if (projectInformation.length > 0) {
-      for (var k in projectInformation) {
-        if (projectInformation[k].Key === "ProjectName") {
-          this.setState({
-            projectName: projectInformation[k].Title,
-          });
-        }
-        if (projectInformation[k].Key === "ProjectNumber") {
-          this.setState({
-            projectNumber: projectInformation[k].Title,
-          });
-        }
-      }
-    }
-    if (dcc !== null) {
-      const detailItem: any[] = await this._Service.getByIdSelectFilterExpand(
-        this.props.siteUrl,
-        this.props.workflowDetailsList,
-        "ID,Workflow,ResponseDate,ResponsibleComment,ResponseStatus,Responsible/Title,TaskID",
-        "HeaderID eq " + this.workflowHeaderID,
-        "Responsible"
-      )
-      //const detailItem: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.filter("HeaderID eq " + this.workflowHeaderID).select("ID,Workflow,ResponseDate,ResponsibleComment,ResponseStatus,Responsible/Title,TaskID").expand("Responsible").get();
-      for (var l in detailItem) {
-        if (detailItem[l].Workflow === 'DCC Review') {
-          var rewdate = new Date(detailItem[l].ResponseDate);
-          reviewDate = moment(rewdate).format('DD-MM-YYYY HH:mm');
-          dccReviewerArr.push({
-            ResponseDate: reviewDate,
-            Reviewer: detailItem[l].Responsible.Title,
-            DCCResponsibleComment: detailItem[l].ResponsibleComment
-          });
-        }
-      }
-    }
-    if (externalDocument === true) {
-      this.setState({ hideacceptance: false });
-      const transmittalcodeitems: any[] = await this._Service.getItems(this.props.siteUrl, this.props.transmittalCodeSettingsList)
-      //const transmittalcodeitems: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.transmittalCodeSettingsList).items.getAll();
+  // public async _project() {
+  //   let reviewDate;
+  //   let dccReviewerArr: any[] = [];
+  //   let acceptanceArray: any[] = [];
+  //   let sorted_Acceptance: any[] = [];
+  //   let projectName;
+  //   let projectNumber;
+  //   const headerItem: any = await this._Service.getByIdSelectExpand(
+  //     this.props.siteUrl,
+  //     this.props.workflowHeaderList,
+  //     this.workflowHeaderID,
+  //     "RevisionLevel/Id,RevisionLevel/Title,DocumentController/ID,DocumentController/Title,DocumentController/EMail,RevisionCodingId,ApproveInSameRevision,DocumentIndexID,AcceptanceCodeId",
+  //     "RevisionLevel,DocumentController"
+  //   )
+  //   //const headerItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowHeaderList).items.getById(this.workflowHeaderID).select("RevisionLevel/Id,RevisionLevel/Title,DocumentController/ID,DocumentController/Title,DocumentController/EMail,RevisionCodingId,ApproveInSameRevision,DocumentIndexID,AcceptanceCodeId").expand("RevisionLevel,DocumentController").get();
+  //   const dcc = headerItem.DocumentController.ID;
+  //   const dccName = headerItem.DocumentController.Title;
+  //   const dccEmail = headerItem.DocumentController.EMail;
+  //   const documentIndexId = headerItem.DocumentIndexID;
+  //   const acceptanceCode = headerItem.AcceptanceCodeId;
+  //   const RevisionCodingId = headerItem.RevisionCodingId;
+  //   const ApproveInSameRevision = headerItem.ApproveInSameRevision;
+  //   const documentIndexItem: any = await this._Service.getByIdSelect(
+  //     this.props.siteUrl,
+  //     this.props.documentIndexList,
+  //     documentIndexId,
+  //     "ExternalDocument,TransmittalDocument,TransmittalRevision"
+  //   )
+  //   //const documentIndexItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(documentIndexId).select("ExternalDocument,TransmittalDocument,TransmittalRevision").get();
+  //   const externalDocument = documentIndexItem.ExternalDocument;
+  //   const transmittalDocument = documentIndexItem.TransmittalDocument;
+  //   const transmittalRevision = documentIndexItem.TransmittalRevision;
+  //   const projectInformation = await this._Service.getItems(
+  //     this.props.siteUrl,
+  //     this.props.projectInformationListName
+  //   )
+  //   //const projectInformation = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.projectInformationListName).items.get();
+  //   console.log("projectInformation", projectInformation);
+  //   if (projectInformation.length > 0) {
+  //     for (var k in projectInformation) {
+  //       if (projectInformation[k].Key === "ProjectName") {
+  //         this.setState({
+  //           projectName: projectInformation[k].Title,
+  //         });
+  //       }
+  //       if (projectInformation[k].Key === "ProjectNumber") {
+  //         this.setState({
+  //           projectNumber: projectInformation[k].Title,
+  //         });
+  //       }
+  //     }
+  //   }
+  //   if (dcc !== null) {
+  //     const detailItem: any[] = await this._Service.getByIdSelectFilterExpand(
+  //       this.props.siteUrl,
+  //       this.props.workflowDetailsList,
+  //       "ID,Workflow,ResponseDate,ResponsibleComment,ResponseStatus,Responsible/Title,TaskID",
+  //       "HeaderID eq " + this.workflowHeaderID,
+  //       "Responsible"
+  //     )
+  //     //const detailItem: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.workflowDetailsList).items.filter("HeaderID eq " + this.workflowHeaderID).select("ID,Workflow,ResponseDate,ResponsibleComment,ResponseStatus,Responsible/Title,TaskID").expand("Responsible").get();
+  //     for (var l in detailItem) {
+  //       if (detailItem[l].Workflow === 'DCC Review') {
+  //         var rewdate = new Date(detailItem[l].ResponseDate);
+  //         reviewDate = moment(rewdate).format('DD-MM-YYYY HH:mm');
+  //         dccReviewerArr.push({
+  //           ResponseDate: reviewDate,
+  //           Reviewer: detailItem[l].Responsible.Title,
+  //           DCCResponsibleComment: detailItem[l].ResponsibleComment
+  //         });
+  //       }
+  //     }
+  //   }
+  //   if (externalDocument === true) {
+  //     this.setState({ hideacceptance: false });
+  //     const transmittalcodeitems: any[] = await this._Service.getItems(this.props.siteUrl, this.props.transmittalCodeSettingsList)
+  //     //const transmittalcodeitems: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.transmittalCodeSettingsList).items.getAll();
 
-      for (let i = 0; i < transmittalcodeitems.length; i++) {
-        if (transmittalcodeitems[i].AcceptanceCode === true) {
-          let transmittalcodedata = {
-            key: transmittalcodeitems[i].ID,
-            text: transmittalcodeitems[i].Description
-          };
-          acceptanceArray.push(transmittalcodedata);
-        }
-      }
-      console.log(acceptanceArray);
-      sorted_Acceptance = _.orderBy(acceptanceArray, 'text', ['asc']);
+  //     for (let i = 0; i < transmittalcodeitems.length; i++) {
+  //       if (transmittalcodeitems[i].AcceptanceCode === true) {
+  //         const transmittalcodedata = {
+  //           key: transmittalcodeitems[i].ID,
+  //           text: transmittalcodeitems[i].Description
+  //         };
+  //         acceptanceArray.push(transmittalcodedata);
+  //       }
+  //     }
+  //     console.log(acceptanceArray);
+  //     sorted_Acceptance = _.orderBy(acceptanceArray, 'text', ['asc']);
 
-    }
-    if (transmittalDocument === true) {
-      this.setState({ hidetransmittalrevision: false });
-    }
-    if (dccReviewerArr.length > 0) {
-      this.setState({
-        dccTableDiv: ""
-      });
-    }
-    else {
-      this.setState({
-        dccTableDiv: "none",
-      });
-    }
-    this.setState({
-      dccreviewerData: dccReviewerArr,
-      acceptanceCodearray: sorted_Acceptance,
-      externalDocument: externalDocument,
-      transmittalRevision: transmittalRevision,
-      acceptanceCode: acceptanceCode,
-      revisionItemID: RevisionCodingId,
-      sameRevision: ApproveInSameRevision,
-      dcc: dcc,
-      dccName: dccName,
-      dccEmail: dccEmail
-    });
-  }
+  //   }
+  //   if (transmittalDocument === true) {
+  //     this.setState({ hidetransmittalrevision: false });
+  //   }
+  //   if (dccReviewerArr.length > 0) {
+  //     this.setState({
+  //       dccTableDiv: ""
+  //     });
+  //   }
+  //   else {
+  //     this.setState({
+  //       dccTableDiv: "none",
+  //     });
+  //   }
+  //   this.setState({
+  //     dccreviewerData: dccReviewerArr,
+  //     acceptanceCodearray: sorted_Acceptance,
+  //     externalDocument: externalDocument,
+  //     transmittalRevision: transmittalRevision,
+  //     acceptanceCode: acceptanceCode,
+  //     revisionItemID: RevisionCodingId,
+  //     sameRevision: ApproveInSameRevision,
+  //     dcc: dcc,
+  //     dccName: dccName,
+  //     dccEmail: dccEmail
+  //   });
+  // }
   //Status Change
   public _status(option: { key: any; text: any }) {
     //console.log(option.key);
@@ -951,8 +950,8 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     // }
     // else 
     {
-      let revision = parseInt(intrev);
-      let rev = revision + 1;
+      const revision = parseInt(intrev);
+      const rev = revision + 1;
       this.currentrevision = rev.toString();
       this.setState({ newRevision: this.currentrevision });
     }
@@ -982,7 +981,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestList).items.filter("Title eq 'QDMS_DocumentPublish'").get();
     console.log("Posturl", laUrl[0].PostUrl);
     this.postUrl = laUrl[0].PostUrl;
-    let siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
+    const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrl;
 
     const requestHeaders: Headers = new Headers();
@@ -1005,8 +1004,8 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       body: body
     };
     let responseText: string = "";
-    let response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
-    let responseJSON = await response.json();
+    const response = await this.props.context.httpClient.post(postURL, HttpClient.configurations.v1, postOptions);
+    const responseJSON = await response.json();
     responseText = JSON.stringify(responseJSON);
     console.log(responseJSON);
     if (response.ok) {
@@ -1018,7 +1017,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
   }
   // Published Update
   public async _publishUpdate() {
-    let SD = await this._Service.getItemById(this.props.siteUrl, this.props.sourceDocument, this.sourceDocumentID)
+    const SD = await this._Service.getLibraryItemById(this.props.siteUrl, this.props.sourceDocument, this.sourceDocumentID)
     //let SD = await sp.web.getList(this.props.siteUrl + "/" + this.props.sourceDocument).items.getById(this.sourceDocumentID).get();
 
     // await sp.web.getList(this.props.siteUrl + "/" + this.props.publishedDocument).items.getById(publishid).update({
@@ -1180,7 +1179,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     //     this._sendMail(this.state.dccEmail, "DocPublish", this.state.dccName);
     //   }
     // }
-    let a = await this._Service.updateItemById(
+    const a = await this._Service.updateItemById(
       this.props.siteUrl,
       this.props.documentRevisionLogList,
       this.revisionLogId,
@@ -1189,7 +1188,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
         Workflow: "Approval"
       }
     )
-    /* let a = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.getById(this.revisionLogId).update({
+    /* const a = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentRevisionLogList).items.getById(this.revisionLogId).update({
       Status: "Published",
       Workflow: "Approval"
     }); */
@@ -1318,7 +1317,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
         this._sendMail(this.state.requesterEmail, "DocRejected", this.state.requesterName);
       }
     }
-    let a = await this._Service.updateItemById(
+    const a = await this._Service.updateItemById(
       this.props.siteUrl,
       this.props.documentRevisionLogList,
       this.revisionLogId,
@@ -1346,8 +1345,8 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
   //Send Mail
   public _sendMail = async (emailuser, type, name) => {
 
-    let formatday = moment(this.today).format('DD/MM/YYYY');
-    let day = formatday.toString();
+    const formatday = moment(this.today).format('DD/MM/YYYY');
+    const day = formatday.toString();
     let mailSend = "No";
     let Subject;
     let Body;
@@ -1381,7 +1380,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       const emailNotification: any[] = await this._Service.getItems(this.props.siteUrl, this.props.emailNotification)
       //const emailNotification: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.emailNotification).items.get();
       console.log(emailNotification);
-      for (var k in emailNotification) {
+      for (let k in emailNotification) {
         if (emailNotification[k].Title === type) {
           Subject = emailNotification[k].Subject;
           Body = emailNotification[k].Body;
@@ -1390,15 +1389,15 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       }
 
       link = `<a href=${this.state.linkToDoc}>` + this.state.documentName + `</a>`;
-      let replacedSubject = replaceString(Subject, '[DocumentName]', this.state.documentName);
-      let replaceRequester = replaceString(Body, '[Sir/Madam]', name);
-      let replaceDate = replaceString(replaceRequester, '[PublishedDate]', day);
-      let replaceApprover = replaceString(replaceDate, '[Approver]', this.state.approverName);
-      let replaceBody = replaceString(replaceApprover, '[DocumentName]', this.state.documentName);
-      let replacelink = replaceString(replaceBody, '[DocumentLink]', link);
-      let FinalBody = replacelink;
+      const replacedSubject = replaceString(Subject, '[DocumentName]', this.state.documentName);
+      const replaceRequester = replaceString(Body, '[Sir/Madam]', name);
+      const replaceDate = replaceString(replaceRequester, '[PublishedDate]', day);
+      const replaceApprover = replaceString(replaceDate, '[Approver]', this.state.approverName);
+      const replaceBody = replaceString(replaceApprover, '[DocumentName]', this.state.documentName);
+      const replacelink = replaceString(replaceBody, '[DocumentLink]', link);
+      const FinalBody = replacelink;
       //Create Body for Email  
-      let emailPostBody: any = {
+      const emailPostBody: any = {
         "message": {
           "subject": replacedSubject,
           "body": {
@@ -1453,14 +1452,14 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     console.log(revisionItem);
     let startPrefix = '-';
     let newRevision = '';
-    let pattern = revisionItem.Pattern;
+    const pattern = revisionItem.Pattern;
     let endWith = '0';
-    let minN = revisionItem.MinN;
+    const minN = revisionItem.MinN;
     let maxN = '0';
-    let isAutoIncrement = revisionItem.AutoIncrement === 'TRUE';
+    const isAutoIncrement = revisionItem.AutoIncrement === 'TRUE';
     let firstChar = currentRevision.substring(0, 1);
     let currentNumber = currentRevision.substring(1, currentRevision.length);
-    let startWith = revisionItem.StartWith;
+    const startWith = revisionItem.StartWith;
 
     if (revisionItem.EndWith !== null)
       endWith = revisionItem.EndWith;
@@ -1474,7 +1473,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     //splitting pattern values
     let incrementValue = 1;
     let isAlphaIncrement = pattern.split('+')[0] === 'A';
-    let isNumericIncrement = pattern.split('+')[0] === 'N';
+    // let isNumericIncrement = pattern.split('+')[0] === 'N';
     if (pattern.split('+').length === 2) {
       incrementValue = Number(pattern.split('+')[1]);
     }
@@ -1509,7 +1508,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
       }
       else if (!isAutoIncrement) // currentRevision is not blank, so splitting pattern string for non- auto - increment pattern.
       {
-        let patternArray = pattern.split(',');
+        const patternArray = pattern.split(',');
         newRevision = patternArray[0]; // if array value exceeds , resetting revision.
         /* let prevRevision = patternArray[0];
          for(let i= 0;i < patternArray.length; i++)
@@ -1570,7 +1569,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
                 }
                 else if (Number(currentNumber) === Number(maxN)) {
                   // if current number part is same as maxN, get the next StartPrefix value from startPrefix.split(',')
-                  let startPrefixArray = startPrefix.split(',');
+                  const startPrefixArray = startPrefix.split(',');
                   for (let i = 0; i < startPrefixArray.length; i++) {
                     if (firstChar === startPrefixArray[i] && (i + 1) < startPrefixArray.length) {
                       firstChar = startPrefixArray[i + 1];
@@ -1598,7 +1597,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
                       firstChar = " ";
                     }
                     // if current number part is same as maxN, get the next StartPrefix value from startPrefix.split(',')
-                    let startPrefixArray = startPrefix.split(',');
+                    const startPrefixArray = startPrefix.split(',');
                     for (let i = 0; i < startPrefixArray.length; i++) {
                       if (firstChar === startPrefixArray[i] && (i + 1) < startPrefixArray.length) {
                         firstChar = startPrefixArray[i + 1];
