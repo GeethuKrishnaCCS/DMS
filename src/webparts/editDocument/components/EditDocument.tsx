@@ -1186,6 +1186,16 @@ const tempReviewers: any[] = [];
   }
   // Update Document Index
   public _updateDocumentIndex() {
+    let WorkflowStatus:string;
+    let Workflow:string;
+    if(this.state.reviewers.length !== 0){
+      WorkflowStatus = "Under Review";
+      Workflow = "Review";
+    }
+    else{
+      WorkflowStatus = "Under Approval";
+      Workflow = "Approval";
+    }
     // Without Expiry date
     if ((this.state.expiryCheck === false) || (this.state.expiryCheck === "")) {
       const itemUpdate = {
@@ -1202,7 +1212,9 @@ const tempReviewers: any[] = [];
         DirectPublish: this.state.directPublishCheck,
         ApprovedDate: this.state.approvalDateEdit,
         ReviewersId: this.state.reviewers,
-        WorkflowStatus: this.state.sendForReview === true ? "Under Review" : "Draft",
+        WorkflowStatus: this.state.sendForReview === true ? WorkflowStatus : "Draft",
+        DocumentStatus: "Active",
+        Workflow:this.state.sendForReview === true ? Workflow : "Draft",
       }
       this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemUpdate).then(afteradd => {
         this.revisionHistoryUrl = this.props.siteUrl + "/SitePages/" + this.props.revisionHistoryPage + ".aspx?did=" + this.documentIndexID + "";
@@ -1226,7 +1238,9 @@ const tempReviewers: any[] = [];
         DirectPublish: this.state.directPublishCheck,
         ApprovedDate: this.state.approvalDateEdit,
         ReviewersId: this.state.reviewers,
-        WorkflowStatus: this.state.sendForReview === true ? "Under Review" : "Draft",
+        WorkflowStatus: this.state.sendForReview === true ? WorkflowStatus : "Draft",
+        DocumentStatus: "Active",
+        Workflow:this.state.sendForReview === true ? Workflow : "Draft",
       }
 
       this._Service.itemUpdate(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, itemUpdate).then(afteradd => {
@@ -1238,6 +1252,16 @@ const tempReviewers: any[] = [];
   }
   // Update Source Document
   public _updateSourceDocument() {
+    let WorkflowStatus:string;
+    let Workflow:string;
+    if(this.state.reviewers.length !== 0){
+      WorkflowStatus = "Under Review";
+      Workflow = "Review";
+    }
+    else{
+      WorkflowStatus = "Under Approval";
+      Workflow = "Approval";
+    }
     // Without Expiry date
     if (this.state.expiryCheck === false) {
       const updateItems = {
@@ -1250,8 +1274,9 @@ const tempReviewers: any[] = [];
         SubCategory: this.state.subCategory,
         ApproverId: this.state.approver,
         Revision: "0",
-        WorkflowStatus: this.state.sendForReview === true ? "Under Review" : "Draft",
+        WorkflowStatus: this.state.sendForReview === true ? WorkflowStatus : "Draft",
         DocumentStatus: "Active",
+        Workflow:this.state.sendForReview === true ? Workflow : "Draft",
         DocumentIndexId: this.documentIndexID,
         PublishFormat: this.state.publishOption,
         Template: this.state.templateDocument,
@@ -1279,8 +1304,9 @@ const tempReviewers: any[] = [];
         ExpiryDate: this.state.expiryDate,
         ExpiryLeadPeriod: this.state.expiryLeadPeriod,
         Revision: "0",
-        WorkflowStatus: this.state.sendForReview === true ? "Under Review" : "Draft",
+        WorkflowStatus: this.state.sendForReview === true ? WorkflowStatus : "Draft",
         DocumentStatus: "Active",
+        Workflow:this.state.sendForReview === true ? Workflow : "Draft",
         DocumentIndexId: this.documentIndexID,
         PublishFormat: this.state.publishOption,
         Template: this.state.templateDocument,
@@ -1402,7 +1428,7 @@ const tempReviewers: any[] = [];
   // Document permission
   protected async _triggerPermission(sourceDocumentID) {
     // const laUrl = await this._Service.DocumentPermission(this.props.siteUrl, this.props.requestList);
-    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq ''DMS-Create Document Permission'");
+    const laUrl = await this._Service.getFilter(this.props.siteUrl, this.props.requestList, "Title eq 'DMS-Create Document Permission'");
     this.postUrl = laUrl[0].PostUrl;
     const siteUrl = window.location.protocol + "//" + window.location.hostname + this.props.siteUrl;
     const postURL = this.postUrl;

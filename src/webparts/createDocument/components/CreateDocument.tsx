@@ -190,15 +190,15 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     let legalEntityArray: any[] = [];
     let sorted_LegalEntity: any[];
     //Get Business Unit
-    const businessUnit: any[] = await this._Service.getItems(this.props.siteUrl, this.props.businessUnit);
-    for (let i = 0; i < businessUnit.length; i++) {
-      let businessUnitdata = {
-        key: businessUnit[i].ID,
-        text: businessUnit[i].BusinessUnitName,
-      };
-      businessUnitArray.push(businessUnitdata);
-    }
-    sorted_BusinessUnit = _.orderBy(businessUnitArray, 'text', ['asc']);
+    // const businessUnit: any[] = await this._Service.getItems(this.props.siteUrl, this.props.businessUnit);
+    // for (let i = 0; i < businessUnit.length; i++) {
+    //   let businessUnitdata = {
+    //     key: businessUnit[i].ID,
+    //     text: businessUnit[i].BusinessUnitName,
+    //   };
+    //   businessUnitArray.push(businessUnitdata);
+    // }
+    // sorted_BusinessUnit = _.orderBy(businessUnitArray, 'text', ['asc']);
     //Get Department
     const department: any[] = await this._Service.getItems(this.props.siteUrl, this.props.department);
     if (this.props.siteUrl === "/sites/DMS") {
@@ -253,7 +253,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     sorted_LegalEntity = _.orderBy(legalEntityArray, 'text', ['asc']);
 
     this.setState({
-      businessUnitOption: sorted_BusinessUnit,
+      // businessUnitOption: sorted_BusinessUnit,
       departmentOption: sorted_Department,
       categoryOption: sorted_Category,
       legalEntityOption: sorted_LegalEntity,
@@ -1136,6 +1136,16 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   // Create Document Index
   public _createDocumentIndex() {
     let documentIndexId;
+    let WorkflowStatus:string;
+    let Workflow:string;
+    if(this.state.reviewers.length !== 0){
+      WorkflowStatus = "Under Review";
+      Workflow = "Review";
+    }
+    else{
+      WorkflowStatus = "Under Approval";
+      Workflow = "Approval";
+    }
     // Without Expiry date
     if (this.state.expiryCheck === false) {
       let indexItems = {
@@ -1143,16 +1153,15 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         DocumentID: this.state.documentid,
         ReviewersId: this.state.reviewers,
         DocumentName: this.state.documentName,
-        BusinessUnitID: this.state.businessUnitID,
-        BusinessUnit: this.state.businessUnit,
         CategoryID: this.state.categoryId,
         Category: this.state.category,
         SubCategoryID: this.state.subCategoryId,
         SubCategory: this.state.subCategory,
         ApproverId: this.state.approver,
         Revision: "0",
-        WorkflowStatus: this.state.sendForReview === true ? "Under Review" : "Draft",
+        WorkflowStatus: this.state.sendForReview === true ? WorkflowStatus : "Draft",
         DocumentStatus: "Active",
+        Workflow:this.state.sendForReview === true ? Workflow : "Draft",
         Template: this.state.templateDocument,
         CriticalDocument: this.state.criticalDocument,
         CreateDocument: this.state.createDocument,
@@ -1179,8 +1188,6 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         DocumentID: this.state.documentid,
         ReviewersId: this.state.reviewers,
         DocumentName: this.state.documentName,
-        BusinessUnitID: this.state.businessUnitID,
-        BusinessUnit: this.state.businessUnit,
         CategoryID: this.state.categoryId,
         Category: this.state.category,
         SubCategoryID: this.state.subCategoryId,
@@ -1190,8 +1197,9 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         DirectPublish: this.state.directPublishCheck,
         ExpiryLeadPeriod: this.state.expiryLeadPeriod,
         Revision: "0",
-        WorkflowStatus: this.state.sendForReview === true ? "Under Review" : "Draft",
+        WorkflowStatus: this.state.sendForReview === true ? WorkflowStatus : "Draft",
         DocumentStatus: "Active",
+        Workflow:this.state.sendForReview === true ? Workflow : "Draft",
         Template: this.state.templateDocument,
         CriticalDocument: this.state.criticalDocument,
         CreateDocument: this.state.createDocument,
@@ -1213,20 +1221,30 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   // Add Source Document metadata
   public async _addSourceDocument() {
     // Without Expiry Date
+    let WorkflowStatus:string;
+    let Workflow:string;
+    if(this.state.reviewers.length !== 0){
+      WorkflowStatus = "Under Review";
+      Workflow = "Review";
+    }
+    else{
+      WorkflowStatus = "Under Approval";
+      Workflow = "Approval";
+    }
     if (this.state.expiryCheck === false) {
       let sourceUpdate = {
         Title: this.state.title,
         DocumentID: this.state.documentid,
         DocumentName: this.documentNameExtension,
-        BusinessUnit: this.state.businessUnit,
-        Category: this.state.category,
+       Category: this.state.category,
         SubCategory: this.state.subCategory,
         ApproverId: this.state.approver,
         ReviewersId: this.state.reviewers,
         OwnerId: this.state.owner,
         Revision: "0",
-        WorkflowStatus: this.state.sendForReview === true ? "Under Review" : "Draft",
+        WorkflowStatus: this.state.sendForReview === true ? WorkflowStatus : "Draft",
         DocumentStatus: "Active",
+        Workflow:this.state.sendForReview === true ? Workflow : "Draft",
         DocumentIndexId: parseInt(this.state.newDocumentId),
         PublishFormat: this.state.publishOption,
         CriticalDocument: this.state.criticalDocument,
@@ -1248,7 +1266,6 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         DocumentID: this.state.documentid,
         Title: this.state.title,
         DocumentName: this.documentNameExtension,
-        BusinessUnit: this.state.businessUnit,
         Category: this.state.category,
         SubCategory: this.state.subCategory,
         ApproverId: this.state.approver,
@@ -1257,8 +1274,9 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
         ExpiryDate: this.state.expiryDate,
         ExpiryLeadPeriod: this.state.expiryLeadPeriod,
         Revision: "0",
-        WorkflowStatus: this.state.sendForReview !== true ? "Draft" : "Under Review",
+        WorkflowStatus: this.state.sendForReview === true ? WorkflowStatus : "Draft",
         DocumentStatus: "Active",
+        Workflow:this.state.sendForReview === true ? Workflow : "Draft",
         CriticalDocument: this.state.criticalDocument,
         DocumentIndexId: parseInt(this.state.newDocumentId),
         PublishFormat: this.state.publishOption,

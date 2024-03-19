@@ -307,7 +307,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       // const businessUnitID;
       // const departmentId;
       //Get Document Index
-      const documentIndexItem: any = await this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, "DocumentID,DocumentName,DepartmentID,BusinessUnitID,Owner/ID,Owner/Title,Owner/EMail,Approver/ID,Approver/Title,Approver/EMail,Revision,SourceDocument,CriticalDocument,SourceDocumentID,Reviewers/ID,Reviewers/Title,Reviewers/EMail", "Owner,Approver,Reviewers");
+      const documentIndexItem: any = await this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID, "DocumentID,DocumentName,DepartmentID,Owner/ID,Owner/Title,Owner/EMail,Approver/ID,Approver/Title,Approver/EMail,Revision,SourceDocument,CriticalDocument,SourceDocumentID,Reviewers/ID,Reviewers/Title,Reviewers/EMail", "Owner,Approver,Reviewers");
       // const documentIndexItem: any = await this._Service.getDocumentIndexItem(this.props.siteUrl, this.props.documentIndexList, this.documentIndexID);
       //const documentIndexItem: any = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndexList).items.getById(this.documentIndexID).select("DocumentID,DocumentName,DepartmentID,BusinessUnitID,Owner/ID,Owner/Title,Owner/EMail,Approver/ID,Approver/Title,Approver/EMail,Revision,SourceDocument,CriticalDocument,SourceDocumentID,Reviewers/ID,Reviewers/Title,Reviewers/EMail").expand("Owner,Approver,Reviewers").get();
 
@@ -322,7 +322,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       // const approverName = documentIndexItem.Approver.Title;
       // const approverId = documentIndexItem.Approver.ID;
       // const approverEmail = documentIndexItem.Approver.EMail;
-      const businessUnitID = documentIndexItem.BusinessUnitID;
+      // const businessUnitID = documentIndexItem.BusinessUnitID;
       const departmentId = documentIndexItem.DepartmentID;
       for (const k in documentIndexItem.Reviewers) {
         temReviewersID.push(documentIndexItem.Reviewers[k].ID);
@@ -349,7 +349,7 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
         // approver: approverId,
         // approverName: approverName,
         reviewersName: tempReviewers,
-        businessUnitID: businessUnitID,
+        // businessUnitID: businessUnitID,
         departmentId: departmentId
       });
       // const sourceDocumentItem: any = await this._Service.getSourceDocumentItem(this.props.siteUrl, this.props.sourceDocumentLibrary, this.documentIndexID);
