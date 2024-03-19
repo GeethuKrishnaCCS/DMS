@@ -665,10 +665,10 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     if (isChecked) {
       // this.setState({ checkdirect: "", });
       // this._checkdirectPublish('QDMS_DirectPublish');
-      this.setState({ hidePublish: "", directPublishCheck: true, approvalDate: new Date(),saveDisable: true });
+      this.setState({ hidePublish: "", directPublishCheck: true, approvalDate: new Date() });
     }
     else if (!isChecked) {
-      this.setState({ hidePublish: "none", directPublishCheck: false,saveDisable: false, approvalDate: new Date(), publishOption: "" });
+      this.setState({ hidePublish: "none", directPublishCheck: false, approvalDate: new Date(), publishOption: "" });
     }
   }
   // Direct publish change
@@ -1943,7 +1943,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
           <div className={styles.divrow}>
             <div style={{ fontStyle: "italic", fontSize: "12px", position: "absolute" }}><span style={{ color: "red", fontSize: "23px" }}>*</span>fields are mandatory </div>
             <div className={styles.rgtalign} >
-              <PrimaryButton id="b2" className={styles.btn} disabled={this.state.saveDisable} onClick={this._onSendForReview}>Send for review and submit</PrimaryButton >
+              {this.state.directPublishCheck === false && <PrimaryButton id="b2" className={styles.btn} disabled={this.state.saveDisable} onClick={this._onSendForReview}>Send for review and submit</PrimaryButton >}
               <PrimaryButton id="b2" className={styles.btn} disabled={this.state.saveDisable} onClick={this._onCreateDocument}>Submit</PrimaryButton >
               <PrimaryButton id="b1" className={styles.btn} onClick={this._onCancel}>Cancel</PrimaryButton >
             </div>

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styles from './NotificationPreference.module.scss';
 import type { INotificationPreferenceProps, INotificationPreferenceState } from '../interfaces';
-import { ChoiceGroup, DirectionalHint, IButtonProps, IChoiceGroupOption, IChoiceGroupOptionStyles, IconButton, IIconProps, Label, MessageBar, ProgressIndicator, Spinner, SpinnerSize, TeachingBubble } from '@fluentui/react';
-import { ClapSpinner, PushSpinner } from 'react-spinners-kit';
+import { ChoiceGroup,IChoiceGroupOption, IChoiceGroupOptionStyles, IconButton, IIconProps,MessageBar} from '@fluentui/react';
 import { DMSService } from '../services';
 
 export default class NotificationPreference extends React.Component<INotificationPreferenceProps, INotificationPreferenceState> {
@@ -100,8 +99,8 @@ export default class NotificationPreference extends React.Component<INotificatio
 
   public async componentDidMount() {
     //Getting current user's email
-    let currentUser = await this._Service.getCurrentUser()
-    //let currentUser = await sp.web.currentUser();
+    const currentUser = await this._Service.getCurrentUser()
+    //const currentUser = await sp.web.currentUser();
     await this.GetCurrentUserDetails();
     // Getting current uuser's preference if already set.
     const notificationPreference: any[] = await this._Service.getSelectExpandFilter(this.props.hubSiteUrl, this.props.notificationPrefListName, "ID,Preference,EmailUser/ID,EmailUser/Title,EmailUser/EMail", "EmailUser", "EmailUser/EMail eq '" + currentUser.Email + "'")
@@ -116,8 +115,8 @@ export default class NotificationPreference extends React.Component<INotificatio
     console.log(this.state.defaultPreference);
   }
   protected async GetCurrentUserDetails() {
-    let currentUser = await this._Service.getCurrentUser()
-    //let currentUser = await sp.web.currentUser();
+    const currentUser = await this._Service.getCurrentUser()
+    //const currentUser = await sp.web.currentUser();
     this.setState({
       currentUserId: currentUser.Id,
       currentUserLoginName: currentUser.Title,
