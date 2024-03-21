@@ -63,17 +63,11 @@ export class DMSService extends BaseService {
     }
 
 
-
-
-
-
-
-
-
     public getItems(siteUrl: string, listname: string,): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items();
     }
     public createNewItem(siteUrl: string, listname: string, metadata: any): Promise<any> {
+        console.log('this._spfi.web.getList(siteUrl + "/Lists/" + listname).items: ', this._spfi.web.getList(siteUrl + "/Lists/" + listname).items);
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
             .add(metadata);
 

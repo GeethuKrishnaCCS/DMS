@@ -229,7 +229,9 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
       // }
       // else {
         // await this._accessGroups();
+        
         await this._checkWorkflowStatus();
+
       // }
     }
     else {
@@ -1731,24 +1733,24 @@ export default class SendRequest extends React.Component<ISendRequestProps, ISen
     let Subject;
     let Body;
     let link;
-    const notificationPreference: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.notificationPreference, "Preference", "EmailUser/EMail eq '" + emailuser + "'");
+    // const notificationPreference: any[] = await this._Service.getSelectFilter(this.props.siteUrl, this.props.notificationPreference, "Preference", "EmailUser/EMail eq '" + emailuser + "'");
     // const notificationPreference: any[] = await this._Service.getMailPreference(this.props.siteUrl, this.props.notificationPreference, emailuser);
     //const notificationPreference: any[] = await this._Service.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPreference).items.filter("EmailUser/EMail eq '" + emailuser + "'").select("Preference").get();
 
-    if (notificationPreference.length > 0) {
-      if (notificationPreference[0].Preference === "Send all emails") {
-        mailSend = "Yes";
-      }
-      else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
-        mailSend = "Yes";
-      }
-      else {
-        mailSend = "No";
-      }
-    }
-    else if (this.state.criticalDocument === true) {
-      mailSend = "Yes";
-    }
+    // if (notificationPreference.length > 0) {
+    //   if (notificationPreference[0].Preference === "Send all emails") {
+    //     mailSend = "Yes";
+    //   }
+    //   else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
+    //     mailSend = "Yes";
+    //   }
+    //   else {
+    //     mailSend = "No";
+    //   }
+    // }
+    // else if (this.state.criticalDocument === true) {
+    //   mailSend = "Yes";
+    // }
     if (mailSend === "Yes") {
       const emailNotification: any[] = await this._Service.getFilter(this.props.siteUrl, this.props.emailNotification, "Title eq '" + type + "'")
       // const emailNotification: any[] = await this._Service.getEmailNotification(this.props.siteUrl, this.props.emailNotification, type)

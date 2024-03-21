@@ -201,7 +201,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     // sorted_BusinessUnit = _.orderBy(businessUnitArray, 'text', ['asc']);
     //Get Department
     const department: any[] = await this._Service.getItems(this.props.siteUrl, this.props.department);
-    if (this.props.siteUrl === "/sites/DMS") {
+    if (this.props.siteUrl === "/sites/DMSDEV") {
       for (let i = 0; i < department.length; i++) {
         let departmentdata: any = {
           key: department[i].ID,
@@ -242,7 +242,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     }
     sorted_Category = _.orderBy(categoryArray, 'text', ['asc']);
     //Get Legal Entity
-    const legalEntity: any = await this._Service.getItems(this.props.siteUrl, this.props.legalEntity);
+    /* const legalEntity: any = await this._Service.getItems(this.props.siteUrl, this.props.legalEntity);
     for (let i = 0; i < legalEntity.length; i++) {
       let legalEntityItemdata = {
         key: legalEntity[i].ID,
@@ -250,13 +250,13 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       };
       legalEntityArray.push(legalEntityItemdata);
     }
-    sorted_LegalEntity = _.orderBy(legalEntityArray, 'text', ['asc']);
+    sorted_LegalEntity = _.orderBy(legalEntityArray, 'text', ['asc']); */
 
     this.setState({
       // businessUnitOption: sorted_BusinessUnit,
       departmentOption: sorted_Department,
       categoryOption: sorted_Category,
-      legalEntityOption: sorted_LegalEntity,
+     /*  legalEntityOption: sorted_LegalEntity, */
       owner: this.currentId,
       ownerEmail: this.currentEmail,
       ownerName: this.currentUser
@@ -1135,6 +1135,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   }
   // Create Document Index
   public _createDocumentIndex() {
+    console.log('this.state.sendForReview: ', this.state.sendForReview);
     let documentIndexId;
     let WorkflowStatus:string;
     let Workflow:string;
@@ -1621,7 +1622,6 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     else {
       this.setState({ insertdocument: "" });
     }
-
 
   }
   public onConfirmReview = async () => {
