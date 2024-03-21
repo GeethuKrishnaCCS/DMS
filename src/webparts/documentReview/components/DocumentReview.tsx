@@ -300,7 +300,8 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       //AccessGroup = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroups).items.select("AccessGroups,AccessFields").filter("Title eq 'QDMS_SendReviewWF'").get();
       let AccessGroupItems: any[] = AccessGroup[0].AccessGroups.split(',');
       console.log("AccessGroupItems", AccessGroupItems);
-      const DocumentIndexItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, "DepartmentID,BusinessUnitID")
+      const DocumentIndexItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, "DepartmentID")
+      // const DocumentIndexItem: any = await this._Service.getByIdSelect(this.props.siteUrl, this.props.documentIndex, this.documentIndexId, "DepartmentID,BusinessUnitID")
       //const DocumentIndexItem: any = await this._Service.getBusinessDepartment(this.props.siteUrl, this.props.documentIndex, this.documentIndexId)
       //const DocumentIndexItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.documentIndex).items.getById(this.documentIndexId).select("DepartmentID,BusinessUnitID").get();
       console.log("DocumentIndexItem", DocumentIndexItem);
@@ -327,25 +328,25 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
       //if no department  
       else {
         //alert("with bussinessUnit");
-        if (DocumentIndexItem.BusinessUnitID !== null) {
-          this.departmentExist === "Exists";
-          let bussinessUnitID = parseInt(DocumentIndexItem.BusinessUnitID);
-          const bussinessUnitItem: any = await this._Service.getItemById(this.props.siteUrl, this.props.bussinessUnitList, bussinessUnitID)
-          //const bussinessUnitItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.bussinessUnitList).items.getById(bussinessUnitID).get();
-          console.log("departmentItem", bussinessUnitItem);
-          let accessGroupvar = bussinessUnitItem.AccessGroups;
-          // alert(accessGroupvar);
-          const accessGroupItem: any = await this._Service.getItems(this.props.siteUrl, this.props.accessGroupDetailsList)
-          //const accessGroupItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroupDetailsList).items.get();
-          let accessGroupID;
-          console.log(accessGroupItem.length);
-          for (let a = 0; a < accessGroupItem.length; a++) {
-            if (accessGroupItem[a].Title === accessGroupvar) {
-              accessGroupID = accessGroupItem[a].GroupID;
-              this.GetGroupMembers(this.props.context, accessGroupID);
-            }
-          }
-        }
+        // if (DocumentIndexItem.BusinessUnitID !== null) {
+        //   this.departmentExist === "Exists";
+        //   let bussinessUnitID = parseInt(DocumentIndexItem.BusinessUnitID);
+        //   const bussinessUnitItem: any = await this._Service.getItemById(this.props.siteUrl, this.props.bussinessUnitList, bussinessUnitID)
+        //   //const bussinessUnitItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.bussinessUnitList).items.getById(bussinessUnitID).get();
+        //   console.log("departmentItem", bussinessUnitItem);
+        //   let accessGroupvar = bussinessUnitItem.AccessGroups;
+        //   // alert(accessGroupvar);
+        //   const accessGroupItem: any = await this._Service.getItems(this.props.siteUrl, this.props.accessGroupDetailsList)
+        //   //const accessGroupItem: any = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.accessGroupDetailsList).items.get();
+        //   let accessGroupID;
+        //   console.log(accessGroupItem.length);
+        //   for (let a = 0; a < accessGroupItem.length; a++) {
+        //     if (accessGroupItem[a].Title === accessGroupvar) {
+        //       accessGroupID = accessGroupItem[a].GroupID;
+        //       this.GetGroupMembers(this.props.context, accessGroupID);
+        //     }
+        //   }
+        // }
       }
     }
 
