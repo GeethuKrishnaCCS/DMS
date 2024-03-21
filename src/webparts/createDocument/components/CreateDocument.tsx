@@ -72,7 +72,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       validApprover: "none",
       hideDoc: "",
       createDocument: false,
-      hideDirect: "",
+      hideDirect: "none",
       upload: false,
       checkdirect: "none",
       insertdocument: "none",
@@ -426,7 +426,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
   private onUploadOrTemplateRadioBtnChange = async (ev: React.FormEvent<HTMLElement | HTMLInputElement>, option: IChoiceGroupOption) => {
     this.setState({
       uploadOrTemplateRadioBtn: option.key,
-      createDocument: true
+      createDocument: true,
+      hideDirect: ""
     });
     if (option.key === "Upload") {
       this.setState({ upload: true, hideupload: "", template: false, hidetemplate: "none" });
