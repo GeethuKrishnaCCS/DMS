@@ -291,7 +291,8 @@ const tempReviewers: any[] = [];
     if (documentindexid !== "" && documentindexid !== null) {
 
       // this._Service.itemsFromIndexExpanded(this.props.siteUrl, this.props.documentIndexList, documentindexid).then(async dataForEdit => {
-      this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, documentindexid, "Title,Owner/Title,Owner/ID,Owner/EMail,SubCategoryID,WorkflowStatus,SourceDocument,SubCategory,Approver/Title,Approver/ID,Approver/EMail,ApprovedDate,Category,CategoryID,DepartmentName,DepartmentID,DocumentID,DocumentName,ExpiryDate,Reviewers/ID,Reviewers/Title,ExpiryLeadPeriod,CategoryID,CriticalDocument,Template,PublishFormat,ApprovedDate,DirectPublish,CreateDocument,LegalEntity", "Owner,Approver,Reviewers").then(async dataForEdit => {
+      // this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, documentindexid, "Title,Owner/Title,Owner/ID,Owner/EMail,SubCategoryID,WorkflowStatus,SourceDocument,SubCategory,Approver/Title,Approver/ID,Approver/EMail,ApprovedDate,Category,CategoryID,DepartmentName,DepartmentID,DocumentID,DocumentName,ExpiryDate,Reviewers/ID,Reviewers/Title,ExpiryLeadPeriod,CategoryID,CriticalDocument,Template,PublishFormat,ApprovedDate,DirectPublish,CreateDocument,LegalEntity", "Owner,Approver,Reviewers").then(async dataForEdit => {
+      this._Service.getByIdSelectExpand(this.props.siteUrl, this.props.documentIndexList, documentindexid, "Title,Owner/Title,Owner/ID,Owner/EMail,SubCategoryID,WorkflowStatus,SourceDocument,SubCategory,Approver/Title,Approver/ID,Approver/EMail,ApprovedDate,Category,CategoryID,DepartmentName,DepartmentID,DocumentID,DocumentName,ExpiryDate,Reviewers/ID,Reviewers/Title,ExpiryLeadPeriod,CategoryID,CriticalDocument,Template,PublishFormat,ApprovedDate,DirectPublish,CreateDocument", "Owner,Approver,Reviewers").then(async dataForEdit => {
         this.setState({
           title: dataForEdit.Title,
           documentid: dataForEdit.DocumentID,
@@ -303,7 +304,7 @@ const tempReviewers: any[] = [];
           expiryLeadPeriod: dataForEdit.ExpiryLeadPeriod,
           owner: dataForEdit.Owner.ID,
           ownerEmail: dataForEdit.Owner.EMail,
-          legalEntity: dataForEdit.LegalEntity,
+          // legalEntity: dataForEdit.LegalEntity,
           subCategory: dataForEdit.SubCategory,
           // businessUnitID: dataForEdit.BusinessUnitID,
           departmentId: dataForEdit.DepartmentID
@@ -658,8 +659,7 @@ const tempReviewers: any[] = [];
         // @ts-ignore
         (document.querySelector("#editqdms") as HTMLInputElement).value = null;
       }
-    }
-    
+    }    
     if (type === "docx") {
       this.setState({ isdocx: "", nodocx: "none" });
     }
