@@ -115,7 +115,8 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       DueDate: new Date(),
       sendForReview: false,
       dueDateMadatory: "",
-      comments: ""
+      comments: "",
+      mydoc: null as File | null,
     }
     this._Service = new DMSService(this.props.context, window.location.protocol + "//" + window.location.hostname + "/" + this.props.QDMSUrl);
     this._bindData = this._bindData.bind(this);
@@ -554,20 +555,42 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
     }
   }
   // On upload
+  // public _add(e) {
+  //   this.setState({ insertdocument: "none" });
+  //   this.myfile = e.target.value;
+  //   let type;
+  //   let myfile;
+  //   this.isDocument = "Yes";
+  //   // @ts-ignore: Object is possibly 'null'.
+  //   myfile = (document.querySelector("#addqdms") as HTMLInputElement).files[0];
+  //   console.log(myfile);
+  //   this.isDocument = "Yes";
+  //   var splitted = myfile.name.split(".");
+  //   // let docsplit =splitted.slice(0, -1).join('.')+"."+splitted[splitted.length - 1];
+  //   // alert(docsplit);
+  //   type = splitted[splitted.length - 1];
+  //   if (type === "docx") {
+  //     this.setState({ isdocx: "", nodocx: "none" });
+  //   }
+  //   else {
+  //     this.setState({ isdocx: "none", nodocx: "" });
+  //   }
+  // }
+
   public _add(e) {
     this.setState({ insertdocument: "none" });
-    this.myfile = e.target.value;
+    // this.myfile = e.target.value;
+    this.myfile = e.currentTarget.files[0];
     let type;
-    let myfile;
     this.isDocument = "Yes";
     // @ts-ignore: Object is possibly 'null'.
-    myfile = (document.querySelector("#addqdms") as HTMLInputElement).files[0];
-    console.log(myfile);
+    // myfile = (document.querySelector("#addqdms") as HTMLInputElement).files[0];
+    this.setState({ ...this.state, mydoc: this.myfile });
     this.isDocument = "Yes";
-    var splitted = myfile.name.split(".");
+    var splitted = this.myfile.name.split(".");
     // let docsplit =splitted.slice(0, -1).join('.')+"."+splitted[splitted.length - 1];
-    // alert(docsplit);
     type = splitted[splitted.length - 1];
+    
     if (type === "docx") {
       this.setState({ isdocx: "", nodocx: "none" });
     }
@@ -575,6 +598,7 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       this.setState({ isdocx: "none", nodocx: "" });
     }
   }
+
   public async _sourcechange(option: { key: any; text: any }) {
     this.setState({ hidetemplate: "", sourceId: option.key });
     let publishedDocumentArray: any[] = [];
@@ -918,11 +942,14 @@ export default class CreateDocument extends React.Component<ICreateDocumentProps
       await this._createDocumentIndex();
       // Get file from form
       // @ts-ignore: Object is possibly 'null'.
-      if ((document.querySelector(upload) as HTMLInputElement).files[0] !== null) {
+      // if ((document.querySelector(upload) as HTMLInputElement).files[0] !== null) {
+        if ( this.state.mydoc !== null) {
         // @ts-ignore: Object is possibly 'null'.
-        let myfile = (document.querySelector(upload) as HTMLInputElement).files[0];
+        // let myfile = (document.querySelector(upload) as HTMLInputElement).files[0];
         console.log(myfile);
-        var splitted = myfile.name.split(".");
+        // var splitted = myfile.name.split(".");
+        const myfile = this.state.mydoc;
+        var splitted = this.state.mydoc.name.split(".");
         documentNameExtension = this.state.documentName + '.' + splitted[splitted.length - 1];
         this.documentNameExtension = documentNameExtension;
         docinsertname = this.state.documentid + '.' + splitted[splitted.length - 1];

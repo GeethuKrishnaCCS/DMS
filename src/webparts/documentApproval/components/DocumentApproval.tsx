@@ -1279,7 +1279,7 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
         WorkflowStatus: this.state.status
       }); */
 
-      await this._Service.updateItemById(
+      await this._Service.updateLibraryItemById(
         this.props.siteUrl,
         this.props.sourceDocument,
         this.sourceDocumentID,
@@ -1352,27 +1352,28 @@ export default class DocumentApproval extends React.Component<IDocumentApprovalP
     let Body;
     let link;
     console.log(this.state.criticalDocument);
-    const notificationPreference: any[] = await this._Service.getSelectFilter(
-      this.props.siteUrl,
-      this.props.notificationPreference,
-      "Preference",
-      "EmailUser/EMail eq '" + emailuser + "'"
-    )
+    // const notificationPreference: any[] = await this._Service.getSelectFilter(
+    //   this.props.siteUrl,
+    //   this.props.notificationPreference,
+    //   "Preference",
+    //   "EmailUser/EMail eq '" + emailuser + "'"
+    // )
     //const notificationPreference: any[] = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.notificationPreference).items.filter("EmailUser/EMail eq '" + emailuser + "'").select("Preference").get();
-    console.log(notificationPreference[0].Preference);
-    if (notificationPreference.length > 0) {
-      if (notificationPreference[0].Preference === "Send all emails") {
-        mailSend = "Yes";
-      }
-      else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
-        mailSend = "Yes";
+    // console.log(notificationPreference[0].Preference);
+    // if (notificationPreference.length > 0) {
+    //   if (notificationPreference[0].Preference === "Send all emails") {
+    //     mailSend = "Yes";
+    //   }
+    //   else if (notificationPreference[0].Preference === "Send mail for critical document" && this.state.criticalDocument === true) {
+    //     mailSend = "Yes";
 
-      }
-      else {
-        mailSend = "No";
-      }
-    }
-    else if (this.state.criticalDocument === true) {
+    //   }
+    //   else {
+    //     mailSend = "No";
+    //   }
+    // }
+    // else 
+    if (this.state.criticalDocument === true) {
       //console.log("Send mail for critical document");
       mailSend = "Yes";
     }

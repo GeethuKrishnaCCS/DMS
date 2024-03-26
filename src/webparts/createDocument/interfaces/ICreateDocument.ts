@@ -113,6 +113,7 @@ export interface ICreateDocumentState {
   sendForReview: boolean,
   dueDateMadatory: string;
   comments: string;
+  mydoc: File | null;
 
 }
 export interface ICreateDocumentWebPartProps {
