@@ -39,7 +39,14 @@ export class DMSService extends BaseService {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.add(metadata);
     } */
     public updateItemById(siteUrl: string, listname: string, itemid: number, dataitem: any): Promise<any> {
-        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.getById(itemid).update(dataitem);
+        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
+            .getById(itemid)
+            .update(dataitem);
+    }
+    public updateLibraryItemById(siteUrl: string, listname: string, itemid: number, dataitem: any): Promise<any> {
+        return this._spfi.web.getList(siteUrl + "/" + listname).items
+            .getById(itemid)
+            .update(dataitem);
     }
     /* public getItemTitleFilter(siteUrl: string, listname: string, title: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items
@@ -54,9 +61,9 @@ export class DMSService extends BaseService {
     /* public getItemsFromUserMsgSettings(siteUrl: string, listname: string): Promise<any> {
         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("Title,Message").filter("PageName eq 'DocumentIndex'")();
     } */
-   /*  public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
-        return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver")();
-    } */
+    /*  public getItemsFromDepartments(siteUrl: string, listname: string): Promise<any> {
+         return this._spfi.web.getList(siteUrl + "/Lists/" + listname).items.select("ID,Title,Approver/Title,Approver/ID,Approver/EMail").expand("Approver")();
+     } */
     /* public async uploadDocument(filename: string, filedata: any, libraryname: string): Promise<any> {
         const file = await this._spfi.web.getFolderByServerRelativePath(libraryname)
             .files.addUsingPath(filename, filedata, { Overwrite: true });
@@ -115,7 +122,7 @@ export class DMSService extends BaseService {
                     .post(emailPostBody);
             });
     }
-    
+
     public getGroupMembers(groupId: string): Promise<any> {
         return this.currentContext.msGraphClientFactory
             .getClient("3")
