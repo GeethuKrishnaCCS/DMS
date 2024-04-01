@@ -3851,7 +3851,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
         <div style={{ display: this.state.access }}>
 
           <div className={styles.border}>
-            <div className={styles.alignCenter}> {this.props.webPartName}</div>
+            <div className={styles.alignCenter}> {this.props.webpartHeader}</div>
 
             <div className={styles.header}>
               <div className={styles.divMetadataCol1}>

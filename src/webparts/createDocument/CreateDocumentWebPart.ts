@@ -127,6 +127,9 @@ export default class CreateDocumentWebPart extends BaseClientSideWebPart<ICreate
             {
               groupName: strings.BasicGroupName,
               groupFields: [
+                PropertyPaneTextField('webpartHeader', {
+                  label: 'webpartHeader'
+                }),
                 PropertyPaneTextField('documentIndexList', {
                   label: 'Document Index List'
                 }),

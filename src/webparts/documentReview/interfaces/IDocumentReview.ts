@@ -2,7 +2,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 export interface IDocumentReviewProps {
   description: string;
-  webPartName: string;
+  webpartHeader: string;
   //project: string;
   redirectUrl: string;
   siteUrl: string;
@@ -104,7 +104,7 @@ export interface IDocumentReviewState {
 
 export interface IDocumentReviewWebPartProps {
   description: string;
-  webPartName: string;
+  webpartHeader: string;
   // project: string;
   redirectUrl: string;
   siteUrl: string;

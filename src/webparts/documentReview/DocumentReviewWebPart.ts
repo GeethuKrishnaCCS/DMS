@@ -23,7 +23,7 @@ export default class DocumentReviewWebPart extends BaseClientSideWebPart<IDocume
       DocumentReview,
       {
         description: this.properties.description,
-        webPartName: this.properties.webPartName,
+        webpartHeader: this.properties.webpartHeader,
         // project: this.properties.project,
         redirectUrl: this.properties.redirectUrl,
         siteUrl: this.context.pageContext.web.serverRelativeUrl,
@@ -130,8 +130,8 @@ export default class DocumentReviewWebPart extends BaseClientSideWebPart<IDocume
                 //   onText: 'On',
                 //   offText: 'Off'
                 // }),
-                PropertyPaneTextField('webPartName', {
-                  label: "WebPart Name"
+                PropertyPaneTextField('webpartHeader', {
+                  label: "webpartHeader"
                 }),
                 PropertyPaneTextField('workflowHeaderListName', {
                   label: "Workflow Header List Name"
