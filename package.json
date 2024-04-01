@@ -12,16 +12,24 @@
     "test": "gulp test"
   },
   "dependencies": {
-    "tslib": "2.3.1",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
     "@fluentui/react": "^8.106.4",
-    "@microsoft/sp-core-library": "1.18.1",
     "@microsoft/sp-component-base": "1.18.1",
+    "@microsoft/sp-core-library": "1.18.1",
+    "@microsoft/sp-lodash-subset": "1.18.1",
+    "@microsoft/sp-office-ui-fabric-core": "1.18.1",
     "@microsoft/sp-property-pane": "1.18.1",
     "@microsoft/sp-webpart-base": "1.18.1",
-    "@microsoft/sp-lodash-subset": "1.18.1",
-    "@microsoft/sp-office-ui-fabric-core": "1.18.1"
+    "@pnp/logging": "^3.22.0",
+    "@pnp/sp": "^3.22.0",
+    "@pnp/spfx-controls-react": "3.16.2",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-light-accordion": "^0.1.4",
+    "react-spinners-kit": "^1.9.1",
+    "replace-string": "^4.0.0",
+    "simple-react-validator": "^1.6.2",
+    "tslib": "2.3.1",
+    "vertical-timeline-component-for-react": "^1.0.7"
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-4.7": "0.1.0",

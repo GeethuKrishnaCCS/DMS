@@ -9,10 +9,65 @@
           "manifest": "./src/webparts/createDocument/CreateDocumentWebPart.manifest.json"
         }
       ]
+    },
+    "edit-document-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/editDocument/EditDocumentWebPart.js",
+          "manifest": "./src/webparts/editDocument/EditDocumentWebPart.manifest.json"
+        }
+      ]
+    },
+    "send-request-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/sendRequest/SendRequestWebPart.js",
+          "manifest": "./src/webparts/sendRequest/SendRequestWebPart.manifest.json"
+        }
+      ]
+    },
+    "revision-history-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/revisionHistory/RevisionHistoryWebPart.js",
+          "manifest": "./src/webparts/revisionHistory/RevisionHistoryWebPart.manifest.json"
+        }
+      ]
+    },
+    "notification-preference-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/notificationPreference/NotificationPreferenceWebPart.js",
+          "manifest": "./src/webparts/notificationPreference/NotificationPreferenceWebPart.manifest.json"
+        }
+      ]
+    },
+    "document-review-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/documentReview/DocumentReviewWebPart.js",
+          "manifest": "./src/webparts/documentReview/DocumentReviewWebPart.manifest.json"
+        }
+      ]
+    },
+    "document-approval-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/documentApproval/DocumentApprovalWebPart.js",
+          "manifest": "./src/webparts/documentApproval/DocumentApprovalWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
-    "CreateDocumentWebPartStrings": "lib/webparts/createDocument/loc/{locale}.js"
+    "CreateDocumentWebPartStrings": "lib/webparts/createDocument/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "EditDocumentWebPartStrings": "lib/webparts/editDocument/loc/{locale}.js",
+    "SendRequestWebPartStrings": "lib/webparts/sendRequest/loc/{locale}.js",
+    "RevisionHistoryWebPartStrings": "lib/webparts/revisionHistory/loc/{locale}.js",
+    "NotificationPreferenceWebPartStrings": "lib/webparts/notificationPreference/loc/{locale}.js",
+    "DocumentReviewWebPartStrings": "lib/webparts/documentReview/loc/{locale}.js",
+    "DocumentApprovalWebPartStrings": "lib/webparts/documentApproval/loc/{locale}.js"
   }
 }
