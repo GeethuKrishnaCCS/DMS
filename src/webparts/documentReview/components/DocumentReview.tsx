@@ -282,7 +282,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     // if (this.props.project) 
     // {
     //   //  AccessGroup = await this.reqWeb.getList("/sites/" + this.props.hubsite + "/Lists/" + this.props.accessGroups).items.select("AccessGroups,AccessFields").filter("Title eq 'Project_SendReviewWF'").get();
-     this._LAUrlGettingForPermission();
+    //  this._LAUrlGettingForPermission();
     //   this.setState({
     //     // access: "",
     //     accessDeniedMsgBar: "none",
@@ -375,7 +375,7 @@ export default class DocumentReview extends React.Component<IDocumentReviewProps
     //const laUrl = await sp.web.getList(this.props.siteUrl + "/Lists/" + this.props.requestListName).items.filter("Title eq 'QDMS_PermissionWebpart'").get();
     console.log("PosturlForPermission", laUrl[0].PostUrl);
     this.postUrlForPermission = laUrl[0].PostUrl;
-    this.triggerProjectPermissionFlow(laUrl[0].PostUrl);
+    // this.triggerProjectPermissionFlow(laUrl[0].PostUrl);
     // this._queryParamGetting();
   }
   protected async triggerProjectPermissionFlow(PostUrl) {
